@@ -1,8 +1,8 @@
-# Preet Sports CREX Scraper
+# Preet Sports
 
 Files:
 - server.py = Flask API
-- scraper.py = CREX scraper
+- scraper.py = scraper
 - index.html = live HTML scoreboard
 - requirements.txt = Python dependencies
 - render.yaml = Render configuration
