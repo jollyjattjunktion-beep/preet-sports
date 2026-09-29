@@ -889,12 +889,51 @@ function renderOversTicker(recentOvers, lastWicket, nextBatsman) {
             (o.balls || []).forEach((b) => {
                 const ball = document.createElement("div");
                 ball.className = "ball-circle";
-                ball.textContent = b;
 
-                if (b === "4") ball.classList.add("four");
-                else if (b === "6") ball.classList.add("six");
-                else if (b.toLowerCase().includes("w") && !b.toLowerCase().includes("wd")) ball.classList.add("wicket");
-                else if (b.toLowerCase().includes("wd") || b.toLowerCase().includes("nb")) ball.classList.add("extra");
+                // CREX structured_overs can return each ball as an object:
+                // { text: "4", type: "four" }
+                // Older responses can return a plain string.
+                // Normalize both without changing the API or scoreboard.
+                const ballText = (
+                    b && typeof b === "object"
+                        ? (b.text ?? b.value ?? "")
+                        : b
+                );
+
+                const ballValue = String(ballText ?? "").trim();
+                const ballType = String(
+                    b && typeof b === "object"
+                        ? (b.type ?? "")
+                        : ""
+                ).trim().toLowerCase();
+
+                ball.textContent = ballValue || "•";
+
+                if (ballType === "four" || ballValue === "4") {
+                    ball.classList.add("four");
+                }
+                else if (ballType === "six" || ballValue === "6") {
+                    ball.classList.add("six");
+                }
+                else if (
+                    ballType === "wicket" ||
+                    ballValue.toUpperCase() === "W" ||
+                    (
+                        ballValue.toLowerCase().includes("w") &&
+                        !ballValue.toLowerCase().includes("wd")
+                    )
+                ) {
+                    ball.classList.add("wicket");
+                }
+                else if (
+                    ballType === "extra" ||
+                    ballType === "wide" ||
+                    ballType === "no-ball" ||
+                    ballValue.toLowerCase().startsWith("wd") ||
+                    ballValue.toLowerCase().startsWith("nb")
+                ) {
+                    ball.classList.add("extra");
+                }
 
                 ballsBox.appendChild(ball);
             });
