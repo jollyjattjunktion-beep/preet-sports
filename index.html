@@ -873,109 +873,113 @@ function renderOversTicker(recentOvers, lastWicket, nextBatsman) {
     const ticker = document.getElementById("oversTicker");
     ticker.innerHTML = "";
 
-    if (recentOvers && recentOvers.length) {
-        recentOvers.forEach((o) => {
-            const col = document.createElement("div");
-            col.className = "over-column";
+    // =========================================================
+    // ONLY SHOW THE LAST 2 OVERS + LAST WICKET
+    // Existing scoreboard/ticker design is unchanged.
+    // =========================================================
+    const overs = Array.isArray(recentOvers)
+        ? recentOvers.slice(-2)
+        : [];
 
-            const title = document.createElement("span");
-            title.className = "over-title";
-            title.textContent = `Over ${o.over}`;
-            col.appendChild(title);
+    overs.forEach((o) => {
+        const col = document.createElement("div");
+        col.className = "over-column";
 
-            const ballsBox = document.createElement("div");
-            ballsBox.className = "balls-container";
+        const title = document.createElement("span");
+        title.className = "over-title";
 
-            (o.balls || []).forEach((b) => {
-                const ball = document.createElement("div");
-                ball.className = "ball-circle";
+        // Scraper returns "label": "Over 47".
+        // Do NOT use o.over because it is undefined.
+        const overLabel = String(
+            o && (o.label ?? o.over ?? "")
+        ).trim();
 
-                // CREX structured_overs can return each ball as an object:
-                // { text: "4", type: "four" }
-                // Older responses can return a plain string.
-                // Normalize both without changing the API or scoreboard.
-                const ballText = (
-                    b && typeof b === "object"
-                        ? (b.text ?? b.value ?? "")
-                        : b
-                );
+        title.textContent = overLabel || "Over";
+        col.appendChild(title);
 
-                const ballValue = String(ballText ?? "").trim();
-                const ballType = String(
-                    b && typeof b === "object"
-                        ? (b.type ?? "")
-                        : ""
-                ).trim().toLowerCase();
+        const ballsBox = document.createElement("div");
+        ballsBox.className = "balls-container";
 
-                ball.textContent = ballValue || "•";
+        const balls = Array.isArray(o && o.balls) ? o.balls : [];
 
-                if (ballType === "four" || ballValue === "4") {
-                    ball.classList.add("four");
-                }
-                else if (ballType === "six" || ballValue === "6") {
-                    ball.classList.add("six");
-                }
-                else if (
-                    ballType === "wicket" ||
-                    ballValue.toUpperCase() === "W" ||
-                    (
-                        ballValue.toLowerCase().includes("w") &&
-                        !ballValue.toLowerCase().includes("wd")
-                    )
-                ) {
-                    ball.classList.add("wicket");
-                }
-                else if (
-                    ballType === "extra" ||
-                    ballType === "wide" ||
-                    ballType === "no-ball" ||
-                    ballValue.toLowerCase().startsWith("wd") ||
-                    ballValue.toLowerCase().startsWith("nb")
-                ) {
-                    ball.classList.add("extra");
-                }
+        balls.forEach((b) => {
+            const ball = document.createElement("div");
+            ball.className = "ball-circle";
 
-                ballsBox.appendChild(ball);
-            });
+            // Current scraper returns objects:
+            // { text: "4", type: "four" }
+            // Older data may return plain strings.
+            const ballText = String(
+                b && typeof b === "object"
+                    ? (b.text ?? b.value ?? "")
+                    : (b ?? "")
+            ).trim();
 
-            col.appendChild(ballsBox);
+            const ballType = String(
+                b && typeof b === "object"
+                    ? (b.type ?? "")
+                    : ""
+            ).trim().toLowerCase();
 
-            if (o.total !== undefined) {
-                const total = document.createElement("span");
-                total.className = "over-total";
-                total.textContent = `= ${o.total}`;
-                col.appendChild(total);
+            ball.textContent = ballText || "•";
+
+            if (ballType === "four" || ballText === "4") {
+                ball.classList.add("four");
+            } else if (ballType === "six" || ballText === "6") {
+                ball.classList.add("six");
+            } else if (
+                ballType === "wicket" ||
+                ballText.toUpperCase() === "W" ||
+                (
+                    ballText.toLowerCase().includes("w") &&
+                    !ballText.toLowerCase().includes("wd")
+                )
+            ) {
+                ball.classList.add("wicket");
+            } else if (
+                ballType === "extra" ||
+                ballType === "wide" ||
+                ballType === "no-ball" ||
+                ballText.toLowerCase().startsWith("wd") ||
+                ballText.toLowerCase().startsWith("nb")
+            ) {
+                ball.classList.add("extra");
             }
 
-            ticker.appendChild(col);
-
-            const sep = document.createElement("div");
-            sep.className = "over-divider-line";
-            ticker.appendChild(sep);
+            ballsBox.appendChild(ball);
         });
-    }
 
+        col.appendChild(ballsBox);
+
+        if (o && o.total !== undefined) {
+            const total = document.createElement("span");
+            total.className = "over-total";
+            total.textContent = String(o.total).startsWith("=")
+                ? String(o.total)
+                : `= ${o.total}`;
+            col.appendChild(total);
+        }
+
+        ticker.appendChild(col);
+    });
+
+    // Divider before LAST WKT.
+    const sep = document.createElement("div");
+    sep.className = "over-divider-line";
+    ticker.appendChild(sep);
+
+    // LAST WICKET — always shown.
     const lwBlock = document.createElement("div");
     lwBlock.className = "ticker-info-block";
+
+    const safeLastWicket = String(lastWicket || "-");
+
     lwBlock.innerHTML = `
         <span class="ticker-info-label">LAST WKT:</span>
-        <span class="ticker-info-val" title="${lastWicket || '-'}">${lastWicket || '-'}</span>
+        <span class="ticker-info-val" title="${safeLastWicket}">${safeLastWicket}</span>
     `;
+
     ticker.appendChild(lwBlock);
-
-    if (nextBatsman && nextBatsman !== "-") {
-        const sep2 = document.createElement("div");
-        sep2.className = "over-divider-line";
-        ticker.appendChild(sep2);
-
-        const nbBlock = document.createElement("div");
-        nbBlock.className = "ticker-info-block";
-        nbBlock.innerHTML = `
-            <span class="ticker-info-label">NEXT BAT:</span>
-            <span class="ticker-info-val" title="${nextBatsman}">${nextBatsman}</span>
-        `;
-        ticker.appendChild(nbBlock);
-    }
 }
 
 /* =========================================================
