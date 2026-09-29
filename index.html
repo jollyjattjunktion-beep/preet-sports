@@ -992,7 +992,7 @@ let retryTimer = null;
 let lastSuccessfulData = null;
 let lastSuccessfulTimestamp = 0;
 
-const POLL_INTERVAL = 3000; // fetch/update every 3 seconds after each request finishes
+const POLL_INTERVAL = 0; // start the next poll immediately after the previous request finishes
 const REQUEST_TIMEOUT = 90000;
 
 function cacheKeyForUrl(url) {
