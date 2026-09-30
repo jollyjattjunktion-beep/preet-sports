@@ -1159,43 +1159,87 @@ function renderScoreData(data, fromCache = false) {
         (t2Role === "BOWLING") ? "inline-block" : "none";
 
     // =========================================================
-    // MIDDLE BOX — EVENT ONLY
-    // Everything else in the original working file is unchanged.
+    // MIDDLE BOX — CREX EVENT DISPLAY
+    // ONLY this middle-box event logic is changed.
     // =========================================================
     const actionEl = document.getElementById("centerLiveAction");
 
-    // Use the scraper's explicit event when available.
-    // Otherwise keep the original last_ball/liveBall value.
-    let actionText = String(
+    const explicitEvent = String(
         data.last_event ||
         data.live_event ||
         data.event ||
-        data.last_ball ||
-        data.liveBall ||
-        "•"
+        data.wicket_type ||
+        ""
     ).trim();
 
-    // Compact display matching the original scoreboard style.
-    const eventUpper = actionText.toUpperCase();
+    const rawLastBall = String(
+        data.last_ball ||
+        data.liveBall ||
+        ""
+    ).trim();
 
-    if (eventUpper === "WICKET") {
+    // Some scraper versions may expose dismissal information
+    // inside last_wicket. Support it without changing the scraper.
+    const lastWicketText = String(data.last_wicket || "").trim();
+
+    let actionText = explicitEvent || rawLastBall || "BALL";
+
+    const eventUpper = actionText.toUpperCase();
+    const wicketUpper = lastWicketText.toUpperCase();
+
+    // Match CREX wording when the API supplies the dismissal type.
+    if (
+        eventUpper.includes("RUN OUT") ||
+        eventUpper.includes("RUNOUT") ||
+        wicketUpper.includes("RUN OUT") ||
+        wicketUpper.includes("RUNOUT")
+    ) {
+        actionText = "Run Out";
+    }
+    else if (
+        eventUpper.includes("RETIRED OUT") ||
+        wicketUpper.includes("RETIRED OUT")
+    ) {
+        actionText = "Retired Out";
+    }
+    else if (
+        eventUpper.includes("RETIRED HURT") ||
+        wicketUpper.includes("RETIRED HURT")
+    ) {
+        actionText = "Retired Hurt";
+    }
+    else if (eventUpper === "WICKET" || eventUpper === "WK") {
         actionText = "W";
-    } else if (eventUpper === "WIDE") {
-        actionText = "WD";
-    } else if (eventUpper === "NO BALL" || eventUpper === "NO-BALL") {
+    }
+    else if (
+        eventUpper === "NO BALL" ||
+        eventUpper === "NO-BALL" ||
+        eventUpper === "NOBALL"
+    ) {
         actionText = "NB";
-    } else if (eventUpper === "FOUR") {
+    }
+    else if (eventUpper === "WIDE") {
+        actionText = "WD";
+    }
+    else if (eventUpper === "FOUR") {
         actionText = "4";
-    } else if (eventUpper === "SIX") {
+    }
+    else if (eventUpper === "SIX") {
         actionText = "6";
+    }
+    else if (eventUpper === "BALL") {
+        actionText = "BALL";
     }
 
     actionEl.textContent = actionText || "•";
 
-    if (String(actionText).length <= 2) {
+    // Fit longer CREX event names inside the existing box.
+    if (actionText.length <= 2) {
         actionEl.style.fontSize = "62px";
-    } else if (String(actionText).length <= 6) {
+    } else if (actionText.length <= 6) {
         actionEl.style.fontSize = "42px";
+    } else if (actionText.length <= 10) {
+        actionEl.style.fontSize = "32px";
     } else {
         actionEl.style.fontSize = "26px";
     }
