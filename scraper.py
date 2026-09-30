@@ -394,14 +394,22 @@ def scrape_crex_match(url: str):
     potm_text = potm_el.get_text(" ", strip=True) if potm_el else None
 
     # ── 9. Partnership ──
+    # Read CREX's displayed P'ship value directly.
+    # Do NOT calculate it from batsman runs/balls because that can lag or differ
+    # from the partnership value currently shown by CREX.
     pship_str = None
-    if batsman1 and batsman2:
-        try:
-            pship_runs = int(batsman1["runs"]) + int(batsman2["runs"])
-            pship_balls = int(batsman1["balls"]) + int(batsman2["balls"])
-            pship_str = f"{pship_runs} ({pship_balls})"
-        except Exception:
-            pass
+    try:
+        page_text = soup.get_text(" ", strip=True)
+        partnership_matches = re.findall(
+            r"P[\'’]?ship\s*:?\s*(\d+)\s*\(\s*(\d+)\s*\)",
+            page_text,
+            flags=re.IGNORECASE
+        )
+        if partnership_matches:
+            runs, balls = partnership_matches[-1]
+            pship_str = f"{runs} ({balls})"
+    except Exception:
+        pship_str = None
 
     # ── 10. Win / Lose Probability (Calculated from real match state only) ──
     win_pct = None
