@@ -66,6 +66,57 @@ def extract_dismissal_type(soup, last_wkt_text=""):
 
     return None
 
+
+
+def extract_next_batsmen(soup, current_batsmen=None, bowler=None):
+    """Extract the CREX 'Yet to bat' player names from the scorecard."""
+    current_batsmen = current_batsmen or []
+    current_names = {
+        str(x.get("name", "")).strip().lower()
+        for x in current_batsmen
+        if isinstance(x, dict) and x.get("name")
+    }
+    if isinstance(bowler, dict) and bowler.get("name"):
+        current_names.add(str(bowler["name"]).strip().lower())
+
+    found = []
+    seen = set()
+
+    # Find the visible 'Yet to bat' section and inspect its nearby DOM.
+    labels = soup.find_all(string=re.compile(r"^\s*Yet\s+to\s+bat\s*$", re.IGNORECASE))
+    for label in labels:
+        node = label.parent
+        # Move up a few levels to capture the complete Yet-to-bat block.
+        for _ in range(5):
+            if node is None:
+                break
+
+            candidates = node.find_all(
+                class_=re.compile(
+                    r"batsmen-name|p-name|player-name|player.*name|batsman.*name",
+                    re.IGNORECASE
+                )
+            )
+
+            for el in candidates:
+                name = el.get_text(" ", strip=True)
+                key = re.sub(r"\s+", " ", name).strip().lower()
+                if not key or key == "yet to bat" or key in current_names or key in seen:
+                    continue
+                # Avoid accidentally taking long scorecard/status text.
+                if len(name) <= 45 and not re.search(r"\d{2,}|avg:|sr:|econ:|batting|bowling", name, re.I):
+                    seen.add(key)
+                    found.append(name)
+
+            if found:
+                break
+            node = node.parent
+
+        if len(found) >= 8:
+            break
+
+    return found[:8]
+
 def scrape_crex_match(url: str):
     """
     Scrapes real live match data from a given Crex match URL.
@@ -341,6 +392,9 @@ def scrape_crex_match(url: str):
     batsman1 = batsmen[0] if len(batsmen) > 0 else None
     batsman2 = batsmen[1] if len(batsmen) > 1 else None
 
+    # ADDED ONLY FOR NEXT BATTERS
+    next_batsmen = extract_next_batsmen(soup, batsmen, bowler)
+
     # ── 6. Real Overs & Ball-by-ball (NO fallback overs) ──
     recent_overs = []
     structured_overs = []
@@ -464,6 +518,7 @@ def scrape_crex_match(url: str):
         "batsman1": batsman1,
         "batsman2": batsman2,
         "bowler": bowler,
+        "next_batsmen": next_batsmen,
         "recent_overs": recent_str,
         "potm": potm_text,
     }
