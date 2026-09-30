@@ -1159,87 +1159,112 @@ function renderScoreData(data, fromCache = false) {
         (t2Role === "BOWLING") ? "inline-block" : "none";
 
     // =========================================================
-    // MIDDLE BOX — CREX EVENT DISPLAY
-    // ONLY this middle-box event logic is changed.
+    // MIDDLE BOX — CREX EVENT
+    // ONLY this middle-box logic is changed.
+    // OBS token system, API, scraper, scoreboard design,
+    // players, teams and ticker remain unchanged.
+    //
+    // If the existing API already exposes dismissal text/type,
+    // show "RUN OUT" exactly like CREX. Otherwise retain the
+    // normal ball value (e.g. 1W) rather than guessing.
     // =========================================================
     const actionEl = document.getElementById("centerLiveAction");
 
-    const explicitEvent = String(
+    const latestBallObject =
+        Array.isArray(data.current_over?.balls) &&
+        data.current_over.balls.length
+            ? data.current_over.balls[data.current_over.balls.length - 1]
+            : null;
+
+    const ballText = String(
+        latestBallObject && typeof latestBallObject === "object"
+            ? (latestBallObject.text ?? "")
+            : (latestBallObject ?? data.last_ball ?? data.liveBall ?? "")
+    ).trim();
+
+    const ballType = String(
+        latestBallObject && typeof latestBallObject === "object"
+            ? (latestBallObject.type ?? "")
+            : ""
+    ).trim();
+
+    // Check fields that may already be returned by the scraper.
+    // No API/scraper modification is made here.
+    const possibleDismissalFields = [
+        data.last_event,
+        data.live_event,
+        data.event,
+        data.dismissal,
+        data.dismissal_type,
+        data.wicket_type,
+        data.wicketType,
+        data.last_wicket_type,
+        data.lastWicketType,
+        data.wicket_text,
+        data.dismissal_text,
+        data.commentary,
+        data.commentary_text,
+        latestBallObject && latestBallObject.dismissal,
+        latestBallObject && latestBallObject.dismissal_type,
+        latestBallObject && latestBallObject.wicket_type,
+        latestBallObject && latestBallObject.wicketType,
+        latestBallObject && latestBallObject.text
+    ];
+
+    const dismissalText = possibleDismissalFields
+        .filter(v => v !== null && v !== undefined)
+        .map(v => String(v))
+        .join(" ")
+        .toUpperCase();
+
+    let actionText =
         data.last_event ||
         data.live_event ||
         data.event ||
-        data.wicket_type ||
-        ""
-    ).trim();
-
-    const rawLastBall = String(
         data.last_ball ||
         data.liveBall ||
-        ""
-    ).trim();
+        "•";
 
-    // Some scraper versions may expose dismissal information
-    // inside last_wicket. Support it without changing the scraper.
-    const lastWicketText = String(data.last_wicket || "").trim();
+    actionText = String(actionText).trim();
 
-    let actionText = explicitEvent || rawLastBall || "BALL";
-
-    const eventUpper = actionText.toUpperCase();
-    const wicketUpper = lastWicketText.toUpperCase();
-
-    // Match CREX wording when the API supplies the dismissal type.
+    // ---------------------------------------------------------
+    // RUN OUT — only when the received data actually says RUN OUT
+    // ---------------------------------------------------------
     if (
-        eventUpper.includes("RUN OUT") ||
-        eventUpper.includes("RUNOUT") ||
-        wicketUpper.includes("RUN OUT") ||
-        wicketUpper.includes("RUNOUT")
+        dismissalText.includes("RUN OUT") ||
+        dismissalText.includes("RUNOUT")
     ) {
-        actionText = "Run Out";
+        actionText = "RUN OUT";
     }
-    else if (
-        eventUpper.includes("RETIRED OUT") ||
-        wicketUpper.includes("RETIRED OUT")
-    ) {
-        actionText = "Retired Out";
-    }
-    else if (
-        eventUpper.includes("RETIRED HURT") ||
-        wicketUpper.includes("RETIRED HURT")
-    ) {
-        actionText = "Retired Hurt";
-    }
-    else if (eventUpper === "WICKET" || eventUpper === "WK") {
-        actionText = "W";
-    }
-    else if (
-        eventUpper === "NO BALL" ||
-        eventUpper === "NO-BALL" ||
-        eventUpper === "NOBALL"
-    ) {
-        actionText = "NB";
-    }
-    else if (eventUpper === "WIDE") {
-        actionText = "WD";
-    }
-    else if (eventUpper === "FOUR") {
-        actionText = "4";
-    }
-    else if (eventUpper === "SIX") {
-        actionText = "6";
-    }
-    else if (eventUpper === "BALL") {
-        actionText = "BALL";
+
+    // Other explicit CREX event labels.
+    else {
+        const eventUpper = actionText.toUpperCase();
+
+        if (eventUpper === "WICKET") {
+            actionText = "W";
+        } else if (eventUpper === "WIDE") {
+            actionText = "WD";
+        } else if (
+            eventUpper === "NO BALL" ||
+            eventUpper === "NO-BALL"
+        ) {
+            actionText = "NB";
+        } else if (eventUpper === "FOUR") {
+            actionText = "4";
+        } else if (eventUpper === "SIX") {
+            actionText = "6";
+        }
     }
 
     actionEl.textContent = actionText || "•";
 
-    // Fit longer CREX event names inside the existing box.
-    if (actionText.length <= 2) {
+    if (actionText.toUpperCase() === "RUN OUT") {
+        actionEl.style.fontSize = "34px";
+    } else if (String(actionText).length <= 2) {
         actionEl.style.fontSize = "62px";
-    } else if (actionText.length <= 6) {
+    } else if (String(actionText).length <= 6) {
         actionEl.style.fontSize = "42px";
-    } else if (actionText.length <= 10) {
-        actionEl.style.fontSize = "32px";
     } else {
         actionEl.style.fontSize = "26px";
     }
