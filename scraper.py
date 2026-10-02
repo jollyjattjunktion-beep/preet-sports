@@ -37,15 +37,15 @@ def _get_match_score(team_short: str, comp_name: str) -> int:
 def extract_dismissal_type(soup, last_wkt_text=""):
     """Return the dismissal type shown in the Last Wicket section, if present."""
     dismissal_patterns = [
-        (r'run\s*out|runout', 'Run Out'),
-        (r'caught', 'Caught'),
-        (r'bowled', 'Bowled'),
-        (r'lbw', 'LBW'),
-        (r'stumped', 'Stumped'),
-        (r'hit\s+wicket', 'Hit Wicket'),
-        (r'obstructing\s+the\s+field', 'Obstructing the Field'),
-        (r'retired\s+hurt', 'Retired Hurt'),
-        (r'retired\s+out', 'Retired Out'),
+        (r'run\s*out|runout', 'Run Out'),
+        (r'caught', 'Caught'),
+        (r'bowled', 'Bowled'),
+        (r'lbw', 'LBW'),
+        (r'stumped', 'Stumped'),
+        (r'hit\s+wicket', 'Hit Wicket'),
+        (r'obstructing\s+the\s+field', 'Obstructing the Field'),
+        (r'retired\s+hurt', 'Retired Hurt'),
+        (r'retired\s+out', 'Retired Out'),
     ]
 
     texts = []
@@ -197,7 +197,6 @@ def scrape_crex_match(url: str):
     }
     status = ""
     center_digit = ""
-    center_text = ""   # NEW: exact text CREX shows in the middle (e.g. "Leg bye single")
 
     if card:
         t1_div = card.find("div", class_="team-inning")
@@ -217,15 +216,13 @@ def scrape_crex_match(url: str):
                 team1["score"] = runs_txt
                 team1["overs"] = overs_txt
 
-        # CHANGED: the centre text is now returned as its own field
-        # (center_text) and no longer overwrites the real match status.
         res_box = card.find(class_=re.compile("result-box|team-result"))
         if res_box:
             txt = res_box.get_text(" ", strip=True)
             if len(txt) <= 3 and any(c.isdigit() or c in "WwNnBb" for c in txt):
                 center_digit = txt
             elif txt:
-                center_text = txt
+                status = txt
 
         t2_div = card.find("div", class_=re.compile("second-inning"))
         if t2_div:
@@ -507,8 +504,6 @@ def scrape_crex_match(url: str):
         "team1": team1,
         "team2": team2,
         "status": status,
-        "center_digit": center_digit,
-        "center_text": center_text,   # NEW
         "equation": equation,
         "crr": crr,
         "rrr": rrr,
