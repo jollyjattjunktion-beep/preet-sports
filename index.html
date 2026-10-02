@@ -1682,12 +1682,10 @@ function renderScoreData(data, fromCache = false) {
         .join(" ")
         .toUpperCase();
 
-    let actionText =
-        data.status ||
-        data.last_event ||
-        data.live_event ||
-        data.event ||
-        "•";
+    // MIDDLE CYAN BOX = ONLY CREX .font1 STATUS.
+    // Examples: Ball In Air, Innings Break, Match Paused, etc.
+    // Do NOT fall back to last_ball/last_event because those belong in the over ticker.
+    let actionText = data.status || "•";
 
     actionText = String(actionText).trim();
 
