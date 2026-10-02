@@ -33,7 +33,7 @@ html, body {
 }
 
 /* FLOATING URL CONTROL BAR */
-.url-control-bar {
+.url-control-bar { display: none !important;
     
     position: absolute;
     top: 8px;
@@ -750,8 +750,8 @@ html, body {
     position: absolute;
     left: 18px;
     right: 18px;
-    top: 676px;
-    height: 30px;
+    top: 455px;
+    height: 32px;
     border: 1.5px solid rgba(213,181,0,0.9);
     border-radius: 14px;
     background: rgba(12,0,2,0.78);
@@ -764,31 +764,22 @@ html, body {
     height: 100%;
     display: flex;
     align-items: center;
-    justify-content: center;
-    width: 100%;
+    width: max-content;
     white-space: nowrap;
-    animation: none !important;
+    animation: marqueeMove 22s linear infinite;
 }
 
 .info-marquee-text {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    padding: 0 18px;
-    box-sizing: border-box;
-    background: #ffd700;
-    color: #000000;
+    padding: 0 55px;
+    color: #ffffff;
     font-size: 15px;
-    font-weight: 1000;
-    letter-spacing: 0.55px;
-    text-shadow: none;
-    overflow: hidden;
+    font-weight: 900;
+    letter-spacing: 0.45px;
+    text-shadow: 1px 1px 3px #000;
 }
 
 .info-marquee-text b {
-    color: #000000;
+    color: #ffd700;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -830,7 +821,10 @@ html, body {
         <div id="infoMarquee" class="info-marquee">
             <div id="infoMarqueeTrack" class="info-marquee-track">
                 <span id="infoMarqueeText" class="info-marquee-text">
-                    <b>PREET SPORTS</b>&nbsp;&nbsp; • &nbsp;&nbsp;MATCH NAME - LIVE DISCUSSION&nbsp;&nbsp; • &nbsp;&nbsp;SUBSCRIBE US
+                    <b>PREET SPORTS</b>&nbsp;&nbsp; • &nbsp;&nbsp;LIVE MATCH DISCUSSION&nbsp;&nbsp; • &nbsp;&nbsp;WAITING FOR LIVE UPDATE...
+                </span>
+                <span class="info-marquee-text">
+                    <b>PREET SPORTS</b>&nbsp;&nbsp; • &nbsp;&nbsp;LIVE MATCH DISCUSSION
                 </span>
             </div>
         </div>
@@ -1388,9 +1382,23 @@ function updateInformationTicker(data, eventLabel = "") {
 
     const t1 = data?.team1?.short || data?.team1?.full_name || "";
     const t2 = data?.team2?.short || data?.team2?.full_name || "";
-    const fixture = data?.vs_text || (t1 && t2 ? `${t1} vs ${t2}` : "MATCH NAME");
+    const score1 = data?.team1?.score || "";
+    const score2 = data?.team2?.score || "";
+    const equation = data?.equation || data?.status || "";
+    const partnership = data?.partnership || "";
+    const lastWicket = data?.last_wicket || "";
 
-    el.innerHTML = `<b>PREET SPORTS</b>&nbsp;&nbsp; • &nbsp;&nbsp;${fixture} - LIVE DISCUSSION&nbsp;&nbsp; • &nbsp;&nbsp;SUBSCRIBE US`;
+    let message = eventLabel
+        ? `<b>${eventLabel}</b>&nbsp;&nbsp; • &nbsp;&nbsp;`
+        : "";
+
+    if (t1 || score1) message += `<b>${t1}</b> ${score1}`;
+    if (t2 || score2) message += `&nbsp;&nbsp; VS &nbsp;&nbsp;<b>${t2}</b> ${score2}`;
+    if (partnership) message += `&nbsp;&nbsp; • &nbsp;&nbsp;PARTNERSHIP: <b>${partnership}</b>`;
+    if (equation) message += `&nbsp;&nbsp; • &nbsp;&nbsp;${equation}`;
+    if (lastWicket) message += `&nbsp;&nbsp; • &nbsp;&nbsp;LAST WKT: ${lastWicket}`;
+
+    el.innerHTML = message || "<b>PREET SPORTS</b>&nbsp;&nbsp; • &nbsp;&nbsp;LIVE MATCH DISCUSSION";
 }
 
 function renderScoreData(data, fromCache = false) {
@@ -1674,12 +1682,26 @@ function renderScoreData(data, fromCache = false) {
         .join(" ")
         .toUpperCase();
 
-    // MIDDLE CYAN BOX = ONLY CREX .font1 STATUS.
-    // Examples: Ball In Air, Innings Break, Match Paused, etc.
-    // Do NOT fall back to last_ball/last_event because those belong in the over ticker.
-    let actionText = data.status || "•";
+    // =========================================================
+    // CENTER BOX — EXACT CREX .font1 VALUE
+    // The scraper reads CREX result-box -> span.font1 into
+    // data.center_digit. Show that value here FIRST.
+    // The over ticker continues using current_over separately.
+    // =========================================================
+    let actionText = String(
+        data.center_digit ??
+        ""
+    ).trim();
 
-    actionText = String(actionText).trim();
+    // If CREX .font1 is empty, use the actual CREX status.
+    if (!actionText) {
+        actionText = String(
+            data.status ??
+            data.match_status ??
+            data.live_status ??
+            ""
+        ).trim();
+    }
 
     // ---------------------------------------------------------
     // RUN OUT — only when the received data actually says RUN OUT
@@ -1691,8 +1713,9 @@ function renderScoreData(data, fromCache = false) {
         actionText = "RUN OUT";
     }
 
-    // Other explicit CREX event labels.
-    else {
+    // Only normalize explicit event words when CREX did not provide
+    // a direct center_digit value. This keeps .font1 exact.
+    else if (!String(data.center_digit ?? "").trim()) {
         const eventUpper = actionText.toUpperCase();
 
         if (eventUpper === "WICKET") {
@@ -2017,7 +2040,7 @@ urlInput.addEventListener("keydown", (e) => {
     if (e.key === "Enter") triggerMatchLoad();
 });
 
-if (urlParams.get("hide") === "1") {
+if (urlParams.get("hide") === "1" || OBS_TOKEN) {
     document.getElementById("urlControlBar").style.display = "none";
 }
 
