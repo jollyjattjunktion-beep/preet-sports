@@ -1260,7 +1260,7 @@ let previousEventSignature = null;
 let firstLiveRender = true;
 let eventHideTimer = null;
 
-const POLL_INTERVAL = 0; // start the next poll immediately after the previous request finishes
+const POLL_INTERVAL = 3000; // poll live data every 3 seconds
 const REQUEST_TIMEOUT = 90000;
 
 function cacheKeyForUrl(url) {
@@ -1409,7 +1409,24 @@ function renderScoreData(data, fromCache = false) {
         ""
     ).trim();
 
-    showMatchStatus(liveStatusText);
+    // Show meaningful match states in the empty area.
+    // Do not cover the normal scoreboard during live play.
+    const normalizedStatus = liveStatusText.toLowerCase();
+    if (
+        normalizedStatus.includes("innings break") ||
+        normalizedStatus.includes("match end") ||
+        normalizedStatus.includes("match ended") ||
+        normalizedStatus.includes("stumps") ||
+        normalizedStatus.includes("rain") ||
+        normalizedStatus.includes("delay") ||
+        normalizedStatus.includes("abandoned") ||
+        normalizedStatus.includes("tea") ||
+        normalizedStatus.includes("lunch")
+    ) {
+        showMatchStatus(liveStatusText);
+    } else {
+        showMatchStatus("");
+    }
 
 
     if (!data || data.success === false) {
@@ -1666,11 +1683,10 @@ function renderScoreData(data, fromCache = false) {
         .toUpperCase();
 
     let actionText =
+        data.status ||
         data.last_event ||
         data.live_event ||
         data.event ||
-        data.last_ball ||
-        data.liveBall ||
         "•";
 
     actionText = String(actionText).trim();
@@ -1833,7 +1849,8 @@ async function fetchScores() {
             mode: "cors",
             signal: controller.signal,
             headers: {
-                "Accept": "application/json"
+                "Accept": "application/json",
+                "Cache-Control": "no-cache"
             }
         });
 
@@ -1877,7 +1894,7 @@ async function fetchScores() {
         clearTimeout(timeoutId);
         fetchInProgress = false;
 
-        // 3 seconds AFTER the current request finishes.
+        // Wait 3 seconds AFTER the current request finishes before polling again.
         scheduleNextFetch(POLL_INTERVAL);
     }
 }
