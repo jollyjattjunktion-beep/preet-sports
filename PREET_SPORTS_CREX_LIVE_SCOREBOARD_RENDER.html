@@ -651,6 +651,41 @@ html, body {
 }
 
 
+.match-status-flash {
+    position: absolute;
+    left: 50%;
+    top: 365px;
+    transform: translateX(-50%);
+    z-index: 20;
+    min-width: 250px;
+    max-width: 600px;
+    padding: 9px 24px;
+    border: 2px solid rgba(255, 215, 0, 0.85);
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.82);
+    color: #fff;
+    font-family: inherit;
+    font-size: 28px;
+    font-weight: 800;
+    line-height: 1.1;
+    text-align: center;
+    letter-spacing: .5px;
+    box-sizing: border-box;
+    display: none;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+.match-status-flash.show {
+    display: block;
+    animation: statusFadeIn .35s ease-out;
+}
+
+@keyframes statusFadeIn {
+    from { opacity: 0; transform: translateX(-50%) translateY(8px) scale(.96); }
+    to { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+}
+
 .event-flash {
     position: absolute;
     left: 50%;
@@ -781,6 +816,7 @@ html, body {
         </div>
 
         <div id="eventFlash" class="event-flash" aria-live="polite"></div>
+<div id="matchStatusFlash" class="match-status-flash" aria-live="polite"></div>
 
         <div id="infoMarquee" class="info-marquee">
             <div id="infoMarqueeTrack" class="info-marquee-track">
@@ -1298,6 +1334,24 @@ function scoreRuns(score) {
     return m ? Number(m[1]) : null;
 }
 
+function showMatchStatus(statusText) {
+    const el = document.getElementById("matchStatusFlash");
+    if (!el) return;
+
+    const text = String(statusText || "").trim();
+
+    if (!text) {
+        el.textContent = "";
+        el.classList.remove("show");
+        return;
+    }
+
+    el.textContent = text;
+    el.classList.remove("show");
+    void el.offsetWidth;
+    el.classList.add("show");
+}
+
 function showEventFlash(label, type) {
     const el = document.getElementById("eventFlash");
     if (!el || !label) return;
@@ -1348,6 +1402,16 @@ function updateInformationTicker(data, eventLabel = "") {
 }
 
 function renderScoreData(data, fromCache = false) {
+    const liveStatusText = String(
+        data.status ??
+        data.match_status ??
+        data.live_status ??
+        ""
+    ).trim();
+
+    showMatchStatus(liveStatusText);
+
+
     if (!data || data.success === false) {
         throw new Error("Invalid score data");
     }
