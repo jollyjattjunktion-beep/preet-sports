@@ -33,7 +33,7 @@ html, body {
 }
 
 /* FLOATING URL CONTROL BAR */
-.url-control-bar { display: none !important;
+.url-control-bar {
     
     position: absolute;
     top: 8px;
@@ -2027,7 +2027,7 @@ urlInput.addEventListener("keydown", (e) => {
     if (e.key === "Enter") triggerMatchLoad();
 });
 
-if (urlParams.get("hide") === "1" || OBS_TOKEN) {
+if (urlParams.get("hide") === "1") {
     document.getElementById("urlControlBar").style.display = "none";
 }
 
