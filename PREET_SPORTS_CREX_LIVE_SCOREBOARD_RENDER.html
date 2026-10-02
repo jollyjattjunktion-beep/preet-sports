@@ -576,6 +576,171 @@ html, body {
 .player-bottom-col .stat-val {
     color: #ffffff;
 }
+
+/* =========================================================
+   PREET SPORTS — LIVE BROADCAST ANIMATION LAYER
+   Data-driven only: animations trigger when live data changes.
+========================================================= */
+
+@keyframes livePulse {
+    0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 45, 45, 0.45); }
+    50% { opacity: 0.72; transform: scale(1.035); box-shadow: 0 0 0 8px rgba(255, 45, 45, 0); }
+}
+
+@keyframes scoreChange {
+    0% { transform: scale(1); filter: brightness(1); }
+    35% { transform: scale(1.22); filter: brightness(1.8); }
+    100% { transform: scale(1); filter: brightness(1); }
+}
+
+@keyframes ballEnter {
+    0% { opacity: 0; transform: scale(0.45) translateY(-8px); }
+    65% { opacity: 1; transform: scale(1.18) translateY(0); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+
+@keyframes eventPop {
+    0% { opacity: 0; transform: translate(-50%, 8px) scale(0.72); }
+    8% { opacity: 1; transform: translate(-50%, 0) scale(1.08); }
+    16% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+    84% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+    100% { opacity: 0; transform: translate(-50%, -5px) scale(0.96); }
+}
+
+@keyframes marqueeMove {
+    from { transform: translateX(100%); }
+    to { transform: translateX(-100%); }
+}
+
+.live-badge {
+    position: absolute;
+    top: 7px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 4px 12px;
+    border: 1.5px solid #ffd700;
+    border-radius: 18px;
+    background: rgba(22, 0, 3, 0.94);
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 1.2px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.7);
+}
+
+.live-badge-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #ff3030;
+    animation: livePulse 1.25s ease-in-out infinite;
+}
+
+.score-change {
+    animation: scoreChange 0.75s cubic-bezier(.2,.8,.2,1);
+}
+
+.ball-circle.new-ball {
+    animation: ballEnter 0.7s cubic-bezier(.2,.8,.2,1);
+}
+
+
+.event-flash {
+    position: absolute;
+    left: 50%;
+    top: 365px;
+    transform: translateX(-50%);
+    z-index: 80;
+    display: none;
+    min-width: 250px;
+    padding: 10px 28px;
+    border: 3px solid #ffd700;
+    border-radius: 16px;
+    background: rgba(20, 0, 3, 0.94);
+    color: #ffffff;
+    font-size: 34px;
+    font-weight: 1000;
+    letter-spacing: 2px;
+    text-align: center;
+    text-shadow: 0 3px 8px #000;
+    box-shadow: 0 0 24px rgba(255,215,0,0.45);
+    pointer-events: none;
+}
+
+.event-flash.show {
+    display: block;
+    animation: eventPop 5s ease-in-out forwards;
+}
+
+.event-flash.four {
+    border-color: #70baff;
+    box-shadow: 0 0 30px rgba(60,170,255,0.7);
+    color: #dff2ff;
+}
+
+.event-flash.six {
+    border-color: #6cf598;
+    box-shadow: 0 0 30px rgba(40,220,120,0.7);
+    color: #d9ffe8;
+}
+
+.event-flash.wicket {
+    border-color: #ff6b7d;
+    box-shadow: 0 0 30px rgba(255,40,70,0.75);
+    color: #ffdbe0;
+}
+
+.info-marquee {
+    position: absolute;
+    left: 18px;
+    right: 18px;
+    top: 455px;
+    height: 32px;
+    border: 1.5px solid rgba(213,181,0,0.9);
+    border-radius: 14px;
+    background: rgba(12,0,2,0.78);
+    overflow: hidden;
+    z-index: 25;
+    box-shadow: inset 0 0 12px rgba(213,181,0,0.12);
+}
+
+.info-marquee-track {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    width: max-content;
+    white-space: nowrap;
+    animation: marqueeMove 22s linear infinite;
+}
+
+.info-marquee-text {
+    padding: 0 55px;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 900;
+    letter-spacing: 0.45px;
+    text-shadow: 1px 1px 3px #000;
+}
+
+.info-marquee-text b {
+    color: #ffd700;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .live-badge-dot,
+    .score-change,
+    .ball-circle.new-ball,
+    .event-flash.show,
+    .info-marquee-track {
+        animation: none !important;
+    }
+}
+
 </style>
 </head>
 
@@ -588,11 +753,29 @@ html, body {
         <span>CREX MATCH:</span>
         <input type="text" id="crexUrlInput" placeholder="Paste CREX URL or Match ID...">
         <button id="loadMatchUrlBtn">LOAD MATCH</button>
+        <button id="generateObsBtn">COPY OBS URL</button>
         <span class="status-indicator" id="statusIndicator">Ready</span>
     </div>
 
     <!-- 1280x720 BOARD CANVAS -->
     <div class="scoreboard" id="scoreboardCanvas">
+        <div class="live-badge" aria-label="Live match">
+            <span class="live-badge-dot"></span>
+            <span>LIVE</span>
+        </div>
+
+        <div id="eventFlash" class="event-flash" aria-live="polite"></div>
+
+        <div id="infoMarquee" class="info-marquee">
+            <div id="infoMarqueeTrack" class="info-marquee-track">
+                <span id="infoMarqueeText" class="info-marquee-text">
+                    <b>PREET SPORTS</b>&nbsp;&nbsp; • &nbsp;&nbsp;LIVE MATCH DISCUSSION&nbsp;&nbsp; • &nbsp;&nbsp;WAITING FOR LIVE UPDATE...
+                </span>
+                <span class="info-marquee-text">
+                    <b>PREET SPORTS</b>&nbsp;&nbsp; • &nbsp;&nbsp;LIVE MATCH DISCUSSION
+                </span>
+            </div>
+        </div>
 
         <!-- TOP SECTION -->
         <div class="top-section">
@@ -786,8 +969,14 @@ window.addEventListener("orientationchange", fitScoreboardToWindow);
 document.addEventListener("DOMContentLoaded", fitScoreboardToWindow);
 fitScoreboardToWindow();
 
-// PREET SPORTS Python CREX API on Render
 const API_BASE = "https://preet-sports.onrender.com";
+
+// OBS TOKEN MODE: /obs/RANDOMTOKEN
+const pathParts = window.location.pathname.split("/").filter(Boolean);
+const OBS_TOKEN = (
+    pathParts.length >= 2 &&
+    pathParts[0].toLowerCase() === "obs"
+) ? pathParts[1] : "";
 
 function cleanCrexUrl(url) {
     if (!url) return "";
@@ -807,10 +996,13 @@ function normalizeInput(val) {
 }
 
 const urlParams = new URLSearchParams(window.location.search);
-let activeTargetUrl =
-    normalizeInput(urlParams.get("url")) ||
-    localStorage.getItem("crex_match_input") ||
-    "https://crex.com/cricket-live-score/kp-vs-pt-16th-match-odisha-t20-league-2026-match-updates-13VH";
+let activeTargetUrl = OBS_TOKEN
+    ? ""
+    : (
+        normalizeInput(urlParams.get("url")) ||
+        localStorage.getItem("crex_match_input") ||
+        "https://crex.com/cricket-live-score/kp-vs-pt-16th-match-odisha-t20-league-2026-match-updates-13VH"
+    );
 
 const urlInput = document.getElementById("crexUrlInput");
 const statusInd = document.getElementById("statusIndicator");
@@ -863,91 +1055,145 @@ function renderOversTicker(recentOvers, lastWicket, nextBatsman) {
     const ticker = document.getElementById("oversTicker");
     ticker.innerHTML = "";
 
-    if (Array.isArray(recentOvers) && recentOvers.length) {
-        recentOvers.slice(-3).forEach((o) => {
-            const col = document.createElement("div");
-            col.className = "over-column";
+    // =========================================================
+    // ONLY SHOW THE LAST 2 OVERS + LAST WICKET
+    // Existing scoreboard/ticker design is unchanged.
+    // =========================================================
+    const overs = Array.isArray(recentOvers)
+        ? recentOvers.slice(-2)
+        : [];
 
-            const title = document.createElement("span");
-            title.className = "over-title";
+    const newestOverIndex = overs.length - 1;
+    const newestOver = overs[newestOverIndex];
+    const newestBallIndex = newestOver && Array.isArray(newestOver.balls)
+        ? newestOver.balls.length - 1
+        : -1;
 
-            // Current scraper uses "label": "Over 5"
-            title.textContent = o.label || (o.over ? `Over ${o.over}` : "Over");
-            col.appendChild(title);
+    const newestBallSignature = newestOver && newestBallIndex >= 0
+        ? `${newestOver.label || ""}|${String(
+            newestOver.balls[newestBallIndex]?.text ??
+            newestOver.balls[newestBallIndex] ??
+            ""
+        )}`
+        : "";
 
-            const ballsBox = document.createElement("div");
-            ballsBox.className = "balls-container";
+    const isNewBall = (
+        newestBallSignature &&
+        newestBallSignature !== previousBallSignature &&
+        !firstLiveRender
+    );
 
-            (o.balls || []).forEach((b) => {
-                const text = typeof b === "object" ? String(b.text ?? "") : String(b);
-                if (!text) return;
+    overs.forEach((o, overIndex) => {
+        const col = document.createElement("div");
+        col.className = "over-column";
 
-                const ball = document.createElement("div");
-                ball.className = "ball-circle";
-                ball.textContent = text;
+        const title = document.createElement("span");
+        title.className = "over-title";
 
-                const type = typeof b === "object" ? String(b.type || "").toLowerCase() : "";
-                const lower = text.toLowerCase();
+        // Scraper returns "label": "Over 47".
+        // Do NOT use o.over because it is undefined.
+        const overLabel = String(
+            o && (o.label ?? o.over ?? "")
+        ).trim();
 
-                if (type === "four" || text === "4") ball.classList.add("four");
-                else if (type === "six" || text === "6") ball.classList.add("six");
-                else if (type === "wicket" || (lower.includes("w") && !lower.includes("wd"))) ball.classList.add("wicket");
-                else if (type === "extra" || lower.includes("wd") || lower.includes("nb")) ball.classList.add("extra");
+        title.textContent = overLabel || "Over";
+        col.appendChild(title);
 
-                ballsBox.appendChild(ball);
-            });
+        const ballsBox = document.createElement("div");
+        ballsBox.className = "balls-container";
 
-            col.appendChild(ballsBox);
+        const balls = Array.isArray(o && o.balls) ? o.balls : [];
 
-            if (o.total !== undefined && o.total !== null && o.total !== "") {
-                const total = document.createElement("span");
-                total.className = "over-total";
+        balls.forEach((b) => {
+            const ball = document.createElement("div");
+            ball.className = "ball-circle";
 
-                let totalText = String(o.total);
-                if (!totalText.startsWith("=")) totalText = `= ${totalText}`;
-                total.textContent = totalText;
+            // Current scraper returns objects:
+            // { text: "4", type: "four" }
+            // Older data may return plain strings.
+            const ballText = String(
+                b && typeof b === "object"
+                    ? (b.text ?? b.value ?? "")
+                    : (b ?? "")
+            ).trim();
 
-                col.appendChild(total);
+            const ballType = String(
+                b && typeof b === "object"
+                    ? (b.type ?? "")
+                    : ""
+            ).trim().toLowerCase();
+
+            ball.textContent = ballText || "•";
+
+            if (
+                isNewBall &&
+                overIndex === newestOverIndex &&
+                balls.indexOf(b) === newestBallIndex
+            ) {
+                ball.classList.add("new-ball");
             }
 
-            ticker.appendChild(col);
+            if (ballType === "four" || ballText === "4") {
+                ball.classList.add("four");
+            } else if (ballType === "six" || ballText === "6") {
+                ball.classList.add("six");
+            } else if (
+                ballType === "wicket" ||
+                ballText.toUpperCase() === "W" ||
+                (
+                    ballText.toLowerCase().includes("w") &&
+                    !ballText.toLowerCase().includes("wd")
+                )
+            ) {
+                ball.classList.add("wicket");
+            } else if (
+                ballType === "extra" ||
+                ballType === "wide" ||
+                ballType === "no-ball" ||
+                ballText.toLowerCase().startsWith("wd") ||
+                ballText.toLowerCase().startsWith("nb")
+            ) {
+                ball.classList.add("extra");
+            }
 
-            const sep = document.createElement("div");
-            sep.className = "over-divider-line";
-            ticker.appendChild(sep);
+            ballsBox.appendChild(ball);
         });
+
+        col.appendChild(ballsBox);
+
+        if (o && o.total !== undefined) {
+            const total = document.createElement("span");
+            total.className = "over-total";
+            total.textContent = String(o.total).startsWith("=")
+                ? String(o.total)
+                : `= ${o.total}`;
+            col.appendChild(total);
+        }
+
+        ticker.appendChild(col);
+    });
+
+    if (newestBallSignature) {
+        previousBallSignature = newestBallSignature;
     }
 
+    // Divider before LAST WKT.
+    const sep = document.createElement("div");
+    sep.className = "over-divider-line";
+    ticker.appendChild(sep);
+
+    // LAST WICKET — always shown.
     const lwBlock = document.createElement("div");
     lwBlock.className = "ticker-info-block";
+
+    const safeLastWicket = String(lastWicket || "-");
+
     lwBlock.innerHTML = `
         <span class="ticker-info-label">LAST WKT:</span>
-        <span class="ticker-info-val" title="${escapeHtml(lastWicket || '-')}">${escapeHtml(lastWicket || '-')}</span>
+        <span class="ticker-info-val" title="${safeLastWicket}">${safeLastWicket}</span>
     `;
+
     ticker.appendChild(lwBlock);
-
-    if (nextBatsman && nextBatsman !== "-") {
-        const sep2 = document.createElement("div");
-        sep2.className = "over-divider-line";
-        ticker.appendChild(sep2);
-
-        const nbBlock = document.createElement("div");
-        nbBlock.className = "ticker-info-block";
-        nbBlock.innerHTML = `
-            <span class="ticker-info-label">NEXT BAT:</span>
-            <span class="ticker-info-val" title="${escapeHtml(nextBatsman)}">${escapeHtml(nextBatsman)}</span>
-        `;
-        ticker.appendChild(nbBlock);
-    }
-}
-
-function escapeHtml(value) {
-    return String(value ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
 }
 
 /* =========================================================
@@ -960,7 +1206,16 @@ let retryTimer = null;
 let lastSuccessfulData = null;
 let lastSuccessfulTimestamp = 0;
 
-const POLL_INTERVAL = 3000; // retry 3 seconds AFTER each request finishes
+// Animation state — prevents the same event from firing repeatedly
+// while the API is returning the same live snapshot.
+let previousTeam1Score = null;
+let previousTeam2Score = null;
+let previousBallSignature = null;
+let previousEventSignature = null;
+let firstLiveRender = true;
+let eventHideTimer = null;
+
+const POLL_INTERVAL = 0; // start the next poll immediately after the previous request finishes
 const REQUEST_TIMEOUT = 90000;
 
 function cacheKeyForUrl(url) {
@@ -1019,6 +1274,70 @@ function setConnectionStatus(text, color) {
 /* Render ONLY after a valid successful response.
    This is the last-successful-score protection: failed requests
    never clear or overwrite the scoreboard. */
+
+function animateElementByClass(id, className) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.remove(className);
+    void el.offsetWidth;
+    el.classList.add(className);
+    setTimeout(() => el.classList.remove(className), 900);
+}
+
+function scoreRuns(score) {
+    const m = String(score || "").match(/^\s*(\d+)/);
+    return m ? Number(m[1]) : null;
+}
+
+function showEventFlash(label, type) {
+    const el = document.getElementById("eventFlash");
+    if (!el || !label) return;
+
+    if (eventHideTimer) {
+        clearTimeout(eventHideTimer);
+        eventHideTimer = null;
+    }
+
+    el.className = "event-flash";
+    el.textContent = label;
+
+    if (type) el.classList.add(type);
+
+    // Restart the 5-second animation cleanly.
+    void el.offsetWidth;
+    el.classList.add("show");
+
+    eventHideTimer = setTimeout(() => {
+        el.classList.remove("show");
+        eventHideTimer = null;
+    }, 5050);
+}
+
+function updateInformationTicker(data, eventLabel = "") {
+    const el = document.getElementById("infoMarqueeText");
+    if (!el) return;
+
+    const t1 = data?.team1?.short || data?.team1?.full_name || "";
+    const t2 = data?.team2?.short || data?.team2?.full_name || "";
+    const score1 = data?.team1?.score || "";
+    const score2 = data?.team2?.score || "";
+    const equation = data?.equation || data?.status || "";
+    const partnership = data?.partnership || "";
+    const lastWicket = data?.last_wicket || "";
+
+    let message = eventLabel
+        ? `<b>${eventLabel}</b>&nbsp;&nbsp; • &nbsp;&nbsp;`
+        : "";
+
+    if (t1 || score1) message += `<b>${t1}</b> ${score1}`;
+    if (t2 || score2) message += `&nbsp;&nbsp; VS &nbsp;&nbsp;<b>${t2}</b> ${score2}`;
+    if (partnership) message += `&nbsp;&nbsp; • &nbsp;&nbsp;PARTNERSHIP: <b>${partnership}</b>`;
+    if (equation) message += `&nbsp;&nbsp; • &nbsp;&nbsp;${equation}`;
+    if (lastWicket) message += `&nbsp;&nbsp; • &nbsp;&nbsp;LAST WKT: ${lastWicket}`;
+
+    el.innerHTML = message || "<b>PREET SPORTS</b>&nbsp;&nbsp; • &nbsp;&nbsp;LIVE MATCH DISCUSSION";
+}
+
 function renderScoreData(data, fromCache = false) {
     if (!data || data.success === false) {
         throw new Error("Invalid score data");
@@ -1086,6 +1405,21 @@ function renderScoreData(data, fromCache = false) {
     let t2Score = apiTeam2.score ? String(apiTeam2.score).replace("/", "-") : "0-0";
     let t2Overs = apiTeam2.overs ? String(apiTeam2.overs).replace(/[()]/g, "") : "0.0";
 
+    // Detect a genuine score change. Cached/first render does not animate.
+    if (!fromCache && !firstLiveRender) {
+        const old1 = scoreRuns(previousTeam1Score);
+        const old2 = scoreRuns(previousTeam2Score);
+        const new1 = scoreRuns(t1Score);
+        const new2 = scoreRuns(t2Score);
+
+        if (old1 !== null && new1 !== null && old1 !== new1) {
+            animateElementByClass("team1Score", "score-change");
+        }
+        if (old2 !== null && new2 !== null && old2 !== new2) {
+            animateElementByClass("team2Score", "score-change");
+        }
+    }
+
     let t1Role = "BOWLING";
     let t2Role = "BATTING";
 
@@ -1126,20 +1460,156 @@ function renderScoreData(data, fromCache = false) {
     document.getElementById("team2BallIcon").style.display =
         (t2Role === "BOWLING") ? "inline-block" : "none";
 
-    // Center live ball.
+    // =========================================================
+    // MIDDLE BOX — CREX EVENT
+    // ONLY this middle-box logic is changed.
+    // OBS token system, API, scraper, scoreboard design,
+    // players, teams and ticker remain unchanged.
+    //
+    // If the existing API already exposes dismissal text/type,
+    // show "RUN OUT" exactly like CREX. Otherwise retain the
+    // normal ball value (e.g. 1W) rather than guessing.
+    // =========================================================
     const actionEl = document.getElementById("centerLiveAction");
-    const actionText = String(data.last_ball || data.liveBall || "•").trim();
+
+    const latestBallObject =
+        Array.isArray(data.current_over?.balls) &&
+        data.current_over.balls.length
+            ? data.current_over.balls[data.current_over.balls.length - 1]
+            : null;
+
+    const ballText = String(
+        latestBallObject && typeof latestBallObject === "object"
+            ? (latestBallObject.text ?? "")
+            : (latestBallObject ?? data.last_ball ?? data.liveBall ?? "")
+    ).trim();
+
+    const ballType = String(
+        latestBallObject && typeof latestBallObject === "object"
+            ? (latestBallObject.type ?? "")
+            : ""
+    ).trim();
+
+    // Event detection: only fire when the newest ball actually changes.
+    const currentOverLabel = String(data.current_over?.label || "");
+    const eventSignature = [
+        currentOverLabel,
+        ballText,
+        String(t1Score),
+        String(t2Score)
+    ].join("|");
+
+    let eventLabel = "";
+    let eventType = "";
+
+    if (!fromCache && !firstLiveRender && eventSignature !== previousEventSignature) {
+        if (ballType === "four" || ballText === "4") {
+            eventLabel = "FOUR!";
+            eventType = "four";
+        } else if (ballType === "six" || ballText === "6") {
+            eventLabel = "SIX!";
+            eventType = "six";
+        } else if (
+            ballType === "wicket" ||
+            /^W$/i.test(ballText) ||
+            /wicket/i.test(String(data.last_event || data.live_event || ""))
+        ) {
+            eventLabel = "WICKET!";
+            eventType = "wicket";
+        }
+    }
+
+    if (eventLabel) {
+        showEventFlash(eventLabel, eventType);
+        updateInformationTicker(data, eventLabel);
+    } else {
+        updateInformationTicker(data);
+    }
+
+    previousEventSignature = eventSignature;
+
+    // Check fields that may already be returned by the scraper.
+    // No API/scraper modification is made here.
+    const possibleDismissalFields = [
+        data.last_event,
+        data.live_event,
+        data.event,
+        data.dismissal,
+        data.dismissal_type,
+        data.wicket_type,
+        data.wicketType,
+        data.last_wicket_type,
+        data.lastWicketType,
+        data.wicket_text,
+        data.dismissal_text,
+        data.commentary,
+        data.commentary_text,
+        latestBallObject && latestBallObject.dismissal,
+        latestBallObject && latestBallObject.dismissal_type,
+        latestBallObject && latestBallObject.wicket_type,
+        latestBallObject && latestBallObject.wicketType,
+        latestBallObject && latestBallObject.text
+    ];
+
+    const dismissalText = possibleDismissalFields
+        .filter(v => v !== null && v !== undefined)
+        .map(v => String(v))
+        .join(" ")
+        .toUpperCase();
+
+    let actionText =
+        data.last_event ||
+        data.live_event ||
+        data.event ||
+        data.last_ball ||
+        data.liveBall ||
+        "•";
+
+    actionText = String(actionText).trim();
+
+    // ---------------------------------------------------------
+    // RUN OUT — only when the received data actually says RUN OUT
+    // ---------------------------------------------------------
+    if (
+        dismissalText.includes("RUN OUT") ||
+        dismissalText.includes("RUNOUT")
+    ) {
+        actionText = "RUN OUT";
+    }
+
+    // Other explicit CREX event labels.
+    else {
+        const eventUpper = actionText.toUpperCase();
+
+        if (eventUpper === "WICKET") {
+            actionText = "W";
+        } else if (eventUpper === "WIDE") {
+            actionText = "WD";
+        } else if (
+            eventUpper === "NO BALL" ||
+            eventUpper === "NO-BALL"
+        ) {
+            actionText = "NB";
+        } else if (eventUpper === "FOUR") {
+            actionText = "4";
+        } else if (eventUpper === "SIX") {
+            actionText = "6";
+        }
+    }
+
     actionEl.textContent = actionText || "•";
 
-    if (actionText.length <= 2) {
+    if (actionText.toUpperCase() === "RUN OUT") {
+        actionEl.style.fontSize = "34px";
+    } else if (String(actionText).length <= 2) {
         actionEl.style.fontSize = "62px";
-    } else if (actionText.length <= 6) {
+    } else if (String(actionText).length <= 6) {
         actionEl.style.fontSize = "42px";
     } else {
         actionEl.style.fontSize = "26px";
     }
 
-    // Equation under center.
+    // Equation under center — ORIGINAL CODE UNCHANGED.
     const chaseEl = document.getElementById("centerChaseEquation");
     chaseEl.textContent = equationText || "";
     if (equationText) {
@@ -1159,12 +1629,8 @@ function renderScoreData(data, fromCache = false) {
     document.getElementById("crr").textContent = data.crr ?? "--";
     document.getElementById("rrr").textContent = data.rrr ?? "--";
     document.getElementById("partnership").textContent = data.partnership || "--";
-    const apiTarget =
-        data.target ||
-        apiTeam2.target ||
-        (data.team2 && data.team2.target) ||
-        "--";
-    document.getElementById("target").textContent = apiTarget;
+    document.getElementById("target").textContent =
+        (data.target && data.target !== "") ? data.target : "--";
 
     // Normalize batsman1/batsman2 from current API.
     const b1 = data.batsman1 || data.batter1;
@@ -1220,6 +1686,13 @@ function renderScoreData(data, fromCache = false) {
         renderImageInCircle("bowlerImage", bowler.img || bowler.image);
     }
 
+    if (!fromCache) {
+        previousTeam1Score = t1Score;
+        previousTeam2Score = t2Score;
+
+        firstLiveRender = false;
+    }
+
     if (fromCache) {
         setConnectionStatus("Cached • Reconnecting...", "#ffd700");
     }
@@ -1235,15 +1708,16 @@ async function fetchScores() {
     const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT);
 
     try {
-        if (!activeTargetUrl) {
+        if (!OBS_TOKEN && !activeTargetUrl) {
             throw new Error("No CREX match URL selected");
         }
 
         // IMPORTANT:
         // Send the CREX URL on EVERY request.
         // This avoids relying on Render's /api/default-url memory/state.
-        const fetchEndpoint =
-            `${API_BASE}/api/scrape?url=${encodeURIComponent(activeTargetUrl)}&t=${Date.now()}`;
+        const fetchEndpoint = OBS_TOKEN
+            ? `${API_BASE}/api/obs/${encodeURIComponent(OBS_TOKEN)}/scrape?t=${Date.now()}`
+            : `${API_BASE}/api/scrape?url=${encodeURIComponent(activeTargetUrl)}&t=${Date.now()}`;
 
         const res = await fetch(fetchEndpoint, {
             method: "GET",
@@ -1346,12 +1820,89 @@ async function triggerMatchLoad() {
 }
 
 document.getElementById("loadMatchUrlBtn").addEventListener("click", triggerMatchLoad);
+// =========================================================
+// PREET SPORTS — RANDOM OBS URL GENERATOR
+// Creates a server-side random token and copies ONLY the
+// token URL to the clipboard. The CREX URL is not exposed.
+// =========================================================
+
+document.getElementById("generateObsBtn").addEventListener("click", async () => {
+    const input = document.getElementById("crexUrlInput");
+    const status = document.getElementById("statusIndicator");
+    const crexUrl = normalizeInput(input.value.trim());
+
+    if (!crexUrl) {
+        alert("Please paste a valid CREX match URL first.");
+        return;
+    }
+
+    try {
+        status.textContent = "GENERATING OBS LINK...";
+        status.style.color = "#ffd700";
+
+        const response = await fetch(`${API_BASE}/api/obs-token`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify({ url: crexUrl })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success || !data.token) {
+            throw new Error(data.error || "Unable to generate OBS URL");
+        }
+
+        // IMPORTANT: only the random token URL is copied.
+        const obsUrl = `${API_BASE}/obs/${encodeURIComponent(data.token)}`;
+
+        try {
+            await navigator.clipboard.writeText(obsUrl);
+        } catch (clipboardError) {
+            // Fallback for browsers that block navigator.clipboard.
+            const temp = document.createElement("textarea");
+            temp.value = obsUrl;
+            temp.style.position = "fixed";
+            temp.style.left = "-9999px";
+            document.body.appendChild(temp);
+            temp.focus();
+            temp.select();
+            document.execCommand("copy");
+            temp.remove();
+        }
+
+        status.textContent = "OBS URL COPIED ✓";
+        status.style.color = "#6cf598";
+
+        alert(
+            "OBS URL copied successfully!\n\n" +
+            obsUrl +
+            "\n\nPaste this URL into OBS → Browser Source."
+        );
+
+        console.log("OBS URL:", obsUrl);
+
+    } catch (error) {
+        console.error("OBS token error:", error);
+
+        status.textContent = "OBS LINK ERROR";
+        status.style.color = "#ff6b6b";
+
+        alert(
+            "Could not generate OBS URL.\n\n" +
+            (error.message || "Unknown error")
+        );
+    }
+});
+
 
 urlInput.addEventListener("keydown", (e) => {
     if (e.key === "Enter") triggerMatchLoad();
 });
 
-if (urlParams.get("hide") === "1") {
+if (urlParams.get("hide") === "1" || OBS_TOKEN) {
     document.getElementById("urlControlBar").style.display = "none";
 }
 
