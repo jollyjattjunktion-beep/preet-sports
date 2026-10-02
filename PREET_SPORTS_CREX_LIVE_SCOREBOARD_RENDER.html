@@ -432,6 +432,83 @@ html, body {
     text-overflow: ellipsis;
 }
 
+
+/* =========================================================
+   LIVE EVENT FLASH — COMPACT EMPTY-AREA ANIMATION
+   Added only; existing scoreboard design is unchanged.
+   ========================================================= */
+.event-flash {
+    position: absolute;
+    left: 50%;
+    top: 365px;
+    width: 330px;
+    height: 72px;
+    transform: translateX(-50%);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 25;
+    pointer-events: none;
+    border: 2px solid rgba(255,255,255,0.9);
+    border-radius: 18px;
+    background: rgba(8, 2, 8, 0.94);
+    box-shadow: 0 0 24px rgba(255,255,255,0.18), inset 0 0 18px rgba(255,255,255,0.08);
+}
+
+.event-flash.show {
+    display: flex;
+    animation: eventFlashPop 5s ease-in-out forwards;
+}
+
+.event-flash-text {
+    position: relative;
+    font-size: 38px;
+    line-height: 1;
+    font-weight: 1000;
+    letter-spacing: 2px;
+    color: #fff;
+    text-shadow: 0 0 14px currentColor, 2px 2px 4px #000;
+}
+
+.event-flash-text::before {
+    content: "";
+    display: inline-block;
+    width: 13px;
+    height: 13px;
+    margin-right: 10px;
+    vertical-align: 5px;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 12px currentColor;
+}
+
+.event-flash.four { border-color: #70baff; }
+.event-flash.four .event-flash-text { color: #70baff; }
+
+.event-flash.six { border-color: #6cf598; }
+.event-flash.six .event-flash-text { color: #6cf598; }
+
+.event-flash.wicket { border-color: #ff5b73; }
+.event-flash.wicket .event-flash-text { color: #ff5b73; }
+
+.event-flash.wide,
+.event-flash.no-ball,
+.event-flash.leg-bye,
+.event-flash.bye { border-color: #fed766; }
+
+.event-flash.wide .event-flash-text,
+.event-flash.no-ball .event-flash-text,
+.event-flash.leg-bye .event-flash-text,
+.event-flash.bye .event-flash-text { color: #fed766; }
+
+@keyframes eventFlashPop {
+    0%   { opacity: 0; transform: translateX(-50%) scale(0.72); }
+    10%  { opacity: 1; transform: translateX(-50%) scale(1.04); }
+    18%  { transform: translateX(-50%) scale(1); }
+    78%  { opacity: 1; transform: translateX(-50%) scale(1); }
+    100% { opacity: 0; transform: translateX(-50%) scale(0.94); }
+}
+
 /* BOTTOM PLAYERS SECTION (3 COLUMNS) */
 .player-section {
     position: absolute;
@@ -576,171 +653,6 @@ html, body {
 .player-bottom-col .stat-val {
     color: #ffffff;
 }
-
-/* =========================================================
-   PREET SPORTS — LIVE BROADCAST ANIMATION LAYER
-   Data-driven only: animations trigger when live data changes.
-========================================================= */
-
-@keyframes livePulse {
-    0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 45, 45, 0.45); }
-    50% { opacity: 0.72; transform: scale(1.035); box-shadow: 0 0 0 8px rgba(255, 45, 45, 0); }
-}
-
-@keyframes scoreChange {
-    0% { transform: scale(1); filter: brightness(1); }
-    35% { transform: scale(1.22); filter: brightness(1.8); }
-    100% { transform: scale(1); filter: brightness(1); }
-}
-
-@keyframes ballEnter {
-    0% { opacity: 0; transform: scale(0.45) translateY(-8px); }
-    65% { opacity: 1; transform: scale(1.18) translateY(0); }
-    100% { opacity: 1; transform: scale(1); }
-}
-
-
-@keyframes eventPop {
-    0% { opacity: 0; transform: translate(-50%, 8px) scale(0.72); }
-    8% { opacity: 1; transform: translate(-50%, 0) scale(1.08); }
-    16% { opacity: 1; transform: translate(-50%, 0) scale(1); }
-    84% { opacity: 1; transform: translate(-50%, 0) scale(1); }
-    100% { opacity: 0; transform: translate(-50%, -5px) scale(0.96); }
-}
-
-@keyframes marqueeMove {
-    from { transform: translateX(100%); }
-    to { transform: translateX(-100%); }
-}
-
-.live-badge {
-    position: absolute;
-    top: 7px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 30;
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    padding: 4px 12px;
-    border: 1.5px solid #ffd700;
-    border-radius: 18px;
-    background: rgba(22, 0, 3, 0.94);
-    color: #ffffff;
-    font-size: 12px;
-    font-weight: 900;
-    letter-spacing: 1.2px;
-    box-shadow: 0 3px 12px rgba(0,0,0,0.7);
-}
-
-.live-badge-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #ff3030;
-    animation: livePulse 1.25s ease-in-out infinite;
-}
-
-.score-change {
-    animation: scoreChange 0.75s cubic-bezier(.2,.8,.2,1);
-}
-
-.ball-circle.new-ball {
-    animation: ballEnter 0.7s cubic-bezier(.2,.8,.2,1);
-}
-
-
-.event-flash {
-    position: absolute;
-    left: 50%;
-    top: 365px;
-    transform: translateX(-50%);
-    z-index: 80;
-    display: none;
-    min-width: 250px;
-    padding: 10px 28px;
-    border: 3px solid #ffd700;
-    border-radius: 16px;
-    background: rgba(20, 0, 3, 0.94);
-    color: #ffffff;
-    font-size: 34px;
-    font-weight: 1000;
-    letter-spacing: 2px;
-    text-align: center;
-    text-shadow: 0 3px 8px #000;
-    box-shadow: 0 0 24px rgba(255,215,0,0.45);
-    pointer-events: none;
-}
-
-.event-flash.show {
-    display: block;
-    animation: eventPop 5s ease-in-out forwards;
-}
-
-.event-flash.four {
-    border-color: #70baff;
-    box-shadow: 0 0 30px rgba(60,170,255,0.7);
-    color: #dff2ff;
-}
-
-.event-flash.six {
-    border-color: #6cf598;
-    box-shadow: 0 0 30px rgba(40,220,120,0.7);
-    color: #d9ffe8;
-}
-
-.event-flash.wicket {
-    border-color: #ff6b7d;
-    box-shadow: 0 0 30px rgba(255,40,70,0.75);
-    color: #ffdbe0;
-}
-
-.info-marquee {
-    position: absolute;
-    left: 18px;
-    right: 18px;
-    top: 455px;
-    height: 32px;
-    border: 1.5px solid rgba(213,181,0,0.9);
-    border-radius: 14px;
-    background: rgba(12,0,2,0.78);
-    overflow: hidden;
-    z-index: 25;
-    box-shadow: inset 0 0 12px rgba(213,181,0,0.12);
-}
-
-.info-marquee-track {
-    height: 100%;
-    display: flex;
-    align-items: center;
-    width: max-content;
-    white-space: nowrap;
-    animation: marqueeMove 22s linear infinite;
-}
-
-.info-marquee-text {
-    padding: 0 55px;
-    color: #ffffff;
-    font-size: 15px;
-    font-weight: 900;
-    letter-spacing: 0.45px;
-    text-shadow: 1px 1px 3px #000;
-}
-
-.info-marquee-text b {
-    color: #ffd700;
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .live-badge-dot,
-    .score-change,
-    .ball-circle.new-ball,
-    .event-flash.show,
-    .info-marquee-track {
-        animation: none !important;
-    }
-}
-
 </style>
 </head>
 
@@ -759,23 +671,6 @@ html, body {
 
     <!-- 1280x720 BOARD CANVAS -->
     <div class="scoreboard" id="scoreboardCanvas">
-        <div class="live-badge" aria-label="Live match">
-            <span class="live-badge-dot"></span>
-            <span>LIVE</span>
-        </div>
-
-        <div id="eventFlash" class="event-flash" aria-live="polite"></div>
-
-        <div id="infoMarquee" class="info-marquee">
-            <div id="infoMarqueeTrack" class="info-marquee-track">
-                <span id="infoMarqueeText" class="info-marquee-text">
-                    <b>PREET SPORTS</b>&nbsp;&nbsp; • &nbsp;&nbsp;LIVE MATCH DISCUSSION&nbsp;&nbsp; • &nbsp;&nbsp;WAITING FOR LIVE UPDATE...
-                </span>
-                <span class="info-marquee-text">
-                    <b>PREET SPORTS</b>&nbsp;&nbsp; • &nbsp;&nbsp;LIVE MATCH DISCUSSION
-                </span>
-            </div>
-        </div>
 
         <!-- TOP SECTION -->
         <div class="top-section">
@@ -848,6 +743,11 @@ html, body {
                     <div class="ball-circle">•</div>
                 </div>
             </div>
+        </div>
+
+        <!-- COMPACT LIVE EVENT FLASH — uses the existing empty middle area -->
+        <div id="eventFlash" class="event-flash" aria-hidden="true">
+            <div id="eventFlashText" class="event-flash-text"></div>
         </div>
 
         <!-- BOTTOM ROW DIVIDED INTO THREE INDIVIDUAL COLUMNS -->
@@ -1063,27 +963,7 @@ function renderOversTicker(recentOvers, lastWicket, nextBatsman) {
         ? recentOvers.slice(-2)
         : [];
 
-    const newestOverIndex = overs.length - 1;
-    const newestOver = overs[newestOverIndex];
-    const newestBallIndex = newestOver && Array.isArray(newestOver.balls)
-        ? newestOver.balls.length - 1
-        : -1;
-
-    const newestBallSignature = newestOver && newestBallIndex >= 0
-        ? `${newestOver.label || ""}|${String(
-            newestOver.balls[newestBallIndex]?.text ??
-            newestOver.balls[newestBallIndex] ??
-            ""
-        )}`
-        : "";
-
-    const isNewBall = (
-        newestBallSignature &&
-        newestBallSignature !== previousBallSignature &&
-        !firstLiveRender
-    );
-
-    overs.forEach((o, overIndex) => {
+    overs.forEach((o) => {
         const col = document.createElement("div");
         col.className = "over-column";
 
@@ -1125,14 +1005,6 @@ function renderOversTicker(recentOvers, lastWicket, nextBatsman) {
 
             ball.textContent = ballText || "•";
 
-            if (
-                isNewBall &&
-                overIndex === newestOverIndex &&
-                balls.indexOf(b) === newestBallIndex
-            ) {
-                ball.classList.add("new-ball");
-            }
-
             if (ballType === "four" || ballText === "4") {
                 ball.classList.add("four");
             } else if (ballType === "six" || ballText === "6") {
@@ -1173,10 +1045,6 @@ function renderOversTicker(recentOvers, lastWicket, nextBatsman) {
         ticker.appendChild(col);
     });
 
-    if (newestBallSignature) {
-        previousBallSignature = newestBallSignature;
-    }
-
     // Divider before LAST WKT.
     const sep = document.createElement("div");
     sep.className = "over-divider-line";
@@ -1205,15 +1073,6 @@ let fetchInProgress = false;
 let retryTimer = null;
 let lastSuccessfulData = null;
 let lastSuccessfulTimestamp = 0;
-
-// Animation state — prevents the same event from firing repeatedly
-// while the API is returning the same live snapshot.
-let previousTeam1Score = null;
-let previousTeam2Score = null;
-let previousBallSignature = null;
-let previousEventSignature = null;
-let firstLiveRender = true;
-let eventHideTimer = null;
 
 const POLL_INTERVAL = 0; // start the next poll immediately after the previous request finishes
 const REQUEST_TIMEOUT = 90000;
@@ -1275,67 +1134,107 @@ function setConnectionStatus(text, color) {
    This is the last-successful-score protection: failed requests
    never clear or overwrite the scoreboard. */
 
-function animateElementByClass(id, className) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.classList.remove(className);
-    void el.offsetWidth;
-    el.classList.add(className);
-    setTimeout(() => el.classList.remove(className), 900);
-}
+/* =========================================================
+   LIVE EVENT FLASH
+   Reads the latest ball already supplied by the existing API.
+   No API/scraper changes.
+   ========================================================= */
+let lastEventFlashSignature = "";
+let eventFlashTimer = null;
+let eventFlashReady = false;
 
-function scoreRuns(score) {
-    const m = String(score || "").match(/^\s*(\d+)/);
-    return m ? Number(m[1]) : null;
-}
+function showLiveEventFlash(label, type) {
+    const box = document.getElementById("eventFlash");
+    const text = document.getElementById("eventFlashText");
+    if (!box || !text) return;
 
-function showEventFlash(label, type) {
-    const el = document.getElementById("eventFlash");
-    if (!el || !label) return;
+    clearTimeout(eventFlashTimer);
 
-    if (eventHideTimer) {
-        clearTimeout(eventHideTimer);
-        eventHideTimer = null;
-    }
+    box.className = "event-flash";
+    text.textContent = label;
 
-    el.className = "event-flash";
-    el.textContent = label;
+    if (type) box.classList.add(type);
 
-    if (type) el.classList.add(type);
+    // Restart the same 5-second animation cleanly for every new event.
+    void box.offsetWidth;
+    box.classList.add("show");
 
-    // Restart the 5-second animation cleanly.
-    void el.offsetWidth;
-    el.classList.add("show");
-
-    eventHideTimer = setTimeout(() => {
-        el.classList.remove("show");
-        eventHideTimer = null;
+    eventFlashTimer = setTimeout(() => {
+        box.classList.remove("show");
     }, 5050);
 }
 
-function updateInformationTicker(data, eventLabel = "") {
-    const el = document.getElementById("infoMarqueeText");
-    if (!el) return;
+function detectLiveEventFlash(data) {
+    const over = data?.current_over;
+    const balls = Array.isArray(over?.balls) ? over.balls : [];
+    const latest = balls.length ? balls[balls.length - 1] : null;
 
-    const t1 = data?.team1?.short || data?.team1?.full_name || "";
-    const t2 = data?.team2?.short || data?.team2?.full_name || "";
-    const score1 = data?.team1?.score || "";
-    const score2 = data?.team2?.score || "";
-    const equation = data?.equation || data?.status || "";
-    const partnership = data?.partnership || "";
-    const lastWicket = data?.last_wicket || "";
+    const rawText = String(
+        latest && typeof latest === "object"
+            ? (latest.text ?? latest.value ?? "")
+            : (latest ?? data?.last_ball ?? data?.liveBall ?? "")
+    ).trim();
 
-    let message = eventLabel
-        ? `<b>${eventLabel}</b>&nbsp;&nbsp; • &nbsp;&nbsp;`
-        : "";
+    const rawType = String(
+        latest && typeof latest === "object"
+            ? (latest.type ?? "")
+            : ""
+    ).trim().toLowerCase();
 
-    if (t1 || score1) message += `<b>${t1}</b> ${score1}`;
-    if (t2 || score2) message += `&nbsp;&nbsp; VS &nbsp;&nbsp;<b>${t2}</b> ${score2}`;
-    if (partnership) message += `&nbsp;&nbsp; • &nbsp;&nbsp;PARTNERSHIP: <b>${partnership}</b>`;
-    if (equation) message += `&nbsp;&nbsp; • &nbsp;&nbsp;${equation}`;
-    if (lastWicket) message += `&nbsp;&nbsp; • &nbsp;&nbsp;LAST WKT: ${lastWicket}`;
+    if (!rawText && !rawType) return;
 
-    el.innerHTML = message || "<b>PREET SPORTS</b>&nbsp;&nbsp; • &nbsp;&nbsp;LIVE MATCH DISCUSSION";
+    const t = rawText.toLowerCase().replace(/\s+/g, "").replace(/-/g, "");
+
+    let label = "";
+    let type = "";
+
+    if (rawType === "four" || t === "4") {
+        label = "FOUR";
+        type = "four";
+    } else if (rawType === "six" || t === "6") {
+        label = "SIX";
+        type = "six";
+    } else if (
+        rawType === "wicket" ||
+        t === "w" ||
+        /wicket/.test(t)
+    ) {
+        label = "WICKET";
+        type = "wicket";
+    } else if (t === "wd" || t.startsWith("wd")) {
+        label = "WIDE BALL";
+        type = "wide";
+    } else if (t === "nb" || t.startsWith("nb")) {
+        label = "NO BALL";
+        type = "no-ball";
+    } else if (t === "lb" || t.startsWith("lb")) {
+        label = "LEG BYE";
+        type = "leg-bye";
+    } else if (t === "b" || t.startsWith("b")) {
+        label = "BYE";
+        type = "bye";
+    }
+
+    if (!label) return;
+
+    const signature = [
+        String(over?.label ?? over?.over ?? data?.current_over_number ?? ""),
+        rawText,
+        String(data?.team1?.score ?? ""),
+        String(data?.team2?.score ?? "")
+    ].join("|");
+
+    // Do not animate the first loaded ball. Only animate when a new event arrives.
+    if (!eventFlashReady) {
+        lastEventFlashSignature = signature;
+        eventFlashReady = true;
+        return;
+    }
+
+    if (signature === lastEventFlashSignature) return;
+
+    lastEventFlashSignature = signature;
+    showLiveEventFlash(label, type);
 }
 
 function renderScoreData(data, fromCache = false) {
@@ -1404,21 +1303,6 @@ function renderScoreData(data, fromCache = false) {
 
     let t2Score = apiTeam2.score ? String(apiTeam2.score).replace("/", "-") : "0-0";
     let t2Overs = apiTeam2.overs ? String(apiTeam2.overs).replace(/[()]/g, "") : "0.0";
-
-    // Detect a genuine score change. Cached/first render does not animate.
-    if (!fromCache && !firstLiveRender) {
-        const old1 = scoreRuns(previousTeam1Score);
-        const old2 = scoreRuns(previousTeam2Score);
-        const new1 = scoreRuns(t1Score);
-        const new2 = scoreRuns(t2Score);
-
-        if (old1 !== null && new1 !== null && old1 !== new1) {
-            animateElementByClass("team1Score", "score-change");
-        }
-        if (old2 !== null && new2 !== null && old2 !== new2) {
-            animateElementByClass("team2Score", "score-change");
-        }
-    }
 
     let t1Role = "BOWLING";
     let t2Role = "BATTING";
@@ -1490,44 +1374,6 @@ function renderScoreData(data, fromCache = false) {
             : ""
     ).trim();
 
-    // Event detection: only fire when the newest ball actually changes.
-    const currentOverLabel = String(data.current_over?.label || "");
-    const eventSignature = [
-        currentOverLabel,
-        ballText,
-        String(t1Score),
-        String(t2Score)
-    ].join("|");
-
-    let eventLabel = "";
-    let eventType = "";
-
-    if (!fromCache && !firstLiveRender && eventSignature !== previousEventSignature) {
-        if (ballType === "four" || ballText === "4") {
-            eventLabel = "FOUR!";
-            eventType = "four";
-        } else if (ballType === "six" || ballText === "6") {
-            eventLabel = "SIX!";
-            eventType = "six";
-        } else if (
-            ballType === "wicket" ||
-            /^W$/i.test(ballText) ||
-            /wicket/i.test(String(data.last_event || data.live_event || ""))
-        ) {
-            eventLabel = "WICKET!";
-            eventType = "wicket";
-        }
-    }
-
-    if (eventLabel) {
-        showEventFlash(eventLabel, eventType);
-        updateInformationTicker(data, eventLabel);
-    } else {
-        updateInformationTicker(data);
-    }
-
-    previousEventSignature = eventSignature;
-
     // Check fields that may already be returned by the scraper.
     // No API/scraper modification is made here.
     const possibleDismissalFields = [
@@ -1598,6 +1444,9 @@ function renderScoreData(data, fromCache = false) {
     }
 
     actionEl.textContent = actionText || "•";
+
+    // New-ball event animation only; existing center action remains unchanged.
+    detectLiveEventFlash(data);
 
     if (actionText.toUpperCase() === "RUN OUT") {
         actionEl.style.fontSize = "34px";
@@ -1684,13 +1533,6 @@ function renderScoreData(data, fromCache = false) {
             bowler.econ || "0.00";
 
         renderImageInCircle("bowlerImage", bowler.img || bowler.image);
-    }
-
-    if (!fromCache) {
-        previousTeam1Score = t1Score;
-        previousTeam2Score = t2Score;
-
-        firstLiveRender = false;
     }
 
     if (fromCache) {
