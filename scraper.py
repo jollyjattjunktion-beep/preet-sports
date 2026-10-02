@@ -504,6 +504,7 @@ def scrape_crex_match(url: str):
         "team1": team1,
         "team2": team2,
         "status": status,
+        "center_digit": center_digit,
         "equation": equation,
         "crr": crr,
         "rrr": rrr,
