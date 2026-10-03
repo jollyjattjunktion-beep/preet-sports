@@ -756,13 +756,12 @@ html, body {
     display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
-    box-sizing: border-box !important;
+    box-sizing: border-box;
     border: 1.5px solid rgba(213,181,0,0.9);
     border-radius: 14px;
     background: #ffd700;
     overflow: hidden;
     z-index: 9999 !important;
-    pointer-events: none;
     box-shadow: inset 0 0 12px rgba(213,181,0,0.12);
 }
 
@@ -781,16 +780,15 @@ html, body {
 }
 
 .info-marquee-text {
-    position: relative !important;
     width: 100% !important;
     height: 100% !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    box-sizing: border-box !important;
+    box-sizing: border-box;
     margin: 0 !important;
     padding: 0 18px !important;
-    background: #ffd700 !important;
+    background: #ffd700;
     color: #000000 !important;
     font-size: 15px;
     font-weight: 900;
@@ -843,6 +841,9 @@ html, body {
             <div id="infoMarqueeTrack" class="info-marquee-track">
                 <span id="infoMarqueeText" class="info-marquee-text">
                     <b>PREET SPORTS</b>&nbsp;&nbsp; • &nbsp;&nbsp;LIVE MATCH DISCUSSION&nbsp;&nbsp; • &nbsp;&nbsp;WAITING FOR LIVE UPDATE...
+                </span>
+                <span class="info-marquee-text">
+                    <b>PREET SPORTS</b>&nbsp;&nbsp; • &nbsp;&nbsp;LIVE MATCH DISCUSSION
                 </span>
             </div>
         </div>
@@ -1700,26 +1701,14 @@ function renderScoreData(data, fromCache = false) {
         .join(" ")
         .toUpperCase();
 
-    // =========================================================
-    // CENTER BOX — EXACT CREX .font1 VALUE
-    // The scraper reads CREX result-box -> span.font1 into
-    // data.center_digit. Show that value here FIRST.
-    // The over ticker continues using current_over separately.
-    // =========================================================
-    let actionText = String(
-        data.center_digit ??
-        ""
-    ).trim();
+    let actionText =
+        data.status ||
+        data.last_event ||
+        data.live_event ||
+        data.event ||
+        "•";
 
-    // If CREX .font1 is empty, use the actual CREX status.
-    if (!actionText) {
-        actionText = String(
-            data.status ??
-            data.match_status ??
-            data.live_status ??
-            ""
-        ).trim();
-    }
+    actionText = String(actionText).trim();
 
     // ---------------------------------------------------------
     // RUN OUT — only when the received data actually says RUN OUT
@@ -1731,9 +1720,8 @@ function renderScoreData(data, fromCache = false) {
         actionText = "RUN OUT";
     }
 
-    // Only normalize explicit event words when CREX did not provide
-    // a direct center_digit value. This keeps .font1 exact.
-    else if (!String(data.center_digit ?? "").trim()) {
+    // Other explicit CREX event labels.
+    else {
         const eventUpper = actionText.toUpperCase();
 
         if (eventUpper === "WICKET") {
