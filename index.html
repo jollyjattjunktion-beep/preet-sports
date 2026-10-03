@@ -33,8 +33,7 @@ html, body {
 }
 
 /* FLOATING URL CONTROL BAR */
-.url-control-bar { display: none !important;
-    
+.url-control-bar {
     position: absolute;
     top: 8px;
     z-index: 99999;
@@ -88,7 +87,7 @@ html, body {
 }
 
 /* =========================================================
-   EXACT 1280 × 720 CANVAS
+   EXACT 1280 x 720 CANVAS
 ========================================================= */
 .scoreboard {
     position: relative;
@@ -108,9 +107,7 @@ html, body {
     flex-shrink: 0;
 }
 
-/* =========================================================
-   TOP SECTION (BROADCAST SCORE DISPLAY)
-========================================================= */
+/* TOP SECTION */
 .top-section {
     position: absolute;
     left: 0;
@@ -123,7 +120,6 @@ html, body {
     padding: 0 22px;
 }
 
-/* LEFT SIDE: 4K CIRCLE CREST + NAME PILL + BIG SCORE + OVERS PILL */
 .left-team-display {
     display: flex;
     align-items: center;
@@ -148,8 +144,6 @@ html, body {
         inset 0 0 16px rgba(0, 0, 0, 0.85),
         0 6px 20px rgba(0, 0, 0, 0.75);
     transform: translateZ(0);
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
 }
 
 .team-logo-circle img {
@@ -158,10 +152,6 @@ html, body {
     object-fit: cover;
     object-position: center;
     border-radius: 50%;
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: crisp-edges;
-    image-rendering: high-quality;
-    transform: translateZ(0);
     display: none;
 }
 
@@ -209,7 +199,6 @@ html, body {
     box-shadow: inset 0 0 6px rgba(0,0,0,0.6);
 }
 
-/* CENTER BOX: NEON CYAN ROUNDED BORDER */
 .center-panel {
     width: 250px;
     height: 110px;
@@ -235,7 +224,6 @@ html, body {
     text-shadow: 0 0 14px rgba(0, 210, 255, 0.8), 2px 2px 4px #000;
 }
 
-/* CHASE EQUATION UNDER THE MIDDLE BOX */
 .center-chase-equation {
     position: absolute;
     left: 0;
@@ -252,7 +240,6 @@ html, body {
     z-index: 12;
 }
 
-/* RIGHT SIDE: NAME PILL + BIG SCORE + OVERS PILL + CREST */
 .right-team-display {
     display: flex;
     align-items: center;
@@ -265,7 +252,6 @@ html, body {
     align-items: flex-end;
 }
 
-/* SMALL CRICKET BALL FOR TEAM BADGE */
 .badge-ball-icon {
     width: 16px;
     height: 16px;
@@ -433,7 +419,7 @@ html, body {
     text-overflow: ellipsis;
 }
 
-/* BOTTOM PLAYERS SECTION (3 COLUMNS) */
+/* BOTTOM PLAYERS SECTION */
 .player-section {
     position: absolute;
     left: 0;
@@ -578,11 +564,7 @@ html, body {
     color: #ffffff;
 }
 
-/* =========================================================
-   PREET SPORTS — LIVE BROADCAST ANIMATION LAYER
-   Data-driven only: animations trigger when live data changes.
-========================================================= */
-
+/* ANIMATIONS */
 @keyframes livePulse {
     0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 45, 45, 0.45); }
     50% { opacity: 0.72; transform: scale(1.035); box-shadow: 0 0 0 8px rgba(255, 45, 45, 0); }
@@ -600,18 +582,12 @@ html, body {
     100% { opacity: 1; transform: scale(1); }
 }
 
-
 @keyframes eventPop {
     0% { opacity: 0; transform: translate(-50%, 8px) scale(0.72); }
     8% { opacity: 1; transform: translate(-50%, 0) scale(1.08); }
     16% { opacity: 1; transform: translate(-50%, 0) scale(1); }
     84% { opacity: 1; transform: translate(-50%, 0) scale(1); }
     100% { opacity: 0; transform: translate(-50%, -5px) scale(0.96); }
-}
-
-@keyframes marqueeMove {
-    from { transform: translateX(100%); }
-    to { transform: translateX(-100%); }
 }
 
 .live-badge {
@@ -649,7 +625,6 @@ html, body {
 .ball-circle.new-ball {
     animation: ballEnter 0.7s cubic-bezier(.2,.8,.2,1);
 }
-
 
 .match-status-flash {
     position: absolute;
@@ -700,7 +675,7 @@ html, body {
     background: rgba(20, 0, 3, 0.94);
     color: #ffffff;
     font-size: 34px;
-    font-weight: 1000;
+    font-weight: 900;
     letter-spacing: 2px;
     text-align: center;
     text-shadow: 0 3px 8px #000;
@@ -775,8 +750,6 @@ html, body {
     margin: 0 !important;
     padding: 0 !important;
     white-space: nowrap;
-    animation: none !important;
-    transform: none !important;
 }
 
 .info-marquee-text {
@@ -805,12 +778,10 @@ html, body {
     .live-badge-dot,
     .score-change,
     .ball-circle.new-ball,
-    .event-flash.show,
-    .info-marquee-track {
+    .event-flash.show {
         animation: none !important;
     }
 }
-
 </style>
 </head>
 
@@ -835,15 +806,12 @@ html, body {
         </div>
 
         <div id="eventFlash" class="event-flash" aria-live="polite"></div>
-<div id="matchStatusFlash" class="match-status-flash" aria-live="polite"></div>
+        <div id="matchStatusFlash" class="match-status-flash" aria-live="polite"></div>
 
         <div id="infoMarquee" class="info-marquee">
             <div id="infoMarqueeTrack" class="info-marquee-track">
                 <span id="infoMarqueeText" class="info-marquee-text">
                     <b>PREET SPORTS</b>&nbsp;&nbsp; • &nbsp;&nbsp;LIVE MATCH DISCUSSION&nbsp;&nbsp; • &nbsp;&nbsp;WAITING FOR LIVE UPDATE...
-                </span>
-                <span class="info-marquee-text">
-                    <b>PREET SPORTS</b>&nbsp;&nbsp; • &nbsp;&nbsp;LIVE MATCH DISCUSSION
                 </span>
             </div>
         </div>
@@ -851,7 +819,7 @@ html, body {
         <!-- TOP SECTION -->
         <div class="top-section">
 
-            <!-- TEAM 1 (LEFT): 4K CIRCLE CREST + NAME PILL + SCORE + OVERS -->
+            <!-- TEAM 1 (LEFT) -->
             <div class="left-team-display">
                 <div class="team-logo-circle">
                     <img id="team1Logo" src="" alt="Team 1 Logo">
@@ -866,15 +834,15 @@ html, body {
                 </div>
             </div>
 
-            <!-- CENTER: CYAN RECTANGULAR BOX -->
+            <!-- CENTER BOX -->
             <div class="center-panel">
                 <div id="centerLiveAction" class="center-live-action">•</div>
             </div>
 
-            <!-- CHASE EQUATION UNDER MIDDLE BOX -->
+            <!-- CHASE EQUATION -->
             <div id="centerChaseEquation" class="center-chase-equation" style="display: none;"></div>
 
-            <!-- TEAM 2 (RIGHT): NAME PILL + SCORE + OVERS + 4K CIRCLE CREST -->
+            <!-- TEAM 2 (RIGHT) -->
             <div class="right-team-display">
                 <div class="team-info-stack">
                     <div class="team-badge-pill" id="team2BadgeBox">
@@ -921,7 +889,7 @@ html, body {
             </div>
         </div>
 
-        <!-- BOTTOM ROW DIVIDED INTO THREE INDIVIDUAL COLUMNS -->
+        <!-- BOTTOM PLAYERS SECTION -->
         <div class="player-section">
             <!-- COLUMN 1: BATTER 1 -->
             <div class="player-col">
@@ -1042,11 +1010,9 @@ fitScoreboardToWindow();
 
 const API_BASE = "https://preet-sports.onrender.com";
 
-// LOCAL OBS MODE
-// This file is designed to be loaded directly by OBS Browser Source.
-// It does not need the /obs/<token> webpage. It talks directly to
-// the existing live-data endpoint using this token.
-const OBS_TOKEN = "wiZO8Tig";
+// URL parameters
+const urlParams = new URLSearchParams(window.location.search);
+const OBS_TOKEN = urlParams.get("token") || "";
 
 function cleanCrexUrl(url) {
     if (!url) return "";
@@ -1065,12 +1031,10 @@ function normalizeInput(val) {
     return clean;
 }
 
-const urlParams = new URLSearchParams(window.location.search);
-let activeTargetUrl = "";
-
+let activeTargetUrl = localStorage.getItem("crex_match_input") || "";
 const urlInput = document.getElementById("crexUrlInput");
 const statusInd = document.getElementById("statusIndicator");
-urlInput.value = activeTargetUrl;
+if (urlInput) urlInput.value = activeTargetUrl;
 
 function flushDomElementsInstantly() {
     document.getElementById("team1Score").textContent = "-";
@@ -1100,8 +1064,6 @@ function flushDomElementsInstantly() {
     document.getElementById("bowlerEcon").textContent = "0.00";
 }
 
-
-
 function renderImageInCircle(elementId, imageUrl) {
     const el = document.getElementById(elementId);
     if (!el) return;
@@ -1115,33 +1077,36 @@ function renderImageInCircle(elementId, imageUrl) {
     }
 }
 
-function renderOversTicker(recentOvers, lastWicket, nextBatsman) {
+// Live polling & animation states
+let fetchInProgress = false;
+let retryTimer = null;
+let lastSuccessfulData = null;
+let lastSuccessfulTimestamp = 0;
+let previousTeam1Score = null;
+let previousTeam2Score = null;
+let previousBallSignature = null;
+let previousEventSignature = null;
+let firstLiveRender = true;
+let eventHideTimer = null;
+
+const POLL_INTERVAL = 3000;
+const REQUEST_TIMEOUT = 15000;
+
+function renderOversTicker(recentOvers, lastWicket) {
     const ticker = document.getElementById("oversTicker");
+    if (!ticker) return;
     ticker.innerHTML = "";
 
-    // =========================================================
-    // ONLY SHOW THE LAST 2 OVERS + LAST WICKET
-    // Existing scoreboard/ticker design is unchanged.
-    // =========================================================
-    const overs = Array.isArray(recentOvers)
-        ? recentOvers.slice(-2)
-        : [];
-
+    const overs = Array.isArray(recentOvers) ? recentOvers.slice(-2) : [];
     const newestOverIndex = overs.length - 1;
     const newestOver = overs[newestOverIndex];
-    const newestBallIndex = newestOver && Array.isArray(newestOver.balls)
-        ? newestOver.balls.length - 1
-        : -1;
+    const newestBallIndex = newestOver && Array.isArray(newestOver.balls) ? newestOver.balls.length - 1 : -1;
 
     const newestBallSignature = newestOver && newestBallIndex >= 0
-        ? `${newestOver.label || ""}|${String(
-            newestOver.balls[newestBallIndex]?.text ??
-            newestOver.balls[newestBallIndex] ??
-            ""
-        )}`
+        ? `${newestOver.label || ""}|${String(newestOver.balls[newestBallIndex]?.text ?? newestOver.balls[newestBallIndex] ?? "")}`
         : "";
 
-    const isNewBall = (
+    const isNewBall = Boolean(
         newestBallSignature &&
         newestBallSignature !== previousBallSignature &&
         !firstLiveRender
@@ -1153,13 +1118,7 @@ function renderOversTicker(recentOvers, lastWicket, nextBatsman) {
 
         const title = document.createElement("span");
         title.className = "over-title";
-
-        // Scraper returns "label": "Over 47".
-        // Do NOT use o.over because it is undefined.
-        const overLabel = String(
-            o && (o.label ?? o.over ?? "")
-        ).trim();
-
+        const overLabel = String(o && (o.label ?? o.over ?? "")).trim();
         title.textContent = overLabel || "Over";
         col.appendChild(title);
 
@@ -1172,28 +1131,12 @@ function renderOversTicker(recentOvers, lastWicket, nextBatsman) {
             const ball = document.createElement("div");
             ball.className = "ball-circle";
 
-            // Current scraper returns objects:
-            // { text: "4", type: "four" }
-            // Older data may return plain strings.
-            const ballText = String(
-                b && typeof b === "object"
-                    ? (b.text ?? b.value ?? "")
-                    : (b ?? "")
-            ).trim();
-
-            const ballType = String(
-                b && typeof b === "object"
-                    ? (b.type ?? "")
-                    : ""
-            ).trim().toLowerCase();
+            const ballText = String(b && typeof b === "object" ? (b.text ?? b.value ?? "") : (b ?? "")).trim();
+            const ballType = String(b && typeof b === "object" ? (b.type ?? "") : "").trim().toLowerCase();
 
             ball.textContent = ballText || "•";
 
-            if (
-                isNewBall &&
-                overIndex === newestOverIndex &&
-                balls.indexOf(b) === newestBallIndex
-            ) {
+            if (isNewBall && overIndex === newestOverIndex && balls.indexOf(b) === newestBallIndex) {
                 ball.classList.add("new-ball");
             }
 
@@ -1204,10 +1147,7 @@ function renderOversTicker(recentOvers, lastWicket, nextBatsman) {
             } else if (
                 ballType === "wicket" ||
                 ballText.toUpperCase() === "W" ||
-                (
-                    ballText.toLowerCase().includes("w") &&
-                    !ballText.toLowerCase().includes("wd")
-                )
+                (ballText.toLowerCase().includes("w") && !ballText.toLowerCase().includes("wd"))
             ) {
                 ball.classList.add("wicket");
             } else if (
@@ -1228,9 +1168,7 @@ function renderOversTicker(recentOvers, lastWicket, nextBatsman) {
         if (o && o.total !== undefined) {
             const total = document.createElement("span");
             total.className = "over-total";
-            total.textContent = String(o.total).startsWith("=")
-                ? String(o.total)
-                : `= ${o.total}`;
+            total.textContent = String(o.total).startsWith("=") ? String(o.total) : `= ${o.total}`;
             col.appendChild(total);
         }
 
@@ -1241,64 +1179,34 @@ function renderOversTicker(recentOvers, lastWicket, nextBatsman) {
         previousBallSignature = newestBallSignature;
     }
 
-    // Divider before LAST WKT.
     const sep = document.createElement("div");
     sep.className = "over-divider-line";
     ticker.appendChild(sep);
 
-    // LAST WICKET — always shown.
     const lwBlock = document.createElement("div");
     lwBlock.className = "ticker-info-block";
-
     const safeLastWicket = String(lastWicket || "-");
-
     lwBlock.innerHTML = `
         <span class="ticker-info-label">LAST WKT:</span>
         <span class="ticker-info-val" title="${safeLastWicket}">${safeLastWicket}</span>
     `;
-
     ticker.appendChild(lwBlock);
 }
 
-/* =========================================================
-   PREET SPORTS — RELIABLE LIVE SCORE ENGINE
-   3-second polling + automatic reconnect + last-success protection
-   ========================================================= */
-
-let fetchInProgress = false;
-let retryTimer = null;
-let lastSuccessfulData = null;
-let lastSuccessfulTimestamp = 0;
-
-// Animation state — prevents the same event from firing repeatedly
-// while the API is returning the same live snapshot.
-let previousTeam1Score = null;
-let previousTeam2Score = null;
-let previousBallSignature = null;
-let previousEventSignature = null;
-let firstLiveRender = true;
-let eventHideTimer = null;
-
-const POLL_INTERVAL = 3000; // poll live data every 3 seconds
-const REQUEST_TIMEOUT = 90000;
-
 function cacheKeyForUrl(url) {
-    return "preet_sports_last_score_" + btoa(unescape(encodeURIComponent(url))).replace(/[^a-zA-Z0-9_-]/g, "_");
+    return "preet_sports_last_score_" + btoa(encodeURIComponent(url || "default")).replace(/[^a-zA-Z0-9_-]/g, "_");
 }
 
 function saveLastSuccessfulData(data) {
     try {
         lastSuccessfulData = data;
         lastSuccessfulTimestamp = Date.now();
-
         const key = cacheKeyForUrl(activeTargetUrl);
         localStorage.setItem(key, JSON.stringify({
             timestamp: lastSuccessfulTimestamp,
             data: data
         }));
-    } catch (e) {
-        // Storage failure must never stop live scoring.
-    }
+    } catch (e) {}
 }
 
 function restoreLastSuccessfulData() {
@@ -1322,7 +1230,6 @@ function restoreLastSuccessfulData() {
 
 function scheduleNextFetch(delay = POLL_INTERVAL) {
     if (retryTimer) clearTimeout(retryTimer);
-
     retryTimer = setTimeout(() => {
         retryTimer = null;
         fetchScores();
@@ -1330,14 +1237,11 @@ function scheduleNextFetch(delay = POLL_INTERVAL) {
 }
 
 function setConnectionStatus(text, color) {
+    if (!statusInd) return;
     statusInd.textContent = text;
     statusInd.style.color = color;
     statusInd.title = text;
 }
-
-/* Render ONLY after a valid successful response.
-   This is the last-successful-score protection: failed requests
-   never clear or overwrite the scoreboard. */
 
 function animateElementByClass(id, className) {
     const el = document.getElementById(id);
@@ -1356,7 +1260,6 @@ function scoreRuns(score) {
 function showMatchStatus(statusText) {
     const el = document.getElementById("matchStatusFlash");
     if (!el) return;
-
     const text = String(statusText || "").trim();
 
     if (!text) {
@@ -1382,10 +1285,8 @@ function showEventFlash(label, type) {
 
     el.className = "event-flash";
     el.textContent = label;
-
     if (type) el.classList.add(type);
 
-    // Restart the 5-second animation cleanly.
     void el.offsetWidth;
     el.classList.add("show");
 
@@ -1407,10 +1308,7 @@ function updateInformationTicker(data, eventLabel = "") {
     const partnership = data?.partnership || "";
     const lastWicket = data?.last_wicket || "";
 
-    let message = eventLabel
-        ? `<b>${eventLabel}</b>&nbsp;&nbsp; • &nbsp;&nbsp;`
-        : "";
-
+    let message = eventLabel ? `<b>${eventLabel}</b>&nbsp;&nbsp; • &nbsp;&nbsp;` : "";
     if (t1 || score1) message += `<b>${t1}</b> ${score1}`;
     if (t2 || score2) message += `&nbsp;&nbsp; VS &nbsp;&nbsp;<b>${t2}</b> ${score2}`;
     if (partnership) message += `&nbsp;&nbsp; • &nbsp;&nbsp;PARTNERSHIP: <b>${partnership}</b>`;
@@ -1421,16 +1319,13 @@ function updateInformationTicker(data, eventLabel = "") {
 }
 
 function renderScoreData(data, fromCache = false) {
-    const liveStatusText = String(
-        data.status ??
-        data.match_status ??
-        data.live_status ??
-        ""
-    ).trim();
+    if (!data || data.success === false) {
+        throw new Error("Invalid score data");
+    }
 
-    // Show meaningful match states in the empty area.
-    // Do not cover the normal scoreboard during live play.
+    const liveStatusText = String(data.status ?? data.match_status ?? data.live_status ?? "").trim();
     const normalizedStatus = liveStatusText.toLowerCase();
+
     if (
         normalizedStatus.includes("innings break") ||
         normalizedStatus.includes("match end") ||
@@ -1447,46 +1342,12 @@ function renderScoreData(data, fromCache = false) {
         showMatchStatus("");
     }
 
-
-    if (!data || data.success === false) {
-        throw new Error("Invalid score data");
-    }
-
-    /* =========================================================
-       NORMALIZE CURRENT CREX PLAYWRIGHT API SCHEMA
-       API returns:
-       team1/team2 as objects,
-       batsman1/batsman2,
-       bowler.img,
-       structured_overs.
-       This keeps the existing scoreboard design unchanged.
-       ========================================================= */
-
     const apiTeam1 = (data.team1 && typeof data.team1 === "object") ? data.team1 : {};
     const apiTeam2 = (data.team2 && typeof data.team2 === "object") ? data.team2 : {};
 
-    // Team names: prefer full_name, then short, then fixture text.
-    const t1Name = String(
-        apiTeam1.full_name ||
-        apiTeam1.short ||
-        (typeof data.team1 === "string" ? data.team1 : "") ||
-        "TEAM 1"
-    ).toUpperCase();
+    const t1Name = String(apiTeam1.full_name || apiTeam1.short || (typeof data.team1 === "string" ? data.team1 : "") || "TEAM 1").toUpperCase();
+    let t2Name = String(apiTeam2.full_name || apiTeam2.short || (typeof data.team2 === "string" ? data.team2 : "") || "TEAM 2").toUpperCase();
 
-    let t2Name = String(
-        apiTeam2.full_name ||
-        apiTeam2.short ||
-        (typeof data.team2 === "string" ? data.team2 : "") ||
-        "TEAM 2"
-    ).toUpperCase();
-
-    // CREX fixture is AUS vs SA. The API's team2.short can currently
-    // contain "SA", so use full_name first and fixture text as fallback.
-    if (apiTeam2.full_name) {
-        t2Name = String(apiTeam2.full_name).toUpperCase();
-    }
-
-    // Broadcast-friendly abbreviations.
     const abbreviation = (name) => {
         const n = String(name || "").toUpperCase();
         if (n.includes("SOUTH AFRICA")) return "SA";
@@ -1504,41 +1365,30 @@ function renderScoreData(data, fromCache = false) {
     const t1Badge = abbreviation(t1Name);
     const t2Badge = abbreviation(t2Name);
 
-    // Current API data says "AUS opt to Bowl", so South Africa is batting.
     const equationText = String(data.equation || data.status || "").trim();
     const australiaBowling = /AUS\s+opt\s+to\s+Bowl/i.test(equationText);
 
     let t1Score = apiTeam1.score ? String(apiTeam1.score).replace("/", "-") : "0-0";
     let t1Overs = apiTeam1.overs ? String(apiTeam1.overs).replace(/[()]/g, "") : "0.0";
-
     let t2Score = apiTeam2.score ? String(apiTeam2.score).replace("/", "-") : "0-0";
     let t2Overs = apiTeam2.overs ? String(apiTeam2.overs).replace(/[()]/g, "") : "0.0";
 
-    // Detect a genuine score change. Cached/first render does not animate.
     if (!fromCache && !firstLiveRender) {
         const old1 = scoreRuns(previousTeam1Score);
         const old2 = scoreRuns(previousTeam2Score);
         const new1 = scoreRuns(t1Score);
         const new2 = scoreRuns(t2Score);
 
-        if (old1 !== null && new1 !== null && old1 !== new1) {
-            animateElementByClass("team1Score", "score-change");
-        }
-        if (old2 !== null && new2 !== null && old2 !== new2) {
-            animateElementByClass("team2Score", "score-change");
-        }
+        if (old1 !== null && new1 !== null && old1 !== new1) animateElementByClass("team1Score", "score-change");
+        if (old2 !== null && new2 !== null && old2 !== new2) animateElementByClass("team2Score", "score-change");
     }
 
     let t1Role = "BOWLING";
     let t2Role = "BATTING";
 
-    // If CREX says AUS opted to bowl, SA is the current batting side.
     if (australiaBowling) {
         t1Role = "BATTING";
         t2Role = "BOWLING";
-
-        // The current API duplicates the live innings score into team2.
-        // Do not display the duplicate score for the bowling side.
         if (t2Score === t1Score) {
             t2Score = "Yet to bat";
             t2Overs = "Yet to bat";
@@ -1546,86 +1396,46 @@ function renderScoreData(data, fromCache = false) {
     } else if (/SA\s+opt\s+to\s+Bowl/i.test(equationText)) {
         t1Role = "BOWLING";
         t2Role = "BATTING";
-
         if (t1Score === t2Score) {
             t1Score = "Yet to bat";
             t1Overs = "Yet to bat";
         }
     }
 
-    // Team logos from nested API objects.
     renderImageInCircle("team1Logo", apiTeam1.logo || data.team1Logo);
     renderImageInCircle("team2Logo", apiTeam2.logo || data.team2Logo);
 
     document.getElementById("team1Badge").textContent = t1Badge;
     document.getElementById("team1Score").textContent = t1Score;
     document.getElementById("team1Overs").textContent = `OVERS: ${t1Overs}`;
-    document.getElementById("team1BallIcon").style.display =
-        (t1Role === "BOWLING") ? "inline-block" : "none";
+    document.getElementById("team1BallIcon").style.display = (t1Role === "BOWLING") ? "inline-block" : "none";
 
     document.getElementById("team2Badge").textContent = t2Badge;
     document.getElementById("team2Score").textContent = t2Score;
     document.getElementById("team2Overs").textContent = `OVERS: ${t2Overs}`;
-    document.getElementById("team2BallIcon").style.display =
-        (t2Role === "BOWLING") ? "inline-block" : "none";
+    document.getElementById("team2BallIcon").style.display = (t2Role === "BOWLING") ? "inline-block" : "none";
 
-    // =========================================================
-    // MIDDLE BOX — CREX EVENT
-    // ONLY this middle-box logic is changed.
-    // OBS token system, API, scraper, scoreboard design,
-    // players, teams and ticker remain unchanged.
-    //
-    // If the existing API already exposes dismissal text/type,
-    // show "RUN OUT" exactly like CREX. Otherwise retain the
-    // normal ball value (e.g. 1W) rather than guessing.
-    // =========================================================
     const actionEl = document.getElementById("centerLiveAction");
+    const latestBallObject = Array.isArray(data.current_over?.balls) && data.current_over.balls.length
+        ? data.current_over.balls[data.current_over.balls.length - 1]
+        : null;
 
-    const latestBallObject =
-        Array.isArray(data.current_over?.balls) &&
-        data.current_over.balls.length
-            ? data.current_over.balls[data.current_over.balls.length - 1]
-            : null;
+    const ballText = String(latestBallObject && typeof latestBallObject === "object" ? (latestBallObject.text ?? "") : (latestBallObject ?? data.last_ball ?? data.liveBall ?? "")).trim();
+    const ballType = String(latestBallObject && typeof latestBallObject === "object" ? (latestBallObject.type ?? "") : "").trim();
 
-    const ballText = String(
-        latestBallObject && typeof latestBallObject === "object"
-            ? (latestBallObject.text ?? "")
-            : (latestBallObject ?? data.last_ball ?? data.liveBall ?? "")
-    ).trim();
-
-    const ballType = String(
-        latestBallObject && typeof latestBallObject === "object"
-            ? (latestBallObject.type ?? "")
-            : ""
-    ).trim();
-
-    // Event detection: only fire when the newest ball actually changes.
     const currentOverLabel = String(data.current_over?.label || "");
-    const eventSignature = [
-        currentOverLabel,
-        ballText,
-        ballType,
-        String(t1Score),
-        String(t2Score)
-    ].join("|");
+    const eventSignature = [currentOverLabel, ballText, ballType, String(t1Score), String(t2Score)].join("|");
 
     let eventLabel = "";
     let eventType = "";
-
     const normalizedBallText = ballText.toLowerCase().replace(/[\s-]/g, "");
     const normalizedBallType = ballType.toLowerCase().replace(/[\s-]/g, "");
 
     if (!fromCache && !firstLiveRender && eventSignature !== previousEventSignature) {
-        if (
-            normalizedBallType === "four" ||
-            normalizedBallText === "4"
-        ) {
+        if (normalizedBallType === "four" || normalizedBallText === "4") {
             eventLabel = "FOUR!";
             eventType = "four";
-        } else if (
-            normalizedBallType === "six" ||
-            normalizedBallText === "6"
-        ) {
+        } else if (normalizedBallType === "six" || normalizedBallText === "6") {
             eventLabel = "SIX!";
             eventType = "six";
         } else if (
@@ -1672,8 +1482,6 @@ function renderScoreData(data, fromCache = false) {
 
     previousEventSignature = eventSignature;
 
-    // Check fields that may already be returned by the scraper.
-    // No API/scraper modification is made here.
     const possibleDismissalFields = [
         data.last_event,
         data.live_event,
@@ -1695,53 +1503,22 @@ function renderScoreData(data, fromCache = false) {
         latestBallObject && latestBallObject.text
     ];
 
-    const dismissalText = possibleDismissalFields
-        .filter(v => v !== null && v !== undefined)
-        .map(v => String(v))
-        .join(" ")
-        .toUpperCase();
-
-    let actionText =
-        data.status ||
-        data.last_event ||
-        data.live_event ||
-        data.event ||
-        "•";
-
+    const dismissalText = possibleDismissalFields.filter(v => v !== null && v !== undefined).map(v => String(v)).join(" ").toUpperCase();
+    let actionText = data.status || data.last_event || data.live_event || data.event || "•";
     actionText = String(actionText).trim();
 
-    // ---------------------------------------------------------
-    // RUN OUT — only when the received data actually says RUN OUT
-    // ---------------------------------------------------------
-    if (
-        dismissalText.includes("RUN OUT") ||
-        dismissalText.includes("RUNOUT")
-    ) {
+    if (dismissalText.includes("RUN OUT") || dismissalText.includes("RUNOUT")) {
         actionText = "RUN OUT";
-    }
-
-    // Other explicit CREX event labels.
-    else {
+    } else {
         const eventUpper = actionText.toUpperCase();
-
-        if (eventUpper === "WICKET") {
-            actionText = "W";
-        } else if (eventUpper === "WIDE") {
-            actionText = "WD";
-        } else if (
-            eventUpper === "NO BALL" ||
-            eventUpper === "NO-BALL"
-        ) {
-            actionText = "NB";
-        } else if (eventUpper === "FOUR") {
-            actionText = "4";
-        } else if (eventUpper === "SIX") {
-            actionText = "6";
-        }
+        if (eventUpper === "WICKET") actionText = "W";
+        else if (eventUpper === "WIDE") actionText = "WD";
+        else if (eventUpper === "NO BALL" || eventUpper === "NO-BALL") actionText = "NB";
+        else if (eventUpper === "FOUR") actionText = "4";
+        else if (eventUpper === "SIX") actionText = "6";
     }
 
     actionEl.textContent = actionText || "•";
-
     if (actionText.toUpperCase() === "RUN OUT") {
         actionEl.style.fontSize = "34px";
     } else if (String(actionText).length <= 2) {
@@ -1752,87 +1529,52 @@ function renderScoreData(data, fromCache = false) {
         actionEl.style.fontSize = "26px";
     }
 
-    // Equation under center — ORIGINAL CODE UNCHANGED.
     const chaseEl = document.getElementById("centerChaseEquation");
     chaseEl.textContent = equationText || "";
-    if (equationText) {
-        chaseEl.style.display = "block";
-    } else {
-        chaseEl.style.display = "none";
-    }
+    chaseEl.style.display = equationText ? "block" : "none";
 
-    // Convert structured_overs to the existing ticker format.
-    const recentOvers = Array.isArray(data.structured_overs)
-        ? data.structured_overs
-        : (data.recentOvers || []);
+    const recentOvers = Array.isArray(data.structured_overs) ? data.structured_overs : (data.recentOvers || []);
+    renderOversTicker(recentOvers, data.last_wicket);
 
-    renderOversTicker(recentOvers, data.last_wicket, data.nextBatsman);
-
-    // Stats.
     document.getElementById("crr").textContent = data.crr ?? "--";
     document.getElementById("rrr").textContent = data.rrr ?? "--";
     document.getElementById("partnership").textContent = data.partnership || "--";
-    document.getElementById("target").textContent =
-        (data.target && data.target !== "") ? data.target : "--";
+    document.getElementById("target").textContent = (data.target && data.target !== "") ? data.target : "--";
 
-    // Normalize batsman1/batsman2 from current API.
     const b1 = data.batsman1 || data.batter1;
     const b2 = data.batsman2 || data.batter2;
 
     if (b1) {
-        document.getElementById("player1Name").textContent =
-            b1.short_name || b1.name || "Batter 1";
-
-        document.getElementById("player1Score").textContent =
-            `${b1.runs ?? 0} (${b1.balls ?? 0})`;
-
+        document.getElementById("player1Name").textContent = b1.short_name || b1.name || "Batter 1";
+        document.getElementById("player1Score").textContent = `${b1.runs ?? 0} (${b1.balls ?? 0})`;
         document.getElementById("b1Fours").textContent = `(${b1.fours ?? 0})`;
         document.getElementById("b1Sixes").textContent = `(${b1.sixes ?? 0})`;
         document.getElementById("b1SR").textContent = b1.sr ?? "0.00";
-
-        document.getElementById("b1BatIcon").style.display =
-            b1.on_strike ? "inline-flex" : "none";
-
+        document.getElementById("b1BatIcon").style.display = b1.on_strike ? "inline-flex" : "none";
         renderImageInCircle("player1Image", b1.img || b1.image);
     }
 
     if (b2) {
-        document.getElementById("player2Name").textContent =
-            b2.short_name || b2.name || "Batter 2";
-
-        document.getElementById("player2Score").textContent =
-            `${b2.runs ?? 0} (${b2.balls ?? 0})`;
-
+        document.getElementById("player2Name").textContent = b2.short_name || b2.name || "Batter 2";
+        document.getElementById("player2Score").textContent = `${b2.runs ?? 0} (${b2.balls ?? 0})`;
         document.getElementById("b2Fours").textContent = `(${b2.fours ?? 0})`;
         document.getElementById("b2Sixes").textContent = `(${b2.sixes ?? 0})`;
         document.getElementById("b2SR").textContent = b2.sr ?? "0.00";
-
-        document.getElementById("b2BatIcon").style.display =
-            b2.on_strike ? "inline-flex" : "none";
-
+        document.getElementById("b2BatIcon").style.display = b2.on_strike ? "inline-flex" : "none";
         renderImageInCircle("player2Image", b2.img || b2.image);
     }
 
-    // Bowler.
     if (data.bowler) {
         const bowler = data.bowler;
-
-        document.getElementById("bowlerName").textContent =
-            bowler.short_name || bowler.name || "Bowler";
-
-        document.getElementById("bowlerScore").textContent =
-            bowler.figures || "-";
-
-        document.getElementById("bowlerEcon").textContent =
-            bowler.econ || "0.00";
-
+        document.getElementById("bowlerName").textContent = bowler.short_name || bowler.name || "Bowler";
+        document.getElementById("bowlerScore").textContent = bowler.figures || "-";
+        document.getElementById("bowlerEcon").textContent = bowler.econ || "0.00";
         renderImageInCircle("bowlerImage", bowler.img || bowler.image);
     }
 
     if (!fromCache) {
         previousTeam1Score = t1Score;
         previousTeam2Score = t2Score;
-
         firstLiveRender = false;
     }
 
@@ -1845,22 +1587,21 @@ async function fetchScores() {
     if (fetchInProgress) return;
 
     fetchInProgress = true;
-    setConnectionStatus("SCRAPING LIVE DATA...", "#ffd700");
+    setConnectionStatus("SYNCING LIVE DATA...", "#ffd700");
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT);
 
     try {
-        if (!OBS_TOKEN && !activeTargetUrl) {
-            throw new Error("No CREX match URL selected");
+        let fetchEndpoint = "";
+        if (OBS_TOKEN) {
+            fetchEndpoint = `${API_BASE}/api/obs/${encodeURIComponent(OBS_TOKEN)}/scrape?t=${Date.now()}`;
+        } else if (activeTargetUrl) {
+            fetchEndpoint = `${API_BASE}/api/scrape?url=${encodeURIComponent(activeTargetUrl)}&t=${Date.now()}`;
+        } else {
+            setConnectionStatus("AWAITING URL", "#ffd700");
+            return;
         }
-
-        // IMPORTANT:
-        // Send the CREX URL on EVERY request.
-        // This avoids relying on Render's /api/default-url memory/state.
-        const fetchEndpoint = OBS_TOKEN
-            ? `${API_BASE}/api/obs/${encodeURIComponent(OBS_TOKEN)}/scrape?t=${Date.now()}`
-            : `${API_BASE}/api/scrape?url=${encodeURIComponent(activeTargetUrl)}&t=${Date.now()}`;
 
         const res = await fetch(fetchEndpoint, {
             method: "GET",
@@ -1874,57 +1615,39 @@ async function fetchScores() {
         });
 
         const rawText = await res.text();
-
-        if (!res.ok) {
-            throw new Error(`HTTP ${res.status}: ${rawText.slice(0, 180)}`);
-        }
+        if (!res.ok) throw new Error(`HTTP ${res.status}: ${rawText.slice(0, 100)}`);
 
         let data;
         try {
             data = JSON.parse(rawText);
         } catch (e) {
-            throw new Error(`API returned non-JSON: ${rawText.slice(0, 180)}`);
+            throw new Error(`API non-JSON: ${rawText.slice(0, 100)}`);
         }
 
         if (!data || data.success !== true) {
-            throw new Error(data?.error || "API returned unsuccessful response");
+            throw new Error(data?.error || "Invalid response");
         }
 
-        // Only a valid successful response can update the scoreboard.
         renderScoreData(data, false);
         saveLastSuccessfulData(data);
-
         setConnectionStatus("LIVE • SYNCED", "#6cf598");
 
     } catch (err) {
-        // NEVER clear the scoreboard here.
-        // Last successful data stays visible.
         const msg = err?.message || "Network error";
-
         if (err?.name === "AbortError") {
-            setConnectionStatus("RETRYING • API TIMEOUT", "#ffd700");
-        } else if (/Failed to fetch|NetworkError|Load failed/i.test(msg)) {
-            setConnectionStatus("RECONNECTING • NETWORK", "#ffd700");
+            setConnectionStatus("RETRYING • TIMEOUT", "#ffd700");
         } else {
-            setConnectionStatus("RECONNECTING • " + msg.slice(0, 38), "#ffd700");
+            setConnectionStatus("RETRYING...", "#ffd700");
         }
-
     } finally {
         clearTimeout(timeoutId);
         fetchInProgress = false;
-
-        // Wait 3 seconds AFTER the current request finishes before polling again.
         scheduleNextFetch(POLL_INTERVAL);
     }
 }
 
-
-/* Manual match switch:
-   A new match is intentionally allowed to clear the old match,
-   then the new match is loaded. Automatic failures never clear data. */
 async function triggerMatchLoad() {
     let rawVal = urlInput.value.trim();
-
     if (!rawVal) {
         alert("Please enter a valid CREX URL or Match ID");
         return;
@@ -1933,22 +1656,16 @@ async function triggerMatchLoad() {
     const target = normalizeInput(rawVal);
     activeTargetUrl = target;
     localStorage.setItem("crex_match_input", target);
-
     urlInput.value = target;
 
-    // Stop the current retry timer so the new match starts immediately.
     if (retryTimer) {
         clearTimeout(retryTimer);
         retryTimer = null;
     }
 
-    // New match = clear the old match deliberately.
     flushDomElementsInstantly();
-
-    // Restore cached data for this exact match immediately, if available.
     restoreLastSuccessfulData();
-
-    setConnectionStatus("SCRAPING LIVE DATA...", "#ffd700");
+    setConnectionStatus("CONNECTING...", "#ffd700");
 
     try {
         await fetch(`${API_BASE}/api/default-url`, {
@@ -1956,33 +1673,22 @@ async function triggerMatchLoad() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ url: target })
         });
-    } catch (e) {
-        // The scrape endpoint can still work even if default-url POST fails.
-    }
+    } catch (e) {}
 
     fetchScores();
 }
 
 document.getElementById("loadMatchUrlBtn").addEventListener("click", triggerMatchLoad);
-// =========================================================
-// PREET SPORTS — RANDOM OBS URL GENERATOR
-// Creates a server-side random token and copies ONLY the
-// token URL to the clipboard. The CREX URL is not exposed.
-// =========================================================
 
 document.getElementById("generateObsBtn").addEventListener("click", async () => {
-    const input = document.getElementById("crexUrlInput");
-    const status = document.getElementById("statusIndicator");
-    const crexUrl = normalizeInput(input.value.trim());
-
+    const crexUrl = normalizeInput(urlInput.value.trim());
     if (!crexUrl) {
         alert("Please paste a valid CREX match URL first.");
         return;
     }
 
     try {
-        status.textContent = "GENERATING OBS LINK...";
-        status.style.color = "#ffd700";
+        setConnectionStatus("GENERATING OBS LINK...", "#ffd700");
 
         const response = await fetch(`${API_BASE}/api/obs-token`, {
             method: "POST",
@@ -1994,18 +1700,15 @@ document.getElementById("generateObsBtn").addEventListener("click", async () => 
         });
 
         const data = await response.json();
-
         if (!response.ok || !data.success || !data.token) {
             throw new Error(data.error || "Unable to generate OBS URL");
         }
 
-        // IMPORTANT: only the random token URL is copied.
-        const obsUrl = `${API_BASE}/obs/${encodeURIComponent(data.token)}`;
+        const obsUrl = `${window.location.origin}${window.location.pathname}?token=${encodeURIComponent(data.token)}&hide=1`;
 
         try {
             await navigator.clipboard.writeText(obsUrl);
         } catch (clipboardError) {
-            // Fallback for browsers that block navigator.clipboard.
             const temp = document.createElement("textarea");
             temp.value = obsUrl;
             temp.style.position = "fixed";
@@ -2017,57 +1720,34 @@ document.getElementById("generateObsBtn").addEventListener("click", async () => 
             temp.remove();
         }
 
-        status.textContent = "OBS URL COPIED ✓";
-        status.style.color = "#6cf598";
-
-        alert(
-            "OBS URL copied successfully!\n\n" +
-            obsUrl +
-            "\n\nPaste this URL into OBS → Browser Source."
-        );
-
-        console.log("OBS URL:", obsUrl);
+        setConnectionStatus("OBS URL COPIED ✓", "#6cf598");
+        alert("OBS Browser Source URL copied to clipboard:\n\n" + obsUrl);
 
     } catch (error) {
-        console.error("OBS token error:", error);
-
-        status.textContent = "OBS LINK ERROR";
-        status.style.color = "#ff6b6b";
-
-        alert(
-            "Could not generate OBS URL.\n\n" +
-            (error.message || "Unknown error")
-        );
+        setConnectionStatus("OBS LINK ERROR", "#ff6b6b");
+        alert("Could not generate OBS URL: " + (error.message || "Unknown error"));
     }
 });
-
 
 urlInput.addEventListener("keydown", (e) => {
     if (e.key === "Enter") triggerMatchLoad();
 });
 
-if (urlParams.get("hide") === "1" || OBS_TOKEN) {
+if (urlParams.get("hide") === "1") {
     document.getElementById("urlControlBar").style.display = "none";
 }
 
-/* =========================================================
-   STARTUP
-   ========================================================= */
-
 window.addEventListener("load", () => {
-    // Show last successful score immediately, if this match was cached.
     const restored = restoreLastSuccessfulData();
-
     if (restored) {
         setConnectionStatus("Cached • Connecting...", "#ffd700");
     } else {
-        setConnectionStatus("SCRAPING LIVE DATA...", "#ffd700");
+        setConnectionStatus("Ready", "#ffd700");
     }
-
-    // Start the live request immediately.
-    fetchScores();
+    if (activeTargetUrl || OBS_TOKEN) {
+        fetchScores();
+    }
 });
-
 </script>
 
 </body>
