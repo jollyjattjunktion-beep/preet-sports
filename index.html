@@ -763,9 +763,10 @@ html, body {
     padding: 0 18px !important;
     background: #ffd700;
     color: #000000 !important;
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 900;
-    letter-spacing: 0.55px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
     text-shadow: none !important;
     overflow: hidden;
 }
@@ -808,10 +809,11 @@ html, body {
         <div id="eventFlash" class="event-flash" aria-live="polite"></div>
         <div id="matchStatusFlash" class="match-status-flash" aria-live="polite"></div>
 
+        <!-- BOTTOM BANNER -->
         <div id="infoMarquee" class="info-marquee">
             <div id="infoMarqueeTrack" class="info-marquee-track">
                 <span id="infoMarqueeText" class="info-marquee-text">
-                    <b>PREET SPORTS</b>&nbsp;&nbsp; • &nbsp;&nbsp;LIVE MATCH DISCUSSION&nbsp;&nbsp; • &nbsp;&nbsp;WAITING FOR LIVE UPDATE...
+                    SUBSCRIBE PREET SPORTS
                 </span>
             </div>
         </div>
@@ -834,7 +836,7 @@ html, body {
                 </div>
             </div>
 
-            <!-- CENTER BOX -->
+            <!-- CENTER BOX (DISPLAYS CURRENT BALL / RUNS / EVENT) -->
             <div class="center-panel">
                 <div id="centerLiveAction" class="center-live-action">•</div>
             </div>
@@ -1010,7 +1012,6 @@ fitScoreboardToWindow();
 
 const API_BASE = "https://preet-sports.onrender.com";
 
-// URL parameters
 const urlParams = new URLSearchParams(window.location.search);
 const OBS_TOKEN = urlParams.get("token") || "";
 
@@ -1077,7 +1078,6 @@ function renderImageInCircle(elementId, imageUrl) {
     }
 }
 
-// Live polling & animation states
 let fetchInProgress = false;
 let retryTimer = null;
 let lastSuccessfulData = null;
@@ -1296,28 +1296,6 @@ function showEventFlash(label, type) {
     }, 5050);
 }
 
-function updateInformationTicker(data, eventLabel = "") {
-    const el = document.getElementById("infoMarqueeText");
-    if (!el) return;
-
-    const t1 = data?.team1?.short || data?.team1?.full_name || "";
-    const t2 = data?.team2?.short || data?.team2?.full_name || "";
-    const score1 = data?.team1?.score || "";
-    const score2 = data?.team2?.score || "";
-    const equation = data?.equation || data?.status || "";
-    const partnership = data?.partnership || "";
-    const lastWicket = data?.last_wicket || "";
-
-    let message = eventLabel ? `<b>${eventLabel}</b>&nbsp;&nbsp; • &nbsp;&nbsp;` : "";
-    if (t1 || score1) message += `<b>${t1}</b> ${score1}`;
-    if (t2 || score2) message += `&nbsp;&nbsp; VS &nbsp;&nbsp;<b>${t2}</b> ${score2}`;
-    if (partnership) message += `&nbsp;&nbsp; • &nbsp;&nbsp;PARTNERSHIP: <b>${partnership}</b>`;
-    if (equation) message += `&nbsp;&nbsp; • &nbsp;&nbsp;${equation}`;
-    if (lastWicket) message += `&nbsp;&nbsp; • &nbsp;&nbsp;LAST WKT: ${lastWicket}`;
-
-    el.innerHTML = message || "<b>PREET SPORTS</b>&nbsp;&nbsp; • &nbsp;&nbsp;LIVE MATCH DISCUSSION";
-}
-
 function renderScoreData(data, fromCache = false) {
     if (!data || data.success === false) {
         throw new Error("Invalid score data");
@@ -1350,11 +1328,11 @@ function renderScoreData(data, fromCache = false) {
 
     const abbreviation = (name) => {
         const n = String(name || "").toUpperCase();
+        if (n.includes("AUSTRALIA") || n.includes("AUSCH")) return "AUS";
+        if (n.includes("INDIA") || n.includes("INDCH")) return "IND";
         if (n.includes("SOUTH AFRICA")) return "SA";
-        if (n.includes("AUSTRALIA")) return "AUS";
         if (n.includes("ENGLAND")) return "ENG";
         if (n.includes("SRI LANKA")) return "SL";
-        if (n.includes("INDIA")) return "IND";
         if (n.includes("NEW ZEALAND")) return "NZ";
         if (n.includes("PAKISTAN")) return "PAK";
         if (n.includes("WEST INDIES")) return "WI";
@@ -1415,6 +1393,9 @@ function renderScoreData(data, fromCache = false) {
     document.getElementById("team2Overs").textContent = `OVERS: ${t2Overs}`;
     document.getElementById("team2BallIcon").style.display = (t2Role === "BOWLING") ? "inline-block" : "none";
 
+    // -------------------------------------------------------------
+    // TOP MIDDLE BOX: Shows strictly the current ball / live event
+    // -------------------------------------------------------------
     const actionEl = document.getElementById("centerLiveAction");
     const latestBallObject = Array.isArray(data.current_over?.balls) && data.current_over.balls.length
         ? data.current_over.balls[data.current_over.balls.length - 1]
@@ -1475,9 +1456,6 @@ function renderScoreData(data, fromCache = false) {
 
     if (eventLabel) {
         showEventFlash(eventLabel, eventType);
-        updateInformationTicker(data, eventLabel);
-    } else {
-        updateInformationTicker(data);
     }
 
     previousEventSignature = eventSignature;
@@ -1494,8 +1472,6 @@ function renderScoreData(data, fromCache = false) {
         data.lastWicketType,
         data.wicket_text,
         data.dismissal_text,
-        data.commentary,
-        data.commentary_text,
         latestBallObject && latestBallObject.dismissal,
         latestBallObject && latestBallObject.dismissal_type,
         latestBallObject && latestBallObject.wicket_type,
@@ -1504,7 +1480,9 @@ function renderScoreData(data, fromCache = false) {
     ];
 
     const dismissalText = possibleDismissalFields.filter(v => v !== null && v !== undefined).map(v => String(v)).join(" ").toUpperCase();
-    let actionText = data.status || data.last_event || data.live_event || data.event || "•";
+
+    // Prefer the raw ball value / event tag first so it doesn't print long sentences in the small box
+    let actionText = ballText || data.last_event || data.live_event || "•";
     actionText = String(actionText).trim();
 
     if (dismissalText.includes("RUN OUT") || dismissalText.includes("RUNOUT")) {
@@ -1516,6 +1494,10 @@ function renderScoreData(data, fromCache = false) {
         else if (eventUpper === "NO BALL" || eventUpper === "NO-BALL") actionText = "NB";
         else if (eventUpper === "FOUR") actionText = "4";
         else if (eventUpper === "SIX") actionText = "6";
+        // If it returns a long phrase or status sentence, fallback to ballText or bullet
+        else if (actionText.length > 8) {
+            actionText = ballText || "•";
+        }
     }
 
     actionEl.textContent = actionText || "•";
@@ -1529,6 +1511,7 @@ function renderScoreData(data, fromCache = false) {
         actionEl.style.fontSize = "26px";
     }
 
+    // CHASE EQUATION UNDER THE BOX
     const chaseEl = document.getElementById("centerChaseEquation");
     chaseEl.textContent = equationText || "";
     chaseEl.style.display = equationText ? "block" : "none";
