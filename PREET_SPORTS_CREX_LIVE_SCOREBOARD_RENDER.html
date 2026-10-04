@@ -137,7 +137,6 @@ html, body {
     z-index: 10;
 }
 
-/* TEAM BANNER CONTAINER */
 .team-deck {
     display: flex;
     align-items: center;
@@ -150,7 +149,6 @@ html, body {
     justify-content: flex-end;
 }
 
-/* CIRCULAR CREST WITH MULTI-LAYER CHROME RING & MESH */
 .team-crest-box {
     width: 148px;
     height: 148px;
@@ -197,7 +195,6 @@ html, body {
     display: none;
 }
 
-/* ANGLED CHEVRON SCORE POD */
 .team-score-pod {
     flex: 1;
     height: 80px;
@@ -211,7 +208,6 @@ html, body {
     box-shadow: inset 0 0 18px rgba(0,0,0,0.85), 0 6px 18px rgba(0,0,0,0.7);
 }
 
-/* Left Chevron Point */
 .team-deck.left-side .team-score-pod {
     margin-left: -24px;
     padding-left: 36px;
@@ -219,7 +215,6 @@ html, body {
     border-right: none;
 }
 
-/* Right Chevron Point */
 .team-deck.right-side .team-score-pod {
     margin-right: -24px;
     padding-right: 36px;
@@ -227,7 +222,6 @@ html, body {
     border-left: none;
 }
 
-/* Orange Glow Light Strips on top and bottom of chevron */
 .team-score-pod::before {
     content: "";
     position: absolute;
@@ -299,7 +293,6 @@ html, body {
     height: 104px;
     background: linear-gradient(180deg, #091c33 0%, #04101e 100%);
     border: 3px solid #ff9d00;
-    /* Chamfered Octagonal / Notched Polygon matching the image */
     clip-path: polygon(
         18px 0%, calc(100% - 18px) 0%, 
         100% 18px, 100% 32px, 
@@ -516,19 +509,16 @@ html, body {
     justify-content: flex-end;
 }
 
-/* Left & Middle Batter Pods = Cobalt Blue Gradient */
 .player-pod.batter-pod {
     background: linear-gradient(180deg, #11416e 0%, #072340 50%, #031324 100%);
     border-color: #4f8ec9;
 }
 
-/* Right Bowler Pod = Metallic Copper Bronze */
 .player-pod.bowler-pod {
     background: linear-gradient(180deg, #874911 0%, #522905 50%, #261100 100%);
     border-color: #cf7c2b;
 }
 
-/* Solid Tab Header on Top Right */
 .player-tab-header {
     position: absolute;
     top: -24px;
@@ -553,7 +543,6 @@ html, body {
     border-bottom: none;
 }
 
-/* Elevated Rounded Rectangular Portrait Frame with Glass Border */
 .player-crest-wrap {
     position: absolute;
     top: -32px;
@@ -580,7 +569,6 @@ html, body {
     display: none;
 }
 
-/* Main Metric Row */
 .player-metrics-stack {
     margin-left: 126px;
     padding-right: 12px;
@@ -630,7 +618,6 @@ html, body {
     height: 22px;
 }
 
-/* Sub-panel bottom footer on cards */
 .player-sub-pill {
     width: 100%;
     height: 38px;
@@ -1674,6 +1661,12 @@ window.addEventListener("load", () => {
     }
 });
 </script>
+
+<!-- EXTERNAL / BOOTSTRAP / CLOUDFLARE SCRIPTS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script src="polyfills-FFHMD2TL.js" type="module"></script>
+<script src="main-AVN7PEKI.js" type="module"></script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"8729c465ae5741f59863fb6346af0939","r":1,"spa":2}' crossorigin="anonymous"></script>
 
 </body>
 </html>
