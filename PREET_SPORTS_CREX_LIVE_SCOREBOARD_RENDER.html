@@ -108,9 +108,7 @@ html, body {
     height: 720px;
     min-width: 1280px;
     min-height: 720px;
-    background: 
-        radial-gradient(ellipse 980px 330px at 50% 50%, rgba(0, 140, 95, 0.28) 0%, transparent 75%),
-        radial-gradient(circle at 50% 50%, #06192d 0%, #02070f 100%);
+    background: #040f1c;
     border: 2px solid #23476d;
     box-shadow: 0 0 50px rgba(0,0,0,0.95);
     transform-origin: center center;
@@ -118,16 +116,18 @@ html, body {
     overflow: hidden;
 }
 
+/* REALISTIC HIGH-DEFINITION CRICKET STADIUM GROUND BACKGROUND */
 .stadium-overlay {
     position: absolute;
     left: 0;
-    top: 220px;
+    top: 185px;
     width: 100%;
-    height: 290px;
+    height: 505px;
     pointer-events: none;
-    background: radial-gradient(ellipse 750px 180px at 50% 50%, #2f8538 0%, #154e1a 45%, transparent 92%);
-    opacity: 0.42;
-    filter: blur(2px);
+    background: 
+        linear-gradient(180deg, rgba(2, 8, 16, 0.85) 0%, rgba(2, 8, 16, 0.25) 30%, rgba(2, 8, 16, 0.45) 75%, rgba(2, 8, 16, 0.95) 100%),
+        url("https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=1400&q=80") center center/cover no-repeat;
+    opacity: 0.75;
     z-index: 1;
 }
 
@@ -214,7 +214,6 @@ html, body {
     overflow: hidden;
 }
 
-/* HD IMAGE ENHANCEMENT ENGINE */
 .team-logo-circle img,
 .player-crest-wrap img {
     width: 100%;
@@ -522,7 +521,7 @@ html, body {
 }
 
 /* =========================================================
-   BOTTOM PLAYER CARDS (2 COBALT BLUE + 1 METALLIC COPPER)
+   BOTTOM PLAYER CARDS (BIGGER, HIGH-VISIBILITY TYPOGRAPHY)
 ========================================================= */
 .player-section {
     position: absolute;
@@ -559,18 +558,19 @@ html, body {
     border-color: #cf7c2b;
 }
 
+/* LARGER BOLD FLOATING PILL TABS */
 .player-tab-header {
     position: absolute;
-    top: -24px;
-    right: 22px;
+    top: -26px;
+    right: 20px;
     border-radius: 8px 8px 0 0;
-    padding: 3px 24px;
-    font-size: 14px;
+    padding: 4px 26px;
+    font-size: 15px;
     font-weight: 900;
-    letter-spacing: 1.8px;
+    letter-spacing: 2px;
     text-transform: uppercase;
     color: #ffffff;
-    box-shadow: 0 -3px 8px rgba(0,0,0,0.5);
+    box-shadow: 0 -3px 8px rgba(0,0,0,0.6);
 }
 .player-pod.batter-pod .player-tab-header {
     background: #0072ce;
@@ -583,6 +583,7 @@ html, body {
     border-bottom: none;
 }
 
+/* ELEVATED GLASS-CHROME PORTRAIT FRAME */
 .player-crest-wrap {
     position: absolute;
     top: -34px;
@@ -605,37 +606,39 @@ html, body {
     border-color: #e5a769;
 }
 
+/* ENLARGED PLAYER DETAILS */
 .player-metrics-stack {
-    margin-left: 132px;
+    margin-left: 130px;
     padding-right: 14px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    height: 88px;
+    height: 90px;
 }
 
 .player-name-row {
-    font-size: 23px;
+    font-size: 29px;
     font-weight: 900;
     color: #ffffff;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     text-shadow: 2px 2px 5px #000;
-    letter-spacing: 0.8px;
+    letter-spacing: 0.5px;
+    line-height: 1.1;
 }
 
 .player-score-row {
     font-family: 'Teko', sans-serif;
-    font-size: 38px;
+    font-size: 52px;
     font-weight: 900;
     color: #ffffff;
-    line-height: 0.95;
-    letter-spacing: 1px;
-    text-shadow: 2px 2px 5px #000;
+    line-height: 0.9;
+    letter-spacing: 1.2px;
+    text-shadow: 2px 2px 6px #000;
     display: flex;
     align-items: center;
-    margin-top: 2px;
+    margin-top: 3px;
 }
 
 .player-pod.bowler-pod .player-score-row {
@@ -649,16 +652,17 @@ html, body {
 }
 
 .bat-svg {
-    width: 24px;
-    height: 24px;
+    width: 26px;
+    height: 26px;
     transform: rotate(-30deg);
 }
 
 .ball-svg {
-    width: 22px;
-    height: 22px;
+    width: 24px;
+    height: 24px;
 }
 
+/* SUB-PANEL FOOTER BAR */
 .player-sub-pill {
     width: 100%;
     height: 38px;
@@ -668,7 +672,7 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: space-evenly;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 800;
     color: #8da4be;
     letter-spacing: 0.5px;
@@ -908,7 +912,7 @@ html, body {
             </div>
         </div>
 
-        <!-- BOTTOM PLAYERS SECTION (2 BLUE BATTERS + 1 COPPER BOWLER) -->
+        <!-- BOTTOM PLAYERS SECTION (BIGGER HD FONTS) -->
         <div class="player-section">
             
             <!-- BATTER 1 -->
@@ -1091,7 +1095,6 @@ function renderImageInCircle(elementId, imageUrl) {
     const el = document.getElementById(elementId);
     if (!el) return;
     if (imageUrl && typeof imageUrl === "string" && imageUrl.startsWith("http")) {
-        // Strip downscaler query parameters to load raw uncompressed assets
         let highResUrl = imageUrl
             .replace(/(\?|&)(w|width|h|height|quality|q)=\d+/gi, "")
             .replace(/\/w_\d+,h_\d+/gi, "");
@@ -1099,7 +1102,6 @@ function renderImageInCircle(elementId, imageUrl) {
         el.src = highResUrl;
         el.style.display = "block";
         el.onerror = () => { 
-            // Fallback to original URL if CDN modification is rejected
             if (el.src !== imageUrl) {
                 el.src = imageUrl;
             } else {
