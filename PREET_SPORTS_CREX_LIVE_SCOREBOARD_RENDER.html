@@ -18,7 +18,7 @@ html, body {
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background-color: #030811;
+    background-color: #02070f;
     font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
 }
 
@@ -40,11 +40,11 @@ html, body {
     display: flex;
     align-items: center;
     gap: 8px;
-    background: rgba(4, 15, 29, 0.95);
+    background: rgba(3, 14, 28, 0.96);
     border: 2px solid #ff9d00;
     border-radius: 30px;
     padding: 5px 14px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.85);
+    box-shadow: 0 6px 25px rgba(0,0,0,0.9);
     width: 90%;
     max-width: 920px;
 }
@@ -87,7 +87,7 @@ html, body {
 }
 
 /* =========================================================
-   EXACT 1280 x 720 CANVAS - STEEL BLUE CYBER BROADCAST THEME
+   1280 x 720 CANVAS - 10/10 CYBER BLUE & GOLD HYBRID
 ========================================================= */
 .scoreboard {
     position: relative;
@@ -96,89 +96,104 @@ html, body {
     min-width: 1280px;
     min-height: 720px;
     background: 
-        radial-gradient(ellipse 950px 320px at 50% 50%, rgba(0, 110, 80, 0.28) 0%, transparent 80%),
-        radial-gradient(circle at 50% 50%, #06182c 0%, #02070e 100%);
-    border: 2px solid #3d6085;
+        radial-gradient(ellipse 980px 330px at 50% 50%, rgba(0, 140, 95, 0.25) 0%, transparent 75%),
+        radial-gradient(circle at 50% 50%, #06192d 0%, #02070f 100%);
+    border: 2px solid #23476d;
     box-shadow: 0 0 50px rgba(0,0,0,0.95);
     transform-origin: center center;
     flex-shrink: 0;
     overflow: hidden;
 }
 
-/* STADIUM BG GRAPHIC OVERLAY */
+/* STADIUM BG LIGHTING EFFECT */
 .stadium-overlay {
     position: absolute;
     left: 0;
-    top: 240px;
+    top: 220px;
     width: 100%;
-    height: 250px;
+    height: 290px;
     pointer-events: none;
-    background: radial-gradient(ellipse 700px 180px at 50% 50%, #2f8538 0%, #154e1a 50%, transparent 95%);
-    opacity: 0.35;
-    filter: blur(4px);
+    background: radial-gradient(ellipse 750px 180px at 50% 50%, #2f8538 0%, #154e1a 45%, transparent 92%);
+    opacity: 0.38;
+    filter: blur(3px);
     z-index: 1;
 }
 
 /* =========================================================
-   TOP HEADER BAR & CHEVRONS
+   TOP HEADER FRAME & CHEVRONS
 ========================================================= */
 .top-header-frame {
     position: absolute;
     left: 0;
     top: 0;
     width: 100%;
-    height: 190px;
-    background: linear-gradient(180deg, #010b17 0%, #07192f 50%, #010c18 100%);
-    border-bottom: 3px solid #14355a;
+    height: 185px;
+    background: linear-gradient(180deg, #010a15 0%, #081a30 50%, #020b17 100%);
+    border-bottom: 2.5px solid #1c4573;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 20px;
+    padding: 0 24px;
     z-index: 10;
+}
+
+/* TOP RIGHT ACCENT TAB */
+.top-right-accent-tab {
+    position: absolute;
+    top: 0;
+    right: 215px;
+    width: 155px;
+    height: 24px;
+    background: linear-gradient(180deg, #1b7a3e 0%, #0d4621 100%);
+    border: 1.5px solid #38b765;
+    border-top: none;
+    clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%);
+    z-index: 12;
 }
 
 .team-deck {
     display: flex;
     align-items: center;
-    width: 485px;
-    height: 140px;
+    width: 490px;
+    height: 145px;
     position: relative;
 }
-
 .team-deck.right-side {
     justify-content: flex-end;
 }
 
+/* 3D CHROME DOUBLE-RING TEAM CREST */
 .team-crest-box {
-    width: 148px;
-    height: 148px;
+    width: 146px;
+    height: 146px;
     border-radius: 50%;
-    background: radial-gradient(circle, #0e2747 0%, #051427 80%, #020a16 100%);
-    border: 6px solid #b8cadc;
+    background: radial-gradient(circle, #0e294b 0%, #06162a 75%, #020813 100%);
+    border: 6px solid #cfdeed;
     box-shadow: 
-        0 0 0 3px #1a395b,
+        0 0 0 3px #15375c,
         0 8px 25px rgba(0,0,0,0.85),
-        inset 0 0 15px rgba(0, 0, 0, 0.9);
+        inset 0 0 16px rgba(0,0,0,0.9);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
     position: relative;
-    z-index: 5;
+    z-index: 6;
 }
 
 .team-crest-box::after {
     content: "";
     position: absolute;
-    inset: 4px;
+    inset: 3px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(255,255,255,0.1) 10%, transparent 60%);
+    border: 1px solid rgba(255,255,255,0.4);
+    background: radial-gradient(circle at 35% 25%, rgba(255,255,255,0.18), transparent 60%);
     pointer-events: none;
 }
 
 .team-logo-circle {
-    width: 120px;
-    height: 120px;
+    width: 116px;
+    height: 116px;
     border-radius: 50%;
     background: #020914;
     border: 2px solid #5784b1;
@@ -195,33 +210,34 @@ html, body {
     display: none;
 }
 
+/* CHEVRON SCORE PODS */
 .team-score-pod {
     flex: 1;
-    height: 80px;
-    background: linear-gradient(180deg, #10243d 0%, #06162a 50%, #030d1a 100%);
-    border: 2px solid #4a75a0;
+    height: 78px;
+    background: linear-gradient(180deg, #122844 0%, #07192e 50%, #030e1c 100%);
+    border-top: 2px solid #4a75a0;
+    border-bottom: 2px solid #4a75a0;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 25px;
+    padding: 0 28px;
     position: relative;
     box-shadow: inset 0 0 18px rgba(0,0,0,0.85), 0 6px 18px rgba(0,0,0,0.7);
 }
 
 .team-deck.left-side .team-score-pod {
-    margin-left: -24px;
+    margin-left: -22px;
     padding-left: 36px;
     clip-path: polygon(0 0, 88% 0, 100% 50%, 88% 100%, 0 100%);
-    border-right: none;
 }
 
 .team-deck.right-side .team-score-pod {
-    margin-right: -24px;
+    margin-right: -22px;
     padding-right: 36px;
     clip-path: polygon(12% 0, 100% 0, 100% 100%, 12% 100%, 0 50%);
-    border-left: none;
 }
 
+/* ORANGE FLARE ACCENT STRIPS */
 .team-score-pod::before {
     content: "";
     position: absolute;
@@ -257,7 +273,7 @@ html, body {
     display: flex;
     align-items: center;
     gap: 6px;
-    text-shadow: 0 0 10px rgba(0, 210, 255, 0.6);
+    text-shadow: 0 0 12px rgba(0, 210, 255, 0.7);
 }
 
 .badge-ball-icon {
@@ -286,12 +302,12 @@ html, body {
 }
 
 /* =========================================================
-   CENTER NOTCHED CYBER MONITOR
+   CENTER NOTCHED CYBER DISPLAY MONITOR
 ========================================================= */
 .center-event-monitor {
-    width: 250px;
-    height: 104px;
-    background: linear-gradient(180deg, #091c33 0%, #04101e 100%);
+    width: 254px;
+    height: 106px;
+    background: linear-gradient(180deg, #0a213c 0%, #041222 100%);
     border: 3px solid #ff9d00;
     clip-path: polygon(
         18px 0%, calc(100% - 18px) 0%, 
@@ -319,9 +335,9 @@ html, body {
     content: "";
     position: absolute;
     top: -2px;
-    width: 60%;
+    width: 65%;
     height: 3px;
-    background: #fff;
+    background: #ffffff;
     box-shadow: 0 0 10px #ffbb45;
 }
 
@@ -329,9 +345,9 @@ html, body {
     content: "";
     position: absolute;
     bottom: -2px;
-    width: 60%;
+    width: 65%;
     height: 3px;
-    background: #fff;
+    background: #ffffff;
     box-shadow: 0 0 10px #ffbb45;
 }
 
@@ -348,7 +364,7 @@ html, body {
     position: absolute;
     left: 0;
     right: 0;
-    top: 152px;
+    top: 154px;
     text-align: center;
     font-size: 14px;
     font-weight: 900;
@@ -365,11 +381,11 @@ html, body {
 .stats-ribbon-upper {
     position: absolute;
     left: 0;
-    top: 190px;
+    top: 185px;
     width: 100%;
-    height: 32px;
-    background: linear-gradient(180deg, #0f243b 0%, #061424 100%);
-    border-top: 1.5px solid #2d557f;
+    height: 34px;
+    background: linear-gradient(180deg, #0e233a 0%, #051424 100%);
+    border-top: 1.5px solid #28517c;
     border-bottom: 1.5px solid #00aaff;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -377,7 +393,7 @@ html, body {
 }
 
 .ribbon-cell {
-    border-right: 1.5px solid #1c3c5f;
+    border-right: 1.5px solid #1a395b;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -397,11 +413,11 @@ html, body {
 .stats-ribbon-lower {
     position: absolute;
     left: 0;
-    top: 222px;
+    top: 219px;
     width: 100%;
-    height: 36px;
+    height: 38px;
     background: linear-gradient(180deg, #051322 0%, #01070e 100%);
-    border-bottom: 2px solid #2d557f;
+    border-bottom: 2px solid #28517c;
     display: flex;
     align-items: center;
     justify-content: space-evenly;
@@ -457,7 +473,7 @@ html, body {
 .over-divider-line {
     width: 1.5px;
     height: 22px;
-    background: #2d557f;
+    background: #28517c;
     flex-shrink: 0;
 }
 
@@ -482,25 +498,25 @@ html, body {
 }
 
 /* =========================================================
-   BOTTOM PLAYER SECTION (2 BLUE + 1 COPPER CARD)
+   BOTTOM PLAYER CARDS (2 COBALT BLUE + 1 METALLIC COPPER)
 ========================================================= */
 .player-section {
     position: absolute;
     left: 0;
-    bottom: 30px;
+    bottom: 28px;
     width: 100%;
-    height: 180px;
+    height: 185px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 16px;
-    padding: 0 18px;
+    padding: 0 20px;
     z-index: 10;
 }
 
 .player-pod {
     position: relative;
-    height: 145px;
-    margin-top: 30px;
+    height: 148px;
+    margin-top: 32px;
     border-radius: 12px;
     border: 2px solid #5784b1;
     box-shadow: inset 0 0 20px rgba(0,0,0,0.85), 0 8px 25px rgba(0,0,0,0.8);
@@ -509,20 +525,23 @@ html, body {
     justify-content: flex-end;
 }
 
+/* BATTER CARDS */
 .player-pod.batter-pod {
-    background: linear-gradient(180deg, #11416e 0%, #072340 50%, #031324 100%);
-    border-color: #4f8ec9;
+    background: linear-gradient(180deg, #114270 0%, #072442 50%, #031324 100%);
+    border-color: #4b8cc9;
 }
 
+/* BOWLER CARD */
 .player-pod.bowler-pod {
     background: linear-gradient(180deg, #874911 0%, #522905 50%, #261100 100%);
     border-color: #cf7c2b;
 }
 
+/* FLOATING PILL TABS */
 .player-tab-header {
     position: absolute;
     top: -24px;
-    right: 20px;
+    right: 22px;
     border-radius: 8px 8px 0 0;
     padding: 3px 22px;
     font-size: 13px;
@@ -534,7 +553,7 @@ html, body {
 }
 .player-pod.batter-pod .player-tab-header {
     background: #0072ce;
-    border: 1.5px solid #4f8ec9;
+    border: 1.5px solid #4b8cc9;
     border-bottom: none;
 }
 .player-pod.bowler-pod .player-tab-header {
@@ -543,16 +562,19 @@ html, body {
     border-bottom: none;
 }
 
+/* ELEVATED GLASS-CHROME PORTRAIT FRAME */
 .player-crest-wrap {
     position: absolute;
-    top: -32px;
-    left: 12px;
-    width: 104px;
-    height: 128px;
+    top: -34px;
+    left: 14px;
+    width: 106px;
+    height: 132px;
     border-radius: 12px;
     background: #02070f;
-    border: 3.5px solid #a4c0db;
-    box-shadow: 0 0 15px rgba(0,0,0,0.9), inset 0 0 10px rgba(0,0,0,0.95);
+    border: 3.5px solid #bdd1e6;
+    box-shadow: 
+        0 6px 18px rgba(0,0,0,0.9), 
+        inset 0 0 12px rgba(0,0,0,0.95);
     overflow: hidden;
     display: flex;
     align-items: center;
@@ -560,7 +582,7 @@ html, body {
     z-index: 5;
 }
 .player-pod.bowler-pod .player-crest-wrap {
-    border-color: #df9e5e;
+    border-color: #e5a769;
 }
 .player-crest-wrap img {
     width: 100%;
@@ -569,17 +591,18 @@ html, body {
     display: none;
 }
 
+/* MAIN PLAYER METRIC ROW */
 .player-metrics-stack {
-    margin-left: 126px;
-    padding-right: 12px;
+    margin-left: 132px;
+    padding-right: 14px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    height: 85px;
+    height: 88px;
 }
 
 .player-name-row {
-    font-size: 20px;
+    font-size: 21px;
     font-weight: 900;
     color: #ffffff;
     white-space: nowrap;
@@ -589,7 +612,7 @@ html, body {
 }
 
 .player-score-row {
-    font-size: 26px;
+    font-size: 27px;
     font-weight: 900;
     color: #ffffff;
     text-shadow: 2px 2px 4px #000;
@@ -618,11 +641,12 @@ html, body {
     height: 22px;
 }
 
+/* SUB-PANEL FOOTER BAR */
 .player-sub-pill {
     width: 100%;
     height: 38px;
     background: #01060d;
-    border-top: 1.5px solid #1c3c5f;
+    border-top: 1.5px solid #1a395b;
     border-radius: 0 0 10px 10px;
     display: flex;
     align-items: center;
@@ -646,7 +670,7 @@ html, body {
     width: 100%;
     height: 26px;
     background: linear-gradient(180deg, #091b2e 0%, #03080e 100%);
-    border-top: 1.5px solid #2d557f;
+    border-top: 1.5px solid #28517c;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -662,7 +686,7 @@ html, body {
 }
 
 /* =========================================================
-   ANIMATIONS & OVERLAYS
+   LIVE PULSE & BROADCAST ANIMATIONS
 ========================================================= */
 @keyframes livePulse {
     0%, 100% { opacity: 1; transform: scale(1); }
@@ -795,6 +819,9 @@ html, body {
 
         <!-- TOP BAR -->
         <div class="top-header-frame">
+
+            <!-- UPPER GREEN ACCENT TAB -->
+            <div class="top-right-accent-tab"></div>
 
             <!-- LEFT TEAM CHEVRON -->
             <div class="team-deck left-side">
@@ -1662,7 +1689,7 @@ window.addEventListener("load", () => {
 });
 </script>
 
-<!-- EXTERNAL / BOOTSTRAP / CLOUDFLARE SCRIPTS -->
+<!-- EXTERNAL BOOTSTRAP & CLOUDFLARE SCRIPTS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 <script src="polyfills-FFHMD2TL.js" type="module"></script>
 <script src="main-AVN7PEKI.js" type="module"></script>
