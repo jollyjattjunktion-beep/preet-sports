@@ -6,7 +6,7 @@
 <title>Preet Sports OBS Scoreboard - 1280x720</title>
 <style>
 /* =========================================================
-   BASE RESET
+   BASE RESET & CANVAS SETUP
 ========================================================= */
 * {
     box-sizing: border-box;
@@ -18,8 +18,8 @@ html, body {
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background-color: #120103;
-    font-family: Arial, Helvetica, sans-serif;
+    background-color: #0b0103;
+    font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
 }
 
 .screen-wrapper {
@@ -33,15 +33,14 @@ html, body {
 }
 
 /* FLOATING URL CONTROL BAR */
-.url-control-bar { display: none !important;
-    
+.url-control-bar {
     position: absolute;
     top: 8px;
     z-index: 99999;
     display: flex;
     align-items: center;
     gap: 8px;
-    background: rgba(28, 4, 7, 0.94);
+    background: rgba(18, 2, 5, 0.95);
     border: 2px solid #d5b500;
     border-radius: 30px;
     padding: 5px 14px;
@@ -88,7 +87,7 @@ html, body {
 }
 
 /* =========================================================
-   EXACT 1280 × 720 CANVAS
+   EXACT 1280 x 720 CANVAS WITH NEW TEMPLATE THEME
 ========================================================= */
 .scoreboard {
     position: relative;
@@ -96,133 +95,174 @@ html, body {
     height: 720px;
     min-width: 1280px;
     min-height: 720px;
-    background: linear-gradient(
-        180deg,
-        #230300 0%,
-        #3d0804 25%,
-        #180000 100%
-    );
+    /* Stadium & Dark Crimson Vignette Background */
+    background: 
+        radial-gradient(ellipse 950px 380px at 50% 58%, rgba(20, 90, 25, 0.45) 0%, rgba(10, 40, 15, 0.1) 75%, transparent 100%),
+        radial-gradient(circle at 50% 50%, #150204 0%, #080002 100%);
     border: 3px solid #d5b500;
-    box-shadow: 0 0 40px rgba(0,0,0,0.8);
+    box-shadow: 0 0 45px rgba(0,0,0,0.9);
     transform-origin: center center;
     flex-shrink: 0;
+    overflow: hidden;
+}
+
+/* STADIUM TURF GRAPHIC EMBED */
+.stadium-overlay {
+    position: absolute;
+    left: 0;
+    top: 250px;
+    width: 100%;
+    height: 290px;
+    pointer-events: none;
+    opacity: 0.35;
+    background: radial-gradient(ellipse 700px 220px at 50% 50%, #2f852a 0%, #144917 60%, transparent 100%);
+    border-radius: 50%;
+    filter: blur(2px);
+    z-index: 1;
 }
 
 /* =========================================================
-   TOP SECTION (BROADCAST SCORE DISPLAY)
+   TOP HEADER BAR
 ========================================================= */
-.top-section {
+.top-header-frame {
     position: absolute;
     left: 0;
     top: 0;
     width: 100%;
-    height: 185px;
+    height: 140px;
+    background: linear-gradient(180deg, #420207 0%, #290004 85%, #180002 100%);
+    border-bottom: 2.5px solid #d5b500;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 22px;
+    padding: 0 14px;
+    z-index: 10;
 }
 
-/* LEFT SIDE: 4K CIRCLE CREST + NAME PILL + BIG SCORE + OVERS PILL */
-.left-team-display {
+/* TEAM SQUARES & RED PANELS */
+.team-deck {
     display: flex;
     align-items: center;
-    gap: 18px;
-    width: 440px;
+    gap: 12px;
+    width: 460px;
+    height: 116px;
+    position: relative;
+}
+
+.team-deck.right-side {
+    justify-content: flex-end;
+}
+
+/* Outer Crest Box */
+.team-crest-box {
+    width: 110px;
+    height: 110px;
+    background: #090002;
+    border: 2px solid #a67c1e;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.9), 0 0 12px rgba(213, 181, 0, 0.25);
+    flex-shrink: 0;
 }
 
 .team-logo-circle {
-    width: 138px;
-    height: 138px;
+    width: 94px;
+    height: 94px;
     border-radius: 50%;
-    border: 5px solid #ffd700;
-    background: radial-gradient(circle, #2a0408 0%, #150003 100%);
+    border: 3.5px solid #ffd700;
+    background: radial-gradient(circle, #2a0408 0%, #110003 100%);
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    flex-shrink: 0;
-    box-shadow: 
-        0 0 0 3px #b8860b,
-        0 0 25px rgba(255, 215, 0, 0.45),
-        inset 0 0 16px rgba(0, 0, 0, 0.85),
-        0 6px 20px rgba(0, 0, 0, 0.75);
-    transform: translateZ(0);
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
+    box-shadow: 0 0 14px rgba(255, 215, 0, 0.45);
 }
 
 .team-logo-circle img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center;
-    border-radius: 50%;
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: crisp-edges;
-    image-rendering: high-quality;
-    transform: translateZ(0);
     display: none;
 }
 
-.team-info-stack {
+/* Crimson Red Score Deck with Gold Bevel */
+.team-score-pod {
+    flex: 1;
+    height: 110px;
+    border: 2px solid #ffd700;
+    border-radius: 20px;
+    background: radial-gradient(ellipse at 50% 30%, #870b17 0%, #4a0208 70%, #200003 100%);
+    box-shadow: inset 0 0 18px rgba(255, 215, 0, 0.2), 0 4px 15px rgba(0,0,0,0.7);
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
     justify-content: center;
+    padding: 6px 18px;
+    position: relative;
+}
+
+.team-deck.right-side .team-score-pod {
+    align-items: flex-end;
+    text-align: right;
 }
 
 .team-badge-pill {
-    background: #1b0305;
-    border: 2px solid #d5b500;
+    background: #140003;
+    border: 1.5px solid #d5b500;
     border-radius: 6px;
-    padding: 3px 14px;
+    padding: 2px 10px;
     color: #ffffff;
-    font-size: 20px;
+    font-size: 16px;
     font-weight: 900;
     letter-spacing: 1px;
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+}
+
+.badge-ball-icon {
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #ff4d4d, #990000);
+    border: 1px solid #ffffff;
+    display: inline-block;
 }
 
 .team-big-score {
-    font-size: 58px;
+    font-size: 48px;
     font-weight: 900;
     color: #ffd700;
-    line-height: 1.05;
+    line-height: 1;
     letter-spacing: 1.5px;
-    text-shadow: 3px 3px 6px #000;
-    margin: 2px 0;
+    text-shadow: 2px 3px 6px #000;
+    margin: 3px 0;
 }
 
 .team-overs-pill {
-    background: #1a0204;
-    border: 1.5px solid #d5b500;
-    border-radius: 14px;
-    padding: 3px 16px;
     color: #ffffff;
-    font-size: 15px;
-    font-weight: 900;
-    letter-spacing: 1px;
-    box-shadow: inset 0 0 6px rgba(0,0,0,0.6);
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    text-shadow: 1px 1px 3px #000;
 }
 
-/* CENTER BOX: NEON CYAN ROUNDED BORDER */
-.center-panel {
+/* CENTER BLACK DISPLAY BOX (ROUNDED BEVEL) */
+.center-event-monitor {
     width: 250px;
-    height: 110px;
-    border: 3.5px solid #00d2ff;
-    border-radius: 24px;
-    background: rgba(0, 18, 30, 0.94);
-    box-shadow: 0 0 22px rgba(0, 210, 255, 0.55), inset 0 0 15px rgba(0, 210, 255, 0.25);
+    height: 114px;
+    background: #000000;
+    border: 2.5px solid #e5b300;
+    border-radius: 18px;
+    box-shadow: 0 0 25px rgba(229, 179, 0, 0.4), inset 0 0 20px rgba(0,0,0,0.95);
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    text-align: center;
     padding: 6px;
-    z-index: 10;
+    position: relative;
+    z-index: 20;
 }
 
 .center-live-action {
@@ -231,160 +271,106 @@ html, body {
     color: #ffffff;
     line-height: 1;
     letter-spacing: 1px;
-    text-transform: uppercase;
-    text-shadow: 0 0 14px rgba(0, 210, 255, 0.8), 2px 2px 4px #000;
+    text-shadow: 0 0 14px rgba(255, 215, 0, 0.8), 2px 2px 4px #000;
 }
 
-/* CHASE EQUATION UNDER THE MIDDLE BOX */
 .center-chase-equation {
     position: absolute;
     left: 0;
     right: 0;
-    top: 150px;
-    margin: 0 auto;
+    top: 145px;
     text-align: center;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 900;
     color: #ffd700;
     letter-spacing: 0.5px;
-    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5), 2px 2px 4px #000;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.6), 2px 2px 4px #000;
     white-space: nowrap;
-    z-index: 12;
+    z-index: 15;
 }
 
-/* RIGHT SIDE: NAME PILL + BIG SCORE + OVERS PILL + CREST */
-.right-team-display {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 18px;
-    width: 440px;
-}
-
-.right-team-display .team-info-stack {
-    align-items: flex-end;
-}
-
-/* SMALL CRICKET BALL FOR TEAM BADGE */
-.badge-ball-icon {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 35% 35%, #ff4d4d, #990000);
-    border: 1px solid #ffffff;
-    display: inline-block;
-}
-
-/* STATS ROW */
-.info-row {
+/* =========================================================
+   TWO-TIER METALLIC NAVY STATS & TICKER BARS
+========================================================= */
+.stats-ribbon-upper {
     position: absolute;
     left: 0;
-    top: 188px;
+    top: 172px;
     width: 100%;
-    height: 105px;
+    height: 38px;
+    background: linear-gradient(180deg, #1c2738 0%, #0d1522 100%);
+    border-top: 1.5px solid #d5b500;
+    border-bottom: 1.5px solid #d5b500;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
+    z-index: 10;
+}
+
+.ribbon-cell {
+    border-right: 1.5px solid #d5b500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     gap: 8px;
-    padding: 0 6px;
-}
-
-.info-box {
-    position: relative;
-    height: 100px;
-    border: 2px solid #e9d77a;
-    border-radius: 18px;
-    background: radial-gradient(
-        ellipse at center top,
-        rgba(255, 170, 0, 0.45),
-        rgba(75, 38, 0, 0.96) 42%,
-        rgba(20, 10, 0, 0.98) 100%
-    );
-    box-shadow: inset 0 0 25px rgba(255, 145, 0, 0.25);
-}
-
-.info-label {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 14px;
-    text-align: center;
-    font-size: 18px;
-    font-weight: 800;
-    color: #e7d76c;
-    letter-spacing: 1px;
-}
-
-.info-value {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 44px;
-    text-align: center;
-    font-size: 30px;
-    font-weight: 900;
     color: #ffffff;
-    text-shadow: 2px 2px 3px #000;
+    font-size: 15px;
+    font-weight: 900;
+    letter-spacing: 0.8px;
+}
+.ribbon-cell:last-child {
+    border-right: none;
+}
+.ribbon-label {
+    color: #ffd700;
 }
 
-/* MAGENTA OVER TICKER */
-.magenta-divider {
+/* LOWER TICKER: RECENT OVERS & LAST WICKET */
+.stats-ribbon-lower {
     position: absolute;
     left: 0;
-    top: 298px;
+    top: 212px;
     width: 100%;
-    height: 48px;
-    background: linear-gradient(
-        180deg,
-        #f000c7 0%,
-        #bf00aa 35%,
-        #81006d 100%
-    );
-    border-top: 2px solid #e5d000;
-    border-bottom: 2px solid #e5d000;
-    box-shadow:
-        inset 0 4px 8px rgba(255, 255, 255, 0.18),
-        inset 0 -6px 10px rgba(0, 0, 0, 0.4);
+    height: 44px;
+    background: linear-gradient(180deg, #091322 0%, #030811 100%);
+    border-bottom: 2px solid #d5b500;
     display: flex;
     align-items: center;
     justify-content: space-evenly;
     padding: 0 16px;
-    overflow: hidden;
+    z-index: 10;
 }
 
 .over-column {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
 }
 
 .over-title {
-    font-size: 17px;
+    font-size: 15px;
     font-weight: 900;
-    color: #fff;
-    letter-spacing: 0.5px;
-    text-shadow: 1px 1px 3px #000;
+    color: #ffd700;
     white-space: nowrap;
 }
 
 .balls-container {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
 }
 
 .ball-circle {
-    width: 30px;
-    height: 30px;
+    width: 27px;
+    height: 27px;
     border-radius: 50%;
-    background: #170007;
-    border: 2px solid #ffd700;
+    background: #120103;
+    border: 1.5px solid #ffd700;
     color: #ffffff;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 900;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
 }
 
 .ball-circle.four { background: #0275d8; border-color: #70baff; }
@@ -393,17 +379,16 @@ html, body {
 .ball-circle.extra { background: #d97706; border-color: #fed7aa; }
 
 .over-total {
-    font-size: 17px;
+    font-size: 15px;
     font-weight: 900;
-    color: #ffe066;
-    margin-left: 4px;
-    text-shadow: 1px 1px 3px #000;
+    color: #ffffff;
+    margin-left: 2px;
 }
 
 .over-divider-line {
-    width: 2px;
-    height: 30px;
-    background: rgba(255, 255, 255, 0.45);
+    width: 1.5px;
+    height: 26px;
+    background: #d5b500;
     flex-shrink: 0;
 }
 
@@ -413,225 +398,212 @@ html, body {
     gap: 6px;
     white-space: nowrap;
 }
-
 .ticker-info-label {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 900;
     color: #ffd700;
-    letter-spacing: 0.5px;
-    text-shadow: 1px 1px 3px #000;
 }
-
 .ticker-info-val {
-    font-size: 17px;
+    font-size: 15px;
     font-weight: 900;
     color: #ffffff;
-    letter-spacing: 0.5px;
-    text-shadow: 1px 1px 3px #000;
-    max-width: 260px;
+    max-width: 280px;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-/* BOTTOM PLAYERS SECTION (3 COLUMNS) */
+/* =========================================================
+   BOTTOM PLAYER PODS (3 COLUMNS)
+========================================================= */
 .player-section {
     position: absolute;
     left: 0;
-    top: 500px;
+    bottom: 35px;
     width: 100%;
-    height: 190px;
+    height: 145px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-    padding: 0 6px;
+    gap: 12px;
+    padding: 0 14px;
+    z-index: 10;
 }
 
-.player-col {
+.player-pod {
+    position: relative;
+    height: 100%;
+    background: linear-gradient(180deg, #101924 0%, #060a10 100%);
+    border: 2px solid #c99f2b;
+    border-radius: 12px;
+    box-shadow: inset 0 0 16px rgba(0,0,0,0.8), 0 4px 15px rgba(0,0,0,0.85);
     display: flex;
-    flex-direction: column;
-    position: relative;
+    align-items: center;
+    padding: 0 12px;
 }
 
-.player-card {
-    position: relative;
-    height: 122px;
-    overflow: hidden;
-    border: 2px solid #d7b900;
-    border-radius: 16px;
-    background: linear-gradient(
-        110deg,
-        #300006 0%,
-        #710014 35%,
-        #c51b3a 50%,
-        #73000e 70%,
-        #280004 100%
-    );
-}
-
-.player-card::before {
-    content: "";
+/* Header Tab Cap */
+.player-tab-header {
     position: absolute;
-    left: 190px;
-    top: -30px;
+    top: -16px;
+    left: 28px;
+    background: linear-gradient(180deg, #2b394e 0%, #151e2b 100%);
+    border: 1.5px solid #c99f2b;
+    border-bottom: none;
+    border-radius: 6px 6px 0 0;
+    padding: 2px 14px;
+    font-size: 11px;
+    font-weight: 900;
+    color: #ffd700;
+    letter-spacing: 1px;
+}
+
+/* Circular Badge for Player Avatar */
+.player-crest-wrap {
     width: 90px;
-    height: 180px;
-    transform: rotate(18deg);
-    background: rgba(255, 255, 255, 0.15);
-}
-
-.player-image {
-    position: absolute;
-    left: 8px;
-    top: 0px;
-    width: 115px;
-    height: 115px;
+    height: 90px;
     border-radius: 50%;
-    border: 5px solid #d9bd00;
-    background: radial-gradient(circle, #9a9a9a 0%, #666666 100%);
+    border: 3.5px solid #d5b500;
+    background: #05080c;
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 3;
+    flex-shrink: 0;
+    box-shadow: 0 0 12px rgba(213, 181, 0, 0.4);
 }
-.player-image img {
+
+.player-crest-wrap img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 50%;
     display: none;
 }
 
-.player-data {
-    position: absolute;
-    left: 135px;
-    right: 10px;
-    top: 14px;
-    z-index: 5;
-    color: #ffffff;
-    text-align: left;
+.player-metrics-stack {
+    flex: 1;
+    margin-left: 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
 }
 
-.player-name {
-    font-size: 22px;
+.player-name-row {
+    font-size: 20px;
     font-weight: 900;
+    color: #ffffff;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    text-shadow: 2px 2px 3px #000;
+    text-shadow: 2px 2px 4px #000;
 }
 
-.player-score {
-    margin-top: 8px;
-    font-size: 30px;
+.player-score-row {
+    font-size: 26px;
     font-weight: 900;
-    text-shadow: 2px 2px 3px #000;
+    color: #ffd700;
+    text-shadow: 2px 2px 4px #000;
     display: flex;
     align-items: center;
 }
 
 .icon-badge {
-    margin-left: 10px;
+    margin-left: 8px;
     display: inline-flex;
     align-items: center;
-    justify-content: center;
 }
 
 .bat-svg {
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
     transform: rotate(-30deg);
-    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.85));
 }
 
 .ball-svg {
-    width: 26px;
-    height: 26px;
-    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.85));
+    width: 22px;
+    height: 22px;
 }
 
-.player-bottom-col {
-    margin-top: 4px;
-    height: 48px;
-    border: 2px solid #d7b900;
-    border-radius: 10px;
-    background: linear-gradient(
-        90deg,
-        #170000,
-        #36000c,
-        #170000
-    );
+/* Pill Stat Outline at bottom of pod */
+.player-sub-pill {
+    background: rgba(0, 0, 0, 0.6);
+    border: 1.5px solid #c99f2b;
+    border-radius: 20px;
+    padding: 3px 12px;
     display: flex;
     align-items: center;
-    justify-content: space-evenly;
-    color: #ffd700;
-    font-size: 19px;
-    font-weight: 900;
-    letter-spacing: 0.5px;
+    justify-content: space-between;
+    font-size: 14px;
+    font-weight: 800;
+    color: #e5b300;
+    margin-top: 4px;
 }
-.player-bottom-col .stat-item {
-    display: flex;
-    align-items: baseline;
-    gap: 4px;
-}
-.player-bottom-col .stat-val {
+.player-sub-pill .val {
     color: #ffffff;
 }
 
 /* =========================================================
-   PREET SPORTS — LIVE BROADCAST ANIMATION LAYER
-   Data-driven only: animations trigger when live data changes.
+   BOTTOM GOLD PROMO BAR
 ========================================================= */
+.bottom-promo-footer {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 28px;
+    background: linear-gradient(180deg, #ffd700 0%, #b8860b 100%);
+    border-top: 1.5px solid #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 30;
+}
 
+.bottom-promo-footer span {
+    color: #0d0103;
+    font-size: 15px;
+    font-weight: 900;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+}
+
+/* =========================================================
+   ANIMATIONS & OVERLAYS
+========================================================= */
 @keyframes livePulse {
-    0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 45, 45, 0.45); }
-    50% { opacity: 0.72; transform: scale(1.035); box-shadow: 0 0 0 8px rgba(255, 45, 45, 0); }
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.04); }
 }
 
 @keyframes scoreChange {
     0% { transform: scale(1); filter: brightness(1); }
-    35% { transform: scale(1.22); filter: brightness(1.8); }
+    35% { transform: scale(1.2); filter: brightness(1.8); }
     100% { transform: scale(1); filter: brightness(1); }
 }
 
-@keyframes ballEnter {
-    0% { opacity: 0; transform: scale(0.45) translateY(-8px); }
-    65% { opacity: 1; transform: scale(1.18) translateY(0); }
-    100% { opacity: 1; transform: scale(1); }
-}
-
-
 @keyframes eventPop {
-    0% { opacity: 0; transform: translate(-50%, 8px) scale(0.72); }
-    8% { opacity: 1; transform: translate(-50%, 0) scale(1.08); }
-    16% { opacity: 1; transform: translate(-50%, 0) scale(1); }
-    84% { opacity: 1; transform: translate(-50%, 0) scale(1); }
-    100% { opacity: 0; transform: translate(-50%, -5px) scale(0.96); }
-}
-
-@keyframes marqueeMove {
-    from { transform: translateX(100%); }
-    to { transform: translateX(-100%); }
+    0% { opacity: 0; transform: translate(-50%, 8px) scale(0.75); }
+    10% { opacity: 1; transform: translate(-50%, 0) scale(1.05); }
+    85% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+    100% { opacity: 0; transform: translate(-50%, -5px) scale(0.95); }
 }
 
 .live-badge {
     position: absolute;
-    top: 7px;
+    top: 6px;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 30;
+    z-index: 40;
     display: flex;
     align-items: center;
-    gap: 7px;
-    padding: 4px 12px;
+    gap: 6px;
+    padding: 3px 12px;
     border: 1.5px solid #ffd700;
-    border-radius: 18px;
-    background: rgba(22, 0, 3, 0.94);
+    border-radius: 16px;
+    background: rgba(14, 1, 3, 0.95);
     color: #ffffff;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 900;
     letter-spacing: 1.2px;
-    box-shadow: 0 3px 12px rgba(0,0,0,0.7);
 }
 
 .live-badge-dot {
@@ -639,159 +611,64 @@ html, body {
     height: 8px;
     border-radius: 50%;
     background: #ff3030;
-    animation: livePulse 1.25s ease-in-out infinite;
+    animation: livePulse 1.25s infinite;
 }
 
 .score-change {
-    animation: scoreChange 0.75s cubic-bezier(.2,.8,.2,1);
+    animation: scoreChange 0.75s ease-out;
 }
-
-.ball-circle.new-ball {
-    animation: ballEnter 0.7s cubic-bezier(.2,.8,.2,1);
-}
-
 
 .match-status-flash {
     position: absolute;
     left: 50%;
-    top: 365px;
+    top: 320px;
     transform: translateX(-50%);
-    z-index: 20;
+    z-index: 50;
     min-width: 250px;
     max-width: 600px;
-    padding: 9px 24px;
-    border: 2px solid rgba(255, 215, 0, 0.85);
-    border-radius: 8px;
-    background: rgba(0, 0, 0, 0.82);
+    padding: 10px 24px;
+    border: 2px solid #ffd700;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.9);
     color: #fff;
-    font-family: inherit;
-    font-size: 28px;
+    font-size: 26px;
     font-weight: 800;
-    line-height: 1.1;
     text-align: center;
-    letter-spacing: .5px;
-    box-sizing: border-box;
     display: none;
-    pointer-events: none;
     white-space: nowrap;
 }
-
 .match-status-flash.show {
     display: block;
-    animation: statusFadeIn .35s ease-out;
-}
-
-@keyframes statusFadeIn {
-    from { opacity: 0; transform: translateX(-50%) translateY(8px) scale(.96); }
-    to { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
 }
 
 .event-flash {
     position: absolute;
     left: 50%;
-    top: 365px;
+    top: 320px;
     transform: translateX(-50%);
     z-index: 80;
     display: none;
-    min-width: 250px;
-    padding: 10px 28px;
+    min-width: 240px;
+    padding: 10px 26px;
     border: 3px solid #ffd700;
     border-radius: 16px;
-    background: rgba(20, 0, 3, 0.94);
+    background: rgba(15, 0, 2, 0.95);
     color: #ffffff;
-    font-size: 34px;
-    font-weight: 1000;
-    letter-spacing: 2px;
+    font-size: 32px;
+    font-weight: 900;
+    letter-spacing: 1.8px;
     text-align: center;
-    text-shadow: 0 3px 8px #000;
-    box-shadow: 0 0 24px rgba(255,215,0,0.45);
-    pointer-events: none;
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
 }
-
 .event-flash.show {
     display: block;
-    animation: eventPop 5s ease-in-out forwards;
+    animation: eventPop 4.5s ease-in-out forwards;
 }
-
-.event-flash.four {
-    border-color: #70baff;
-    box-shadow: 0 0 30px rgba(60,170,255,0.7);
-    color: #dff2ff;
-}
-
-.event-flash.six {
-    border-color: #6cf598;
-    box-shadow: 0 0 30px rgba(40,220,120,0.7);
-    color: #d9ffe8;
-}
-
-.event-flash.wide {
-    border-color: #00d9ff;
-    color: #00d9ff;
-}
-
-.event-flash.noball {
-    border-color: #ff8a00;
-    color: #ff8a00;
-}
-
-.event-flash.legbye {
-    border-color: #b88cff;
-    color: #b88cff;
-}
-
-.event-flash.wicket {
-    border-color: #ff6b7d;
-    box-shadow: 0 0 30px rgba(255,40,70,0.75);
-    color: #ffdbe0;
-}
-
-.info-marquee {
-    position: absolute;
-    left: 18px;
-    right: 18px;
-    top: 455px;
-    height: 32px;
-    border: 1.5px solid rgba(213,181,0,0.9);
-    border-radius: 14px;
-    background: rgba(12,0,2,0.78);
-    overflow: hidden;
-    z-index: 25;
-    box-shadow: inset 0 0 12px rgba(213,181,0,0.12);
-}
-
-.info-marquee-track {
-    height: 100%;
-    display: flex;
-    align-items: center;
-    width: max-content;
-    white-space: nowrap;
-    animation: marqueeMove 22s linear infinite;
-}
-
-.info-marquee-text {
-    padding: 0 55px;
-    color: #ffffff;
-    font-size: 15px;
-    font-weight: 900;
-    letter-spacing: 0.45px;
-    text-shadow: 1px 1px 3px #000;
-}
-
-.info-marquee-text b {
-    color: #ffd700;
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .live-badge-dot,
-    .score-change,
-    .ball-circle.new-ball,
-    .event-flash.show,
-    .info-marquee-track {
-        animation: none !important;
-    }
-}
-
+.event-flash.four { border-color: #70baff; color: #dff2ff; }
+.event-flash.six { border-color: #6cf598; color: #d9ffe8; }
+.event-flash.wide { border-color: #00d9ff; color: #00d9ff; }
+.event-flash.noball { border-color: #ff8a00; color: #ff8a00; }
+.event-flash.wicket { border-color: #ff6b7d; color: #ffdbe0; }
 </style>
 </head>
 
@@ -808,92 +685,76 @@ html, body {
         <span class="status-indicator" id="statusIndicator">Ready</span>
     </div>
 
-    <!-- 1280x720 BOARD CANVAS -->
+    <!-- 1280x720 CANVAS BOARD -->
     <div class="scoreboard" id="scoreboardCanvas">
-        <div class="live-badge" aria-label="Live match">
+        
+        <div class="stadium-overlay"></div>
+
+        <div class="live-badge">
             <span class="live-badge-dot"></span>
             <span>LIVE</span>
         </div>
 
-        <div id="eventFlash" class="event-flash" aria-live="polite"></div>
-<div id="matchStatusFlash" class="match-status-flash" aria-live="polite"></div>
+        <div id="eventFlash" class="event-flash"></div>
+        <div id="matchStatusFlash" class="match-status-flash"></div>
 
-        <div id="infoMarquee" class="info-marquee">
-            <div id="infoMarqueeTrack" class="info-marquee-track">
-                <span id="infoMarqueeText" class="info-marquee-text">
-                    <b>PREET SPORTS</b>&nbsp;&nbsp; • &nbsp;&nbsp;LIVE MATCH DISCUSSION&nbsp;&nbsp; • &nbsp;&nbsp;WAITING FOR LIVE UPDATE...
-                </span>
-                <span class="info-marquee-text">
-                    <b>PREET SPORTS</b>&nbsp;&nbsp; • &nbsp;&nbsp;LIVE MATCH DISCUSSION
-                </span>
-            </div>
-        </div>
+        <!-- TOP BAR -->
+        <div class="top-header-frame">
 
-        <!-- TOP SECTION -->
-        <div class="top-section">
-
-            <!-- TEAM 1 (LEFT): 4K CIRCLE CREST + NAME PILL + SCORE + OVERS -->
-            <div class="left-team-display">
-                <div class="team-logo-circle">
-                    <img id="team1Logo" src="" alt="Team 1 Logo">
+            <!-- LEFT TEAM -->
+            <div class="team-deck">
+                <div class="team-crest-box">
+                    <div class="team-logo-circle">
+                        <img id="team1Logo" src="" alt="Team 1 Logo">
+                    </div>
                 </div>
-                <div class="team-info-stack">
+                <div class="team-score-pod">
                     <div class="team-badge-pill" id="team1BadgeBox">
                         <span id="team1BallIcon" class="badge-ball-icon" style="display: none;"></span>
-                        <span id="team1Badge">KP</span>
+                        <span id="team1Badge">AUS</span>
                     </div>
                     <div class="team-big-score" id="team1Score">-</div>
                     <div class="team-overs-pill" id="team1Overs">OVERS: 0.0</div>
                 </div>
             </div>
 
-            <!-- CENTER: CYAN RECTANGULAR BOX -->
-            <div class="center-panel">
+            <!-- CENTER EVENT MONITOR -->
+            <div class="center-event-monitor">
                 <div id="centerLiveAction" class="center-live-action">•</div>
             </div>
 
-            <!-- CHASE EQUATION UNDER MIDDLE BOX -->
-            <div id="centerChaseEquation" class="center-chase-equation" style="display: none;"></div>
-
-            <!-- TEAM 2 (RIGHT): NAME PILL + SCORE + OVERS + 4K CIRCLE CREST -->
-            <div class="right-team-display">
-                <div class="team-info-stack">
+            <!-- RIGHT TEAM -->
+            <div class="team-deck right-side">
+                <div class="team-score-pod">
                     <div class="team-badge-pill" id="team2BadgeBox">
                         <span id="team2BallIcon" class="badge-ball-icon" style="display: none;"></span>
-                        <span id="team2Badge">PT</span>
+                        <span id="team2Badge">IND</span>
                     </div>
                     <div class="team-big-score" id="team2Score">-</div>
                     <div class="team-overs-pill" id="team2Overs">OVERS: 0.0</div>
                 </div>
-                <div class="team-logo-circle">
-                    <img id="team2Logo" src="" alt="Team 2 Logo">
+                <div class="team-crest-box">
+                    <div class="team-logo-circle">
+                        <img id="team2Logo" src="" alt="Team 2 Logo">
+                    </div>
                 </div>
             </div>
 
         </div>
 
-        <!-- STATS ROW -->
-        <div class="info-row">
-            <div class="info-box">
-                <div class="info-label">CRR</div>
-                <div id="crr" class="info-value">--</div>
-            </div>
-            <div class="info-box">
-                <div class="info-label">RRR</div>
-                <div id="rrr" class="info-value">--</div>
-            </div>
-            <div class="info-box">
-                <div class="info-label">PARTNERSHIP</div>
-                <div id="partnership" class="info-value">--</div>
-            </div>
-            <div class="info-box">
-                <div class="info-label">TARGET</div>
-                <div id="target" class="info-value">--</div>
-            </div>
+        <!-- CHASE EQUATION -->
+        <div id="centerChaseEquation" class="center-chase-equation" style="display: none;"></div>
+
+        <!-- UPPER STATS RIBBON -->
+        <div class="stats-ribbon-upper">
+            <div class="ribbon-cell"><span class="ribbon-label">CRR:</span> <span id="crr">--</span></div>
+            <div class="ribbon-cell"><span class="ribbon-label">RRR:</span> <span id="rrr">--</span></div>
+            <div class="ribbon-cell"><span class="ribbon-label">PARTNERSHIP:</span> <span id="partnership">--</span></div>
+            <div class="ribbon-cell"><span class="ribbon-label">TARGET:</span> <span id="target">--</span></div>
         </div>
 
-        <!-- MAGENTA OVER TICKER -->
-        <div class="magenta-divider" id="oversTicker">
+        <!-- LOWER TICKER RIBBON -->
+        <div class="stats-ribbon-lower" id="oversTicker">
             <div class="over-column">
                 <span class="over-title">Over --</span>
                 <div class="balls-container">
@@ -902,96 +763,100 @@ html, body {
             </div>
         </div>
 
-        <!-- BOTTOM ROW DIVIDED INTO THREE INDIVIDUAL COLUMNS -->
+        <!-- BOTTOM PLAYERS SECTION -->
         <div class="player-section">
-            <!-- COLUMN 1: BATTER 1 -->
-            <div class="player-col">
-                <div class="player-card">
-                    <div class="player-image">
-                        <img id="player1Image" src="" alt="">
-                    </div>
-                    <div class="player-data">
-                        <div id="player1Name" class="player-name">Batter 1</div>
-                        <div class="player-score">
-                            <span id="player1Score">-</span>
-                            <span id="b1BatIcon" class="icon-badge" style="display: none;">
-                                <svg class="bat-svg" viewBox="0 0 32 32">
-                                    <rect x="14.5" y="1" width="3" height="10" rx="1.5" fill="#f8f9fa" stroke="#222" stroke-width="0.8"/>
-                                    <line x1="14.5" y1="3" x2="17.5" y2="3" stroke="#e63946" stroke-width="1.2"/>
-                                    <line x1="14.5" y1="6" x2="17.5" y2="6" stroke="#e63946" stroke-width="1.2"/>
-                                    <path d="M13.5 11 L18.5 11 L19 28 C19 30 13 30 13 28 Z" fill="#d4a373" stroke="#78350f" stroke-width="1.2"/>
-                                    <path d="M15.5 12 L16.5 12 L16.5 28 L15.5 28 Z" fill="#b08968" opacity="0.6"/>
-                                </svg>
-                            </span>
-                        </div>
-                    </div>
+            
+            <!-- BATTER 1 -->
+            <div class="player-pod">
+                <div class="player-tab-header">BATSMAN</div>
+                <div class="player-crest-wrap">
+                    <img id="player1Image" src="" alt="">
                 </div>
-                <div class="player-bottom-col">
-                    <span class="stat-item">4<span class="stat-val" id="b1Fours">(0)</span></span>
-                    <span class="stat-item">6<span class="stat-val" id="b1Sixes">(0)</span></span>
-                    <span class="stat-item">SR: <span class="stat-val" id="b1SR">0.00</span></span>
+                <div class="player-metrics-stack">
+                    <div id="player1Name" class="player-name-row">Batter 1</div>
+                    <div class="player-score-row">
+                        <span id="player1Score">-</span>
+                        <span id="b1BatIcon" class="icon-badge" style="display: none;">
+                            <svg class="bat-svg" viewBox="0 0 32 32">
+                                <rect x="14.5" y="1" width="3" height="10" rx="1.5" fill="#f8f9fa" stroke="#222" stroke-width="0.8"/>
+                                <line x1="14.5" y1="3" x2="17.5" y2="3" stroke="#e63946" stroke-width="1.2"/>
+                                <line x1="14.5" y1="6" x2="17.5" y2="6" stroke="#e63946" stroke-width="1.2"/>
+                                <path d="M13.5 11 L18.5 11 L19 28 C19 30 13 30 13 28 Z" fill="#d4a373" stroke="#78350f" stroke-width="1.2"/>
+                                <path d="M15.5 12 L16.5 12 L16.5 28 L15.5 28 Z" fill="#b08968" opacity="0.6"/>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="player-sub-pill">
+                        <span>4s: <span class="val" id="b1Fours">(0)</span></span>
+                        <span>6s: <span class="val" id="b1Sixes">(0)</span></span>
+                        <span>SR: <span class="val" id="b1SR">0.00</span></span>
+                    </div>
                 </div>
             </div>
 
-            <!-- COLUMN 2: BATTER 2 -->
-            <div class="player-col">
-                <div class="player-card">
-                    <div class="player-image">
-                        <img id="player2Image" src="" alt="">
-                    </div>
-                    <div class="player-data">
-                        <div id="player2Name" class="player-name">Batter 2</div>
-                        <div class="player-score">
-                            <span id="player2Score">-</span>
-                            <span id="b2BatIcon" class="icon-badge" style="display: none;">
-                                <svg class="bat-svg" viewBox="0 0 32 32">
-                                    <rect x="14.5" y="1" width="3" height="10" rx="1.5" fill="#f8f9fa" stroke="#222" stroke-width="0.8"/>
-                                    <line x1="14.5" y1="3" x2="17.5" y2="3" stroke="#e63946" stroke-width="1.2"/>
-                                    <line x1="14.5" y1="6" x2="17.5" y2="6" stroke="#e63946" stroke-width="1.2"/>
-                                    <path d="M13.5 11 L18.5 11 L19 28 C19 30 13 30 13 28 Z" fill="#d4a373" stroke="#78350f" stroke-width="1.2"/>
-                                    <path d="M15.5 12 L16.5 12 L16.5 28 L15.5 28 Z" fill="#b08968" opacity="0.6"/>
-                                </svg>
-                            </span>
-                        </div>
-                    </div>
+            <!-- BATTER 2 -->
+            <div class="player-pod">
+                <div class="player-tab-header">BATSMAN</div>
+                <div class="player-crest-wrap">
+                    <img id="player2Image" src="" alt="">
                 </div>
-                <div class="player-bottom-col">
-                    <span class="stat-item">4<span class="stat-val" id="b2Fours">(0)</span></span>
-                    <span class="stat-item">6<span class="stat-val" id="b2Sixes">(0)</span></span>
-                    <span class="stat-item">SR: <span class="stat-val" id="b2SR">0.00</span></span>
+                <div class="player-metrics-stack">
+                    <div id="player2Name" class="player-name-row">Batter 2</div>
+                    <div class="player-score-row">
+                        <span id="player2Score">-</span>
+                        <span id="b2BatIcon" class="icon-badge" style="display: none;">
+                            <svg class="bat-svg" viewBox="0 0 32 32">
+                                <rect x="14.5" y="1" width="3" height="10" rx="1.5" fill="#f8f9fa" stroke="#222" stroke-width="0.8"/>
+                                <line x1="14.5" y1="3" x2="17.5" y2="3" stroke="#e63946" stroke-width="1.2"/>
+                                <line x1="14.5" y1="6" x2="17.5" y2="6" stroke="#e63946" stroke-width="1.2"/>
+                                <path d="M13.5 11 L18.5 11 L19 28 C19 30 13 30 13 28 Z" fill="#d4a373" stroke="#78350f" stroke-width="1.2"/>
+                                <path d="M15.5 12 L16.5 12 L16.5 28 L15.5 28 Z" fill="#b08968" opacity="0.6"/>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="player-sub-pill">
+                        <span>4s: <span class="val" id="b2Fours">(0)</span></span>
+                        <span>6s: <span class="val" id="b2Sixes">(0)</span></span>
+                        <span>SR: <span class="val" id="b2SR">0.00</span></span>
+                    </div>
                 </div>
             </div>
 
-            <!-- COLUMN 3: BOWLER -->
-            <div class="player-col">
-                <div class="player-card">
-                    <div class="player-image">
-                        <img id="bowlerImage" src="" alt="">
-                    </div>
-                    <div class="player-data">
-                        <div id="bowlerName" class="player-name">Bowler</div>
-                        <div class="player-score">
-                            <span id="bowlerScore">-</span>
-                            <span class="icon-badge">
-                                <svg class="ball-svg" viewBox="0 0 32 32">
-                                    <defs>
-                                        <radialGradient id="cricketBallGrad" cx="35%" cy="35%" r="65%">
-                                            <stop offset="0%" stop-color="#ff4d4d"/>
-                                            <stop offset="55%" stop-color="#b30000"/>
-                                            <stop offset="100%" stop-color="#590000"/>
-                                        </radialGradient>
-                                    </defs>
-                                    <circle cx="16" cy="16" r="13" fill="url(#cricketBallGrad)" stroke="#800000" stroke-width="1.2"/>
-                                    <path d="M7 9 C13 13 19 19 25 23" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-dasharray="2,1.5"/>
-                                </svg>
-                            </span>
-                        </div>
-                    </div>
+            <!-- BOWLER -->
+            <div class="player-pod">
+                <div class="player-tab-header">BOWLER</div>
+                <div class="player-crest-wrap">
+                    <img id="bowlerImage" src="" alt="">
                 </div>
-                <div class="player-bottom-col">
-                    <span class="stat-item">Eco : <span class="stat-val" id="bowlerEcon">0.00</span></span>
+                <div class="player-metrics-stack">
+                    <div id="bowlerName" class="player-name-row">Bowler</div>
+                    <div class="player-score-row">
+                        <span id="bowlerScore">-</span>
+                        <span class="icon-badge">
+                            <svg class="ball-svg" viewBox="0 0 32 32">
+                                <defs>
+                                    <radialGradient id="cricketBallGrad" cx="35%" cy="35%" r="65%">
+                                        <stop offset="0%" stop-color="#ff4d4d"/>
+                                        <stop offset="55%" stop-color="#b30000"/>
+                                        <stop offset="100%" stop-color="#590000"/>
+                                    </radialGradient>
+                                </defs>
+                                <circle cx="16" cy="16" r="13" fill="url(#cricketBallGrad)" stroke="#800000" stroke-width="1.2"/>
+                                <path d="M7 9 C13 13 19 19 25 23" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-dasharray="2,1.5"/>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="player-sub-pill">
+                        <span>ECON: <span class="val" id="bowlerEcon">0.00</span></span>
+                    </div>
                 </div>
             </div>
+
+        </div>
+
+        <!-- FOOTER PROMO -->
+        <div class="bottom-promo-footer">
+            <span>SUBSCRIBE PREET SPORTS</span>
         </div>
 
     </div>
@@ -1023,11 +888,8 @@ fitScoreboardToWindow();
 
 const API_BASE = "https://preet-sports.onrender.com";
 
-// LOCAL OBS MODE
-// This file is designed to be loaded directly by OBS Browser Source.
-// It does not need the /obs/<token> webpage. It talks directly to
-// the existing live-data endpoint using this token.
-const OBS_TOKEN = "wiZO8Tig";
+const urlParams = new URLSearchParams(window.location.search);
+const OBS_TOKEN = urlParams.get("token") || "";
 
 function cleanCrexUrl(url) {
     if (!url) return "";
@@ -1046,12 +908,10 @@ function normalizeInput(val) {
     return clean;
 }
 
-const urlParams = new URLSearchParams(window.location.search);
-let activeTargetUrl = "";
-
+let activeTargetUrl = localStorage.getItem("crex_match_input") || "";
 const urlInput = document.getElementById("crexUrlInput");
 const statusInd = document.getElementById("statusIndicator");
-urlInput.value = activeTargetUrl;
+if (urlInput) urlInput.value = activeTargetUrl;
 
 function flushDomElementsInstantly() {
     document.getElementById("team1Score").textContent = "-";
@@ -1081,8 +941,6 @@ function flushDomElementsInstantly() {
     document.getElementById("bowlerEcon").textContent = "0.00";
 }
 
-
-
 function renderImageInCircle(elementId, imageUrl) {
     const el = document.getElementById(elementId);
     if (!el) return;
@@ -1096,33 +954,35 @@ function renderImageInCircle(elementId, imageUrl) {
     }
 }
 
-function renderOversTicker(recentOvers, lastWicket, nextBatsman) {
+let fetchInProgress = false;
+let retryTimer = null;
+let lastSuccessfulData = null;
+let lastSuccessfulTimestamp = 0;
+let previousTeam1Score = null;
+let previousTeam2Score = null;
+let previousBallSignature = null;
+let previousEventSignature = null;
+let firstLiveRender = true;
+let eventHideTimer = null;
+
+const POLL_INTERVAL = 3000;
+const REQUEST_TIMEOUT = 15000;
+
+function renderOversTicker(recentOvers, lastWicket) {
     const ticker = document.getElementById("oversTicker");
+    if (!ticker) return;
     ticker.innerHTML = "";
 
-    // =========================================================
-    // ONLY SHOW THE LAST 2 OVERS + LAST WICKET
-    // Existing scoreboard/ticker design is unchanged.
-    // =========================================================
-    const overs = Array.isArray(recentOvers)
-        ? recentOvers.slice(-2)
-        : [];
-
+    const overs = Array.isArray(recentOvers) ? recentOvers.slice(-2) : [];
     const newestOverIndex = overs.length - 1;
     const newestOver = overs[newestOverIndex];
-    const newestBallIndex = newestOver && Array.isArray(newestOver.balls)
-        ? newestOver.balls.length - 1
-        : -1;
+    const newestBallIndex = newestOver && Array.isArray(newestOver.balls) ? newestOver.balls.length - 1 : -1;
 
     const newestBallSignature = newestOver && newestBallIndex >= 0
-        ? `${newestOver.label || ""}|${String(
-            newestOver.balls[newestBallIndex]?.text ??
-            newestOver.balls[newestBallIndex] ??
-            ""
-        )}`
+        ? `${newestOver.label || ""}|${String(newestOver.balls[newestBallIndex]?.text ?? newestOver.balls[newestBallIndex] ?? "")}`
         : "";
 
-    const isNewBall = (
+    const isNewBall = Boolean(
         newestBallSignature &&
         newestBallSignature !== previousBallSignature &&
         !firstLiveRender
@@ -1134,13 +994,7 @@ function renderOversTicker(recentOvers, lastWicket, nextBatsman) {
 
         const title = document.createElement("span");
         title.className = "over-title";
-
-        // Scraper returns "label": "Over 47".
-        // Do NOT use o.over because it is undefined.
-        const overLabel = String(
-            o && (o.label ?? o.over ?? "")
-        ).trim();
-
+        const overLabel = String(o && (o.label ?? o.over ?? "")).trim();
         title.textContent = overLabel || "Over";
         col.appendChild(title);
 
@@ -1153,30 +1007,10 @@ function renderOversTicker(recentOvers, lastWicket, nextBatsman) {
             const ball = document.createElement("div");
             ball.className = "ball-circle";
 
-            // Current scraper returns objects:
-            // { text: "4", type: "four" }
-            // Older data may return plain strings.
-            const ballText = String(
-                b && typeof b === "object"
-                    ? (b.text ?? b.value ?? "")
-                    : (b ?? "")
-            ).trim();
-
-            const ballType = String(
-                b && typeof b === "object"
-                    ? (b.type ?? "")
-                    : ""
-            ).trim().toLowerCase();
+            const ballText = String(b && typeof b === "object" ? (b.text ?? b.value ?? "") : (b ?? "")).trim();
+            const ballType = String(b && typeof b === "object" ? (b.type ?? "") : "").trim().toLowerCase();
 
             ball.textContent = ballText || "•";
-
-            if (
-                isNewBall &&
-                overIndex === newestOverIndex &&
-                balls.indexOf(b) === newestBallIndex
-            ) {
-                ball.classList.add("new-ball");
-            }
 
             if (ballType === "four" || ballText === "4") {
                 ball.classList.add("four");
@@ -1185,10 +1019,7 @@ function renderOversTicker(recentOvers, lastWicket, nextBatsman) {
             } else if (
                 ballType === "wicket" ||
                 ballText.toUpperCase() === "W" ||
-                (
-                    ballText.toLowerCase().includes("w") &&
-                    !ballText.toLowerCase().includes("wd")
-                )
+                (ballText.toLowerCase().includes("w") && !ballText.toLowerCase().includes("wd"))
             ) {
                 ball.classList.add("wicket");
             } else if (
@@ -1209,9 +1040,7 @@ function renderOversTicker(recentOvers, lastWicket, nextBatsman) {
         if (o && o.total !== undefined) {
             const total = document.createElement("span");
             total.className = "over-total";
-            total.textContent = String(o.total).startsWith("=")
-                ? String(o.total)
-                : `= ${o.total}`;
+            total.textContent = String(o.total).startsWith("=") ? String(o.total) : `= ${o.total}`;
             col.appendChild(total);
         }
 
@@ -1222,64 +1051,34 @@ function renderOversTicker(recentOvers, lastWicket, nextBatsman) {
         previousBallSignature = newestBallSignature;
     }
 
-    // Divider before LAST WKT.
     const sep = document.createElement("div");
     sep.className = "over-divider-line";
     ticker.appendChild(sep);
 
-    // LAST WICKET — always shown.
     const lwBlock = document.createElement("div");
     lwBlock.className = "ticker-info-block";
-
     const safeLastWicket = String(lastWicket || "-");
-
     lwBlock.innerHTML = `
         <span class="ticker-info-label">LAST WKT:</span>
         <span class="ticker-info-val" title="${safeLastWicket}">${safeLastWicket}</span>
     `;
-
     ticker.appendChild(lwBlock);
 }
 
-/* =========================================================
-   PREET SPORTS — RELIABLE LIVE SCORE ENGINE
-   3-second polling + automatic reconnect + last-success protection
-   ========================================================= */
-
-let fetchInProgress = false;
-let retryTimer = null;
-let lastSuccessfulData = null;
-let lastSuccessfulTimestamp = 0;
-
-// Animation state — prevents the same event from firing repeatedly
-// while the API is returning the same live snapshot.
-let previousTeam1Score = null;
-let previousTeam2Score = null;
-let previousBallSignature = null;
-let previousEventSignature = null;
-let firstLiveRender = true;
-let eventHideTimer = null;
-
-const POLL_INTERVAL = 3000; // poll live data every 3 seconds
-const REQUEST_TIMEOUT = 90000;
-
 function cacheKeyForUrl(url) {
-    return "preet_sports_last_score_" + btoa(unescape(encodeURIComponent(url))).replace(/[^a-zA-Z0-9_-]/g, "_");
+    return "preet_sports_last_score_" + btoa(encodeURIComponent(url || "default")).replace(/[^a-zA-Z0-9_-]/g, "_");
 }
 
 function saveLastSuccessfulData(data) {
     try {
         lastSuccessfulData = data;
         lastSuccessfulTimestamp = Date.now();
-
         const key = cacheKeyForUrl(activeTargetUrl);
         localStorage.setItem(key, JSON.stringify({
             timestamp: lastSuccessfulTimestamp,
             data: data
         }));
-    } catch (e) {
-        // Storage failure must never stop live scoring.
-    }
+    } catch (e) {}
 }
 
 function restoreLastSuccessfulData() {
@@ -1303,7 +1102,6 @@ function restoreLastSuccessfulData() {
 
 function scheduleNextFetch(delay = POLL_INTERVAL) {
     if (retryTimer) clearTimeout(retryTimer);
-
     retryTimer = setTimeout(() => {
         retryTimer = null;
         fetchScores();
@@ -1311,14 +1109,11 @@ function scheduleNextFetch(delay = POLL_INTERVAL) {
 }
 
 function setConnectionStatus(text, color) {
+    if (!statusInd) return;
     statusInd.textContent = text;
     statusInd.style.color = color;
     statusInd.title = text;
 }
-
-/* Render ONLY after a valid successful response.
-   This is the last-successful-score protection: failed requests
-   never clear or overwrite the scoreboard. */
 
 function animateElementByClass(id, className) {
     const el = document.getElementById(id);
@@ -1337,7 +1132,6 @@ function scoreRuns(score) {
 function showMatchStatus(statusText) {
     const el = document.getElementById("matchStatusFlash");
     if (!el) return;
-
     const text = String(statusText || "").trim();
 
     if (!text) {
@@ -1363,55 +1157,25 @@ function showEventFlash(label, type) {
 
     el.className = "event-flash";
     el.textContent = label;
-
     if (type) el.classList.add(type);
 
-    // Restart the 5-second animation cleanly.
     void el.offsetWidth;
     el.classList.add("show");
 
     eventHideTimer = setTimeout(() => {
         el.classList.remove("show");
         eventHideTimer = null;
-    }, 5050);
-}
-
-function updateInformationTicker(data, eventLabel = "") {
-    const el = document.getElementById("infoMarqueeText");
-    if (!el) return;
-
-    const t1 = data?.team1?.short || data?.team1?.full_name || "";
-    const t2 = data?.team2?.short || data?.team2?.full_name || "";
-    const score1 = data?.team1?.score || "";
-    const score2 = data?.team2?.score || "";
-    const equation = data?.equation || data?.status || "";
-    const partnership = data?.partnership || "";
-    const lastWicket = data?.last_wicket || "";
-
-    let message = eventLabel
-        ? `<b>${eventLabel}</b>&nbsp;&nbsp; • &nbsp;&nbsp;`
-        : "";
-
-    if (t1 || score1) message += `<b>${t1}</b> ${score1}`;
-    if (t2 || score2) message += `&nbsp;&nbsp; VS &nbsp;&nbsp;<b>${t2}</b> ${score2}`;
-    if (partnership) message += `&nbsp;&nbsp; • &nbsp;&nbsp;PARTNERSHIP: <b>${partnership}</b>`;
-    if (equation) message += `&nbsp;&nbsp; • &nbsp;&nbsp;${equation}`;
-    if (lastWicket) message += `&nbsp;&nbsp; • &nbsp;&nbsp;LAST WKT: ${lastWicket}`;
-
-    el.innerHTML = message || "<b>PREET SPORTS</b>&nbsp;&nbsp; • &nbsp;&nbsp;LIVE MATCH DISCUSSION";
+    }, 4500);
 }
 
 function renderScoreData(data, fromCache = false) {
-    const liveStatusText = String(
-        data.status ??
-        data.match_status ??
-        data.live_status ??
-        ""
-    ).trim();
+    if (!data || data.success === false) {
+        throw new Error("Invalid score data");
+    }
 
-    // Show meaningful match states in the empty area.
-    // Do not cover the normal scoreboard during live play.
+    const liveStatusText = String(data.status ?? data.match_status ?? data.live_status ?? "").trim();
     const normalizedStatus = liveStatusText.toLowerCase();
+
     if (
         normalizedStatus.includes("innings break") ||
         normalizedStatus.includes("match end") ||
@@ -1428,53 +1192,19 @@ function renderScoreData(data, fromCache = false) {
         showMatchStatus("");
     }
 
-
-    if (!data || data.success === false) {
-        throw new Error("Invalid score data");
-    }
-
-    /* =========================================================
-       NORMALIZE CURRENT CREX PLAYWRIGHT API SCHEMA
-       API returns:
-       team1/team2 as objects,
-       batsman1/batsman2,
-       bowler.img,
-       structured_overs.
-       This keeps the existing scoreboard design unchanged.
-       ========================================================= */
-
     const apiTeam1 = (data.team1 && typeof data.team1 === "object") ? data.team1 : {};
     const apiTeam2 = (data.team2 && typeof data.team2 === "object") ? data.team2 : {};
 
-    // Team names: prefer full_name, then short, then fixture text.
-    const t1Name = String(
-        apiTeam1.full_name ||
-        apiTeam1.short ||
-        (typeof data.team1 === "string" ? data.team1 : "") ||
-        "TEAM 1"
-    ).toUpperCase();
+    const t1Name = String(apiTeam1.full_name || apiTeam1.short || (typeof data.team1 === "string" ? data.team1 : "") || "TEAM 1").toUpperCase();
+    let t2Name = String(apiTeam2.full_name || apiTeam2.short || (typeof data.team2 === "string" ? data.team2 : "") || "TEAM 2").toUpperCase();
 
-    let t2Name = String(
-        apiTeam2.full_name ||
-        apiTeam2.short ||
-        (typeof data.team2 === "string" ? data.team2 : "") ||
-        "TEAM 2"
-    ).toUpperCase();
-
-    // CREX fixture is AUS vs SA. The API's team2.short can currently
-    // contain "SA", so use full_name first and fixture text as fallback.
-    if (apiTeam2.full_name) {
-        t2Name = String(apiTeam2.full_name).toUpperCase();
-    }
-
-    // Broadcast-friendly abbreviations.
     const abbreviation = (name) => {
         const n = String(name || "").toUpperCase();
+        if (n.includes("AUSTRALIA") || n.includes("AUSCH")) return "AUS";
+        if (n.includes("INDIA") || n.includes("INDCH")) return "IND";
         if (n.includes("SOUTH AFRICA")) return "SA";
-        if (n.includes("AUSTRALIA")) return "AUS";
         if (n.includes("ENGLAND")) return "ENG";
         if (n.includes("SRI LANKA")) return "SL";
-        if (n.includes("INDIA")) return "IND";
         if (n.includes("NEW ZEALAND")) return "NZ";
         if (n.includes("PAKISTAN")) return "PAK";
         if (n.includes("WEST INDIES")) return "WI";
@@ -1485,41 +1215,30 @@ function renderScoreData(data, fromCache = false) {
     const t1Badge = abbreviation(t1Name);
     const t2Badge = abbreviation(t2Name);
 
-    // Current API data says "AUS opt to Bowl", so South Africa is batting.
     const equationText = String(data.equation || data.status || "").trim();
     const australiaBowling = /AUS\s+opt\s+to\s+Bowl/i.test(equationText);
 
     let t1Score = apiTeam1.score ? String(apiTeam1.score).replace("/", "-") : "0-0";
     let t1Overs = apiTeam1.overs ? String(apiTeam1.overs).replace(/[()]/g, "") : "0.0";
-
     let t2Score = apiTeam2.score ? String(apiTeam2.score).replace("/", "-") : "0-0";
     let t2Overs = apiTeam2.overs ? String(apiTeam2.overs).replace(/[()]/g, "") : "0.0";
 
-    // Detect a genuine score change. Cached/first render does not animate.
     if (!fromCache && !firstLiveRender) {
         const old1 = scoreRuns(previousTeam1Score);
         const old2 = scoreRuns(previousTeam2Score);
         const new1 = scoreRuns(t1Score);
         const new2 = scoreRuns(t2Score);
 
-        if (old1 !== null && new1 !== null && old1 !== new1) {
-            animateElementByClass("team1Score", "score-change");
-        }
-        if (old2 !== null && new2 !== null && old2 !== new2) {
-            animateElementByClass("team2Score", "score-change");
-        }
+        if (old1 !== null && new1 !== null && old1 !== new1) animateElementByClass("team1Score", "score-change");
+        if (old2 !== null && new2 !== null && old2 !== new2) animateElementByClass("team2Score", "score-change");
     }
 
     let t1Role = "BOWLING";
     let t2Role = "BATTING";
 
-    // If CREX says AUS opted to bowl, SA is the current batting side.
     if (australiaBowling) {
         t1Role = "BATTING";
         t2Role = "BOWLING";
-
-        // The current API duplicates the live innings score into team2.
-        // Do not display the duplicate score for the bowling side.
         if (t2Score === t1Score) {
             t2Score = "Yet to bat";
             t2Overs = "Yet to bat";
@@ -1527,86 +1246,47 @@ function renderScoreData(data, fromCache = false) {
     } else if (/SA\s+opt\s+to\s+Bowl/i.test(equationText)) {
         t1Role = "BOWLING";
         t2Role = "BATTING";
-
         if (t1Score === t2Score) {
             t1Score = "Yet to bat";
             t1Overs = "Yet to bat";
         }
     }
 
-    // Team logos from nested API objects.
     renderImageInCircle("team1Logo", apiTeam1.logo || data.team1Logo);
     renderImageInCircle("team2Logo", apiTeam2.logo || data.team2Logo);
 
     document.getElementById("team1Badge").textContent = t1Badge;
     document.getElementById("team1Score").textContent = t1Score;
     document.getElementById("team1Overs").textContent = `OVERS: ${t1Overs}`;
-    document.getElementById("team1BallIcon").style.display =
-        (t1Role === "BOWLING") ? "inline-block" : "none";
+    document.getElementById("team1BallIcon").style.display = (t1Role === "BOWLING") ? "inline-block" : "none";
 
     document.getElementById("team2Badge").textContent = t2Badge;
     document.getElementById("team2Score").textContent = t2Score;
     document.getElementById("team2Overs").textContent = `OVERS: ${t2Overs}`;
-    document.getElementById("team2BallIcon").style.display =
-        (t2Role === "BOWLING") ? "inline-block" : "none";
+    document.getElementById("team2BallIcon").style.display = (t2Role === "BOWLING") ? "inline-block" : "none";
 
-    // =========================================================
-    // MIDDLE BOX — CREX EVENT
-    // ONLY this middle-box logic is changed.
-    // OBS token system, API, scraper, scoreboard design,
-    // players, teams and ticker remain unchanged.
-    //
-    // If the existing API already exposes dismissal text/type,
-    // show "RUN OUT" exactly like CREX. Otherwise retain the
-    // normal ball value (e.g. 1W) rather than guessing.
-    // =========================================================
+    // Center display box: ball/run/event
     const actionEl = document.getElementById("centerLiveAction");
+    const latestBallObject = Array.isArray(data.current_over?.balls) && data.current_over.balls.length
+        ? data.current_over.balls[data.current_over.balls.length - 1]
+        : null;
 
-    const latestBallObject =
-        Array.isArray(data.current_over?.balls) &&
-        data.current_over.balls.length
-            ? data.current_over.balls[data.current_over.balls.length - 1]
-            : null;
+    const ballText = String(latestBallObject && typeof latestBallObject === "object" ? (latestBallObject.text ?? "") : (latestBallObject ?? data.last_ball ?? data.liveBall ?? "")).trim();
+    const ballType = String(latestBallObject && typeof latestBallObject === "object" ? (latestBallObject.type ?? "") : "").trim();
 
-    const ballText = String(
-        latestBallObject && typeof latestBallObject === "object"
-            ? (latestBallObject.text ?? "")
-            : (latestBallObject ?? data.last_ball ?? data.liveBall ?? "")
-    ).trim();
-
-    const ballType = String(
-        latestBallObject && typeof latestBallObject === "object"
-            ? (latestBallObject.type ?? "")
-            : ""
-    ).trim();
-
-    // Event detection: only fire when the newest ball actually changes.
     const currentOverLabel = String(data.current_over?.label || "");
-    const eventSignature = [
-        currentOverLabel,
-        ballText,
-        ballType,
-        String(t1Score),
-        String(t2Score)
-    ].join("|");
+    const eventSignature = [currentOverLabel, ballText, ballType, String(t1Score), String(t2Score)].join("|");
 
     let eventLabel = "";
     let eventType = "";
-
     const normalizedBallText = ballText.toLowerCase().replace(/[\s-]/g, "");
     const normalizedBallType = ballType.toLowerCase().replace(/[\s-]/g, "");
 
     if (!fromCache && !firstLiveRender && eventSignature !== previousEventSignature) {
-        if (
-            normalizedBallType === "four" ||
-            normalizedBallText === "4"
-        ) {
+        if (normalizedBallType === "four" || normalizedBallText === "4") {
             eventLabel = "FOUR!";
             eventType = "four";
-        } else if (
-            normalizedBallType === "six" ||
-            normalizedBallText === "6"
-        ) {
+        } else if (normalizedBallType === "six" || normalizedBallText === "6") {
             eventLabel = "SIX!";
             eventType = "six";
         } else if (
@@ -1633,200 +1313,82 @@ function renderScoreData(data, fromCache = false) {
         ) {
             eventLabel = "NO BALL!";
             eventType = "noball";
-        } else if (
-            normalizedBallText === "lb" ||
-            normalizedBallText.endsWith("lb") ||
-            normalizedBallType === "legbye" ||
-            normalizedBallType === "legbyes"
-        ) {
-            eventLabel = "LEG BYE!";
-            eventType = "legbye";
         }
     }
 
     if (eventLabel) {
         showEventFlash(eventLabel, eventType);
-        updateInformationTicker(data, eventLabel);
-    } else {
-        updateInformationTicker(data);
     }
 
     previousEventSignature = eventSignature;
 
-    // Check fields that may already be returned by the scraper.
-    // No API/scraper modification is made here.
-    const possibleDismissalFields = [
-        data.last_event,
-        data.live_event,
-        data.event,
-        data.dismissal,
-        data.dismissal_type,
-        data.wicket_type,
-        data.wicketType,
-        data.last_wicket_type,
-        data.lastWicketType,
-        data.wicket_text,
-        data.dismissal_text,
-        data.commentary,
-        data.commentary_text,
-        latestBallObject && latestBallObject.dismissal,
-        latestBallObject && latestBallObject.dismissal_type,
-        latestBallObject && latestBallObject.wicket_type,
-        latestBallObject && latestBallObject.wicketType,
-        latestBallObject && latestBallObject.text
-    ];
+    let actionText = ballText || data.last_event || data.live_event || "•";
+    actionText = String(actionText).trim();
 
-    const dismissalText = possibleDismissalFields
-        .filter(v => v !== null && v !== undefined)
-        .map(v => String(v))
-        .join(" ")
-        .toUpperCase();
-
-    // =========================================================
-    // CENTER BOX — EXACT CREX .font1 VALUE
-    // The scraper reads CREX result-box -> span.font1 into
-    // data.center_digit. Show that value here FIRST.
-    // The over ticker continues using current_over separately.
-    // =========================================================
-    let actionText = String(
-        data.center_digit ??
-        ""
-    ).trim();
-
-    // If CREX .font1 is empty, use the actual CREX status.
-    if (!actionText) {
-        actionText = String(
-            data.status ??
-            data.match_status ??
-            data.live_status ??
-            ""
-        ).trim();
-    }
-
-    // ---------------------------------------------------------
-    // RUN OUT — only when the received data actually says RUN OUT
-    // ---------------------------------------------------------
-    if (
-        dismissalText.includes("RUN OUT") ||
-        dismissalText.includes("RUNOUT")
-    ) {
-        actionText = "RUN OUT";
-    }
-
-    // Only normalize explicit event words when CREX did not provide
-    // a direct center_digit value. This keeps .font1 exact.
-    else if (!String(data.center_digit ?? "").trim()) {
-        const eventUpper = actionText.toUpperCase();
-
-        if (eventUpper === "WICKET") {
-            actionText = "W";
-        } else if (eventUpper === "WIDE") {
-            actionText = "WD";
-        } else if (
-            eventUpper === "NO BALL" ||
-            eventUpper === "NO-BALL"
-        ) {
-            actionText = "NB";
-        } else if (eventUpper === "FOUR") {
-            actionText = "4";
-        } else if (eventUpper === "SIX") {
-            actionText = "6";
-        }
-    }
+    const eventUpper = actionText.toUpperCase();
+    if (eventUpper.includes("RUN OUT")) actionText = "RUN OUT";
+    else if (eventUpper === "WICKET") actionText = "W";
+    else if (eventUpper === "WIDE") actionText = "WD";
+    else if (eventUpper === "NO BALL" || eventUpper === "NO-BALL") actionText = "NB";
+    else if (eventUpper === "FOUR") actionText = "4";
+    else if (eventUpper === "SIX") actionText = "6";
+    else if (actionText.length > 8) actionText = ballText || "•";
 
     actionEl.textContent = actionText || "•";
-
-    if (actionText.toUpperCase() === "RUN OUT") {
-        actionEl.style.fontSize = "34px";
+    if (actionText === "RUN OUT") {
+        actionEl.style.fontSize = "32px";
     } else if (String(actionText).length <= 2) {
-        actionEl.style.fontSize = "62px";
-    } else if (String(actionText).length <= 6) {
-        actionEl.style.fontSize = "42px";
+        actionEl.style.fontSize = "58px";
     } else {
-        actionEl.style.fontSize = "26px";
+        actionEl.style.fontSize = "38px";
     }
 
-    // Equation under center — ORIGINAL CODE UNCHANGED.
     const chaseEl = document.getElementById("centerChaseEquation");
     chaseEl.textContent = equationText || "";
-    if (equationText) {
-        chaseEl.style.display = "block";
-    } else {
-        chaseEl.style.display = "none";
-    }
+    chaseEl.style.display = equationText ? "block" : "none";
 
-    // Convert structured_overs to the existing ticker format.
-    const recentOvers = Array.isArray(data.structured_overs)
-        ? data.structured_overs
-        : (data.recentOvers || []);
+    const recentOvers = Array.isArray(data.structured_overs) ? data.structured_overs : (data.recentOvers || []);
+    renderOversTicker(recentOvers, data.last_wicket);
 
-    renderOversTicker(recentOvers, data.last_wicket, data.nextBatsman);
-
-    // Stats.
     document.getElementById("crr").textContent = data.crr ?? "--";
     document.getElementById("rrr").textContent = data.rrr ?? "--";
     document.getElementById("partnership").textContent = data.partnership || "--";
-    document.getElementById("target").textContent =
-        (data.target && data.target !== "") ? data.target : "--";
+    document.getElementById("target").textContent = (data.target && data.target !== "") ? data.target : "--";
 
-    // Normalize batsman1/batsman2 from current API.
     const b1 = data.batsman1 || data.batter1;
     const b2 = data.batsman2 || data.batter2;
 
     if (b1) {
-        document.getElementById("player1Name").textContent =
-            b1.short_name || b1.name || "Batter 1";
-
-        document.getElementById("player1Score").textContent =
-            `${b1.runs ?? 0} (${b1.balls ?? 0})`;
-
+        document.getElementById("player1Name").textContent = b1.short_name || b1.name || "Batter 1";
+        document.getElementById("player1Score").textContent = `${b1.runs ?? 0} (${b1.balls ?? 0})`;
         document.getElementById("b1Fours").textContent = `(${b1.fours ?? 0})`;
         document.getElementById("b1Sixes").textContent = `(${b1.sixes ?? 0})`;
         document.getElementById("b1SR").textContent = b1.sr ?? "0.00";
-
-        document.getElementById("b1BatIcon").style.display =
-            b1.on_strike ? "inline-flex" : "none";
-
+        document.getElementById("b1BatIcon").style.display = b1.on_strike ? "inline-flex" : "none";
         renderImageInCircle("player1Image", b1.img || b1.image);
     }
 
     if (b2) {
-        document.getElementById("player2Name").textContent =
-            b2.short_name || b2.name || "Batter 2";
-
-        document.getElementById("player2Score").textContent =
-            `${b2.runs ?? 0} (${b2.balls ?? 0})`;
-
+        document.getElementById("player2Name").textContent = b2.short_name || b2.name || "Batter 2";
+        document.getElementById("player2Score").textContent = `${b2.runs ?? 0} (${b2.balls ?? 0})`;
         document.getElementById("b2Fours").textContent = `(${b2.fours ?? 0})`;
         document.getElementById("b2Sixes").textContent = `(${b2.sixes ?? 0})`;
         document.getElementById("b2SR").textContent = b2.sr ?? "0.00";
-
-        document.getElementById("b2BatIcon").style.display =
-            b2.on_strike ? "inline-flex" : "none";
-
+        document.getElementById("b2BatIcon").style.display = b2.on_strike ? "inline-flex" : "none";
         renderImageInCircle("player2Image", b2.img || b2.image);
     }
 
-    // Bowler.
     if (data.bowler) {
         const bowler = data.bowler;
-
-        document.getElementById("bowlerName").textContent =
-            bowler.short_name || bowler.name || "Bowler";
-
-        document.getElementById("bowlerScore").textContent =
-            bowler.figures || "-";
-
-        document.getElementById("bowlerEcon").textContent =
-            bowler.econ || "0.00";
-
+        document.getElementById("bowlerName").textContent = bowler.short_name || bowler.name || "Bowler";
+        document.getElementById("bowlerScore").textContent = bowler.figures || "-";
+        document.getElementById("bowlerEcon").textContent = bowler.econ || "0.00";
         renderImageInCircle("bowlerImage", bowler.img || bowler.image);
     }
 
     if (!fromCache) {
         previousTeam1Score = t1Score;
         previousTeam2Score = t2Score;
-
         firstLiveRender = false;
     }
 
@@ -1839,22 +1401,21 @@ async function fetchScores() {
     if (fetchInProgress) return;
 
     fetchInProgress = true;
-    setConnectionStatus("SCRAPING LIVE DATA...", "#ffd700");
+    setConnectionStatus("SYNCING LIVE DATA...", "#ffd700");
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT);
 
     try {
-        if (!OBS_TOKEN && !activeTargetUrl) {
-            throw new Error("No CREX match URL selected");
+        let fetchEndpoint = "";
+        if (OBS_TOKEN) {
+            fetchEndpoint = `${API_BASE}/api/obs/${encodeURIComponent(OBS_TOKEN)}/scrape?t=${Date.now()}`;
+        } else if (activeTargetUrl) {
+            fetchEndpoint = `${API_BASE}/api/scrape?url=${encodeURIComponent(activeTargetUrl)}&t=${Date.now()}`;
+        } else {
+            setConnectionStatus("AWAITING URL", "#ffd700");
+            return;
         }
-
-        // IMPORTANT:
-        // Send the CREX URL on EVERY request.
-        // This avoids relying on Render's /api/default-url memory/state.
-        const fetchEndpoint = OBS_TOKEN
-            ? `${API_BASE}/api/obs/${encodeURIComponent(OBS_TOKEN)}/scrape?t=${Date.now()}`
-            : `${API_BASE}/api/scrape?url=${encodeURIComponent(activeTargetUrl)}&t=${Date.now()}`;
 
         const res = await fetch(fetchEndpoint, {
             method: "GET",
@@ -1868,57 +1429,39 @@ async function fetchScores() {
         });
 
         const rawText = await res.text();
-
-        if (!res.ok) {
-            throw new Error(`HTTP ${res.status}: ${rawText.slice(0, 180)}`);
-        }
+        if (!res.ok) throw new Error(`HTTP ${res.status}: ${rawText.slice(0, 100)}`);
 
         let data;
         try {
             data = JSON.parse(rawText);
         } catch (e) {
-            throw new Error(`API returned non-JSON: ${rawText.slice(0, 180)}`);
+            throw new Error(`API non-JSON: ${rawText.slice(0, 100)}`);
         }
 
         if (!data || data.success !== true) {
-            throw new Error(data?.error || "API returned unsuccessful response");
+            throw new Error(data?.error || "Invalid response");
         }
 
-        // Only a valid successful response can update the scoreboard.
         renderScoreData(data, false);
         saveLastSuccessfulData(data);
-
         setConnectionStatus("LIVE • SYNCED", "#6cf598");
 
     } catch (err) {
-        // NEVER clear the scoreboard here.
-        // Last successful data stays visible.
         const msg = err?.message || "Network error";
-
         if (err?.name === "AbortError") {
-            setConnectionStatus("RETRYING • API TIMEOUT", "#ffd700");
-        } else if (/Failed to fetch|NetworkError|Load failed/i.test(msg)) {
-            setConnectionStatus("RECONNECTING • NETWORK", "#ffd700");
+            setConnectionStatus("RETRYING • TIMEOUT", "#ffd700");
         } else {
-            setConnectionStatus("RECONNECTING • " + msg.slice(0, 38), "#ffd700");
+            setConnectionStatus("RETRYING...", "#ffd700");
         }
-
     } finally {
         clearTimeout(timeoutId);
         fetchInProgress = false;
-
-        // Wait 3 seconds AFTER the current request finishes before polling again.
         scheduleNextFetch(POLL_INTERVAL);
     }
 }
 
-
-/* Manual match switch:
-   A new match is intentionally allowed to clear the old match,
-   then the new match is loaded. Automatic failures never clear data. */
 async function triggerMatchLoad() {
     let rawVal = urlInput.value.trim();
-
     if (!rawVal) {
         alert("Please enter a valid CREX URL or Match ID");
         return;
@@ -1927,22 +1470,16 @@ async function triggerMatchLoad() {
     const target = normalizeInput(rawVal);
     activeTargetUrl = target;
     localStorage.setItem("crex_match_input", target);
-
     urlInput.value = target;
 
-    // Stop the current retry timer so the new match starts immediately.
     if (retryTimer) {
         clearTimeout(retryTimer);
         retryTimer = null;
     }
 
-    // New match = clear the old match deliberately.
     flushDomElementsInstantly();
-
-    // Restore cached data for this exact match immediately, if available.
     restoreLastSuccessfulData();
-
-    setConnectionStatus("SCRAPING LIVE DATA...", "#ffd700");
+    setConnectionStatus("CONNECTING...", "#ffd700");
 
     try {
         await fetch(`${API_BASE}/api/default-url`, {
@@ -1950,33 +1487,22 @@ async function triggerMatchLoad() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ url: target })
         });
-    } catch (e) {
-        // The scrape endpoint can still work even if default-url POST fails.
-    }
+    } catch (e) {}
 
     fetchScores();
 }
 
 document.getElementById("loadMatchUrlBtn").addEventListener("click", triggerMatchLoad);
-// =========================================================
-// PREET SPORTS — RANDOM OBS URL GENERATOR
-// Creates a server-side random token and copies ONLY the
-// token URL to the clipboard. The CREX URL is not exposed.
-// =========================================================
 
 document.getElementById("generateObsBtn").addEventListener("click", async () => {
-    const input = document.getElementById("crexUrlInput");
-    const status = document.getElementById("statusIndicator");
-    const crexUrl = normalizeInput(input.value.trim());
-
+    const crexUrl = normalizeInput(urlInput.value.trim());
     if (!crexUrl) {
         alert("Please paste a valid CREX match URL first.");
         return;
     }
 
     try {
-        status.textContent = "GENERATING OBS LINK...";
-        status.style.color = "#ffd700";
+        setConnectionStatus("GENERATING OBS LINK...", "#ffd700");
 
         const response = await fetch(`${API_BASE}/api/obs-token`, {
             method: "POST",
@@ -1988,18 +1514,15 @@ document.getElementById("generateObsBtn").addEventListener("click", async () => 
         });
 
         const data = await response.json();
-
         if (!response.ok || !data.success || !data.token) {
             throw new Error(data.error || "Unable to generate OBS URL");
         }
 
-        // IMPORTANT: only the random token URL is copied.
-        const obsUrl = `${API_BASE}/obs/${encodeURIComponent(data.token)}`;
+        const obsUrl = `${window.location.origin}${window.location.pathname}?token=${encodeURIComponent(data.token)}&hide=1`;
 
         try {
             await navigator.clipboard.writeText(obsUrl);
         } catch (clipboardError) {
-            // Fallback for browsers that block navigator.clipboard.
             const temp = document.createElement("textarea");
             temp.value = obsUrl;
             temp.style.position = "fixed";
@@ -2011,57 +1534,34 @@ document.getElementById("generateObsBtn").addEventListener("click", async () => 
             temp.remove();
         }
 
-        status.textContent = "OBS URL COPIED ✓";
-        status.style.color = "#6cf598";
-
-        alert(
-            "OBS URL copied successfully!\n\n" +
-            obsUrl +
-            "\n\nPaste this URL into OBS → Browser Source."
-        );
-
-        console.log("OBS URL:", obsUrl);
+        setConnectionStatus("OBS URL COPIED ✓", "#6cf598");
+        alert("OBS Browser Source URL copied to clipboard:\n\n" + obsUrl);
 
     } catch (error) {
-        console.error("OBS token error:", error);
-
-        status.textContent = "OBS LINK ERROR";
-        status.style.color = "#ff6b6b";
-
-        alert(
-            "Could not generate OBS URL.\n\n" +
-            (error.message || "Unknown error")
-        );
+        setConnectionStatus("OBS LINK ERROR", "#ff6b6b");
+        alert("Could not generate OBS URL: " + (error.message || "Unknown error"));
     }
 });
-
 
 urlInput.addEventListener("keydown", (e) => {
     if (e.key === "Enter") triggerMatchLoad();
 });
 
-if (urlParams.get("hide") === "1" || OBS_TOKEN) {
+if (urlParams.get("hide") === "1") {
     document.getElementById("urlControlBar").style.display = "none";
 }
 
-/* =========================================================
-   STARTUP
-   ========================================================= */
-
 window.addEventListener("load", () => {
-    // Show last successful score immediately, if this match was cached.
     const restored = restoreLastSuccessfulData();
-
     if (restored) {
         setConnectionStatus("Cached • Connecting...", "#ffd700");
     } else {
-        setConnectionStatus("SCRAPING LIVE DATA...", "#ffd700");
+        setConnectionStatus("Ready", "#ffd700");
     }
-
-    // Start the live request immediately.
-    fetchScores();
+    if (activeTargetUrl || OBS_TOKEN) {
+        fetchScores();
+    }
 });
-
 </script>
 
 </body>
