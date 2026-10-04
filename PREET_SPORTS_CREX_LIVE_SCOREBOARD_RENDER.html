@@ -4,14 +4,23 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Preet Sports OBS Scoreboard - 1280x720</title>
+
+<!-- ULTRA-HD BROADCAST TYPOGRAPHY -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700;800;900&family=Teko:wght@700;800;900&display=swap" rel="stylesheet">
+
 <style>
 /* =========================================================
-   BASE RESET & CANVAS SETUP
+   BASE RESET & HD HARDWARE ACCELERATION
 ========================================================= */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
 }
 
 html, body {
@@ -19,7 +28,7 @@ html, body {
     height: 100%;
     overflow: hidden;
     background-color: #02070f;
-    font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+    font-family: 'Rajdhani', sans-serif;
 }
 
 .screen-wrapper {
@@ -40,7 +49,7 @@ html, body {
     display: flex;
     align-items: center;
     gap: 8px;
-    background: rgba(3, 14, 28, 0.96);
+    background: rgba(3, 14, 28, 0.98);
     border: 2px solid #ff9d00;
     border-radius: 30px;
     padding: 5px 14px;
@@ -50,18 +59,20 @@ html, body {
 }
 .url-control-bar span {
     color: #ffb834;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 800;
+    letter-spacing: 0.5px;
     white-space: nowrap;
 }
 .url-control-bar input {
     flex: 1;
-    background: #081d38;
-    border: 1px solid #00a8ff;
+    background: #06182e;
+    border: 1.5px solid #00a8ff;
     border-radius: 18px;
     color: #ffffff;
-    font-size: 13px;
-    font-weight: 600;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
     padding: 5px 12px;
     outline: none;
 }
@@ -70,8 +81,10 @@ html, body {
     border: none;
     border-radius: 18px;
     color: #ffffff;
-    font-size: 13px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 14px;
     font-weight: 900;
+    letter-spacing: 0.8px;
     padding: 6px 16px;
     cursor: pointer;
     white-space: nowrap;
@@ -80,14 +93,14 @@ html, body {
     transform: scale(0.96);
 }
 .status-indicator {
-    font-size: 11px;
-    font-weight: bold;
+    font-size: 12px;
+    font-weight: 800;
     color: #6cf598;
     white-space: nowrap;
 }
 
 /* =========================================================
-   1280 x 720 CANVAS - 10/10 CYBER BLUE & GOLD HYBRID
+   1280 x 720 CANVAS - ULTRA HD CYBER BLUE HYBRID
 ========================================================= */
 .scoreboard {
     position: relative;
@@ -96,7 +109,7 @@ html, body {
     min-width: 1280px;
     min-height: 720px;
     background: 
-        radial-gradient(ellipse 980px 330px at 50% 50%, rgba(0, 140, 95, 0.25) 0%, transparent 75%),
+        radial-gradient(ellipse 980px 330px at 50% 50%, rgba(0, 140, 95, 0.28) 0%, transparent 75%),
         radial-gradient(circle at 50% 50%, #06192d 0%, #02070f 100%);
     border: 2px solid #23476d;
     box-shadow: 0 0 50px rgba(0,0,0,0.95);
@@ -105,7 +118,6 @@ html, body {
     overflow: hidden;
 }
 
-/* STADIUM BG LIGHTING EFFECT */
 .stadium-overlay {
     position: absolute;
     left: 0;
@@ -114,8 +126,8 @@ html, body {
     height: 290px;
     pointer-events: none;
     background: radial-gradient(ellipse 750px 180px at 50% 50%, #2f8538 0%, #154e1a 45%, transparent 92%);
-    opacity: 0.38;
-    filter: blur(3px);
+    opacity: 0.42;
+    filter: blur(2px);
     z-index: 1;
 }
 
@@ -137,7 +149,6 @@ html, body {
     z-index: 10;
 }
 
-/* TOP RIGHT ACCENT TAB */
 .top-right-accent-tab {
     position: absolute;
     top: 0;
@@ -203,10 +214,18 @@ html, body {
     overflow: hidden;
 }
 
-.team-logo-circle img {
+/* HD IMAGE ENHANCEMENT ENGINE */
+.team-logo-circle img,
+.player-crest-wrap img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    filter: contrast(1.08) brightness(1.04);
     display: none;
 }
 
@@ -237,7 +256,6 @@ html, body {
     clip-path: polygon(12% 0, 100% 0, 100% 100%, 12% 100%, 0 50%);
 }
 
-/* ORANGE FLARE ACCENT STRIPS */
 .team-score-pod::before {
     content: "";
     position: absolute;
@@ -266,14 +284,14 @@ html, body {
 }
 
 .team-badge-pill {
-    color: #00d2ff;
-    font-size: 22px;
+    color: #00f0ff;
+    font-size: 26px;
     font-weight: 900;
-    letter-spacing: 1.5px;
+    letter-spacing: 1.8px;
     display: flex;
     align-items: center;
-    gap: 6px;
-    text-shadow: 0 0 12px rgba(0, 210, 255, 0.7);
+    gap: 8px;
+    text-shadow: 0 0 12px rgba(0, 240, 255, 0.7), 2px 2px 4px #000;
 }
 
 .badge-ball-icon {
@@ -286,19 +304,21 @@ html, body {
 }
 
 .team-overs-pill {
-    color: #9cb8d6;
-    font-size: 13px;
+    color: #c0d8f5;
+    font-size: 14px;
     font-weight: 800;
-    letter-spacing: 1px;
+    letter-spacing: 1.2px;
+    text-shadow: 1px 1px 3px #000;
 }
 
 .team-big-score {
-    font-size: 46px;
+    font-family: 'Teko', sans-serif;
+    font-size: 64px;
     font-weight: 900;
     color: #ffffff;
-    line-height: 1;
-    letter-spacing: 1px;
-    text-shadow: 0 0 15px rgba(255,255,255,0.4), 2px 2px 4px #000;
+    line-height: 0.9;
+    letter-spacing: 1.5px;
+    text-shadow: 0 0 15px rgba(255,255,255,0.45), 3px 3px 6px #000;
 }
 
 /* =========================================================
@@ -352,12 +372,13 @@ html, body {
 }
 
 .center-live-action {
-    font-size: 52px;
+    font-family: 'Teko', sans-serif;
+    font-size: 68px;
     font-weight: 900;
     color: #ffffff;
-    line-height: 1;
-    letter-spacing: 1px;
-    text-shadow: 0 0 15px rgba(0, 210, 255, 0.8), 2px 2px 4px #000;
+    line-height: 0.9;
+    letter-spacing: 1.5px;
+    text-shadow: 0 0 18px rgba(0, 240, 255, 0.85), 2px 2px 4px #000;
 }
 
 .center-chase-equation {
@@ -366,11 +387,11 @@ html, body {
     right: 0;
     top: 154px;
     text-align: center;
-    font-size: 14px;
-    font-weight: 900;
-    color: #ffb43b;
-    letter-spacing: 0.8px;
-    text-shadow: 0 0 10px rgba(255, 180, 59, 0.7), 2px 2px 4px #000;
+    font-size: 15px;
+    font-weight: 800;
+    color: #ffd700;
+    letter-spacing: 1px;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.7), 2px 2px 4px #000;
     white-space: nowrap;
     z-index: 15;
 }
@@ -399,15 +420,16 @@ html, body {
     justify-content: center;
     gap: 8px;
     color: #ffffff;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 800;
-    letter-spacing: 0.8px;
+    letter-spacing: 1px;
 }
 .ribbon-cell:last-child {
     border-right: none;
 }
 .ribbon-label {
-    color: #00d2ff;
+    color: #00f0ff;
+    font-weight: 900;
 }
 
 .stats-ribbon-lower {
@@ -432,26 +454,27 @@ html, body {
 }
 
 .over-title {
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 900;
     color: #ff9d00;
+    letter-spacing: 0.5px;
     white-space: nowrap;
 }
 
 .balls-container {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
 }
 
 .ball-circle {
-    width: 25px;
-    height: 25px;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
     background: #091c33;
     border: 1.5px solid #5784b1;
     color: #ffffff;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 900;
     display: flex;
     align-items: center;
@@ -464,7 +487,7 @@ html, body {
 .ball-circle.extra { background: #d97706; border-color: #fed7aa; }
 
 .over-total {
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 900;
     color: #ffffff;
     margin-left: 2px;
@@ -484,12 +507,13 @@ html, body {
     white-space: nowrap;
 }
 .ticker-info-label {
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 900;
     color: #ff9d00;
+    letter-spacing: 0.5px;
 }
 .ticker-info-val {
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 900;
     color: #ffffff;
     max-width: 280px;
@@ -525,28 +549,25 @@ html, body {
     justify-content: flex-end;
 }
 
-/* BATTER CARDS */
 .player-pod.batter-pod {
     background: linear-gradient(180deg, #114270 0%, #072442 50%, #031324 100%);
     border-color: #4b8cc9;
 }
 
-/* BOWLER CARD */
 .player-pod.bowler-pod {
     background: linear-gradient(180deg, #874911 0%, #522905 50%, #261100 100%);
     border-color: #cf7c2b;
 }
 
-/* FLOATING PILL TABS */
 .player-tab-header {
     position: absolute;
     top: -24px;
     right: 22px;
     border-radius: 8px 8px 0 0;
-    padding: 3px 22px;
-    font-size: 13px;
+    padding: 3px 24px;
+    font-size: 14px;
     font-weight: 900;
-    letter-spacing: 1.5px;
+    letter-spacing: 1.8px;
     text-transform: uppercase;
     color: #ffffff;
     box-shadow: 0 -3px 8px rgba(0,0,0,0.5);
@@ -562,7 +583,6 @@ html, body {
     border-bottom: none;
 }
 
-/* ELEVATED GLASS-CHROME PORTRAIT FRAME */
 .player-crest-wrap {
     position: absolute;
     top: -34px;
@@ -584,14 +604,7 @@ html, body {
 .player-pod.bowler-pod .player-crest-wrap {
     border-color: #e5a769;
 }
-.player-crest-wrap img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: none;
-}
 
-/* MAIN PLAYER METRIC ROW */
 .player-metrics-stack {
     margin-left: 132px;
     padding-right: 14px;
@@ -602,22 +615,27 @@ html, body {
 }
 
 .player-name-row {
-    font-size: 21px;
+    font-size: 23px;
     font-weight: 900;
     color: #ffffff;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    text-shadow: 2px 2px 4px #000;
+    text-shadow: 2px 2px 5px #000;
+    letter-spacing: 0.8px;
 }
 
 .player-score-row {
-    font-size: 27px;
+    font-family: 'Teko', sans-serif;
+    font-size: 38px;
     font-weight: 900;
     color: #ffffff;
-    text-shadow: 2px 2px 4px #000;
+    line-height: 0.95;
+    letter-spacing: 1px;
+    text-shadow: 2px 2px 5px #000;
     display: flex;
     align-items: center;
+    margin-top: 2px;
 }
 
 .player-pod.bowler-pod .player-score-row {
@@ -641,7 +659,6 @@ html, body {
     height: 22px;
 }
 
-/* SUB-PANEL FOOTER BAR */
 .player-sub-pill {
     width: 100%;
     height: 38px;
@@ -651,9 +668,10 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: space-evenly;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 800;
     color: #8da4be;
+    letter-spacing: 0.5px;
 }
 .player-sub-pill .val {
     color: #ffffff;
@@ -679,10 +697,11 @@ html, body {
 
 .bottom-promo-footer span {
     color: #ff9d00;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 900;
-    letter-spacing: 2px;
+    letter-spacing: 2.2px;
     text-transform: uppercase;
+    text-shadow: 0 0 8px rgba(255,157,0,0.5);
 }
 
 /* =========================================================
@@ -720,9 +739,9 @@ html, body {
     border-radius: 16px;
     background: rgba(3, 14, 27, 0.95);
     color: #ffffff;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 900;
-    letter-spacing: 1.2px;
+    letter-spacing: 1.4px;
 }
 
 .live-badge-dot {
@@ -750,8 +769,8 @@ html, body {
     border-radius: 10px;
     background: rgba(3, 15, 29, 0.92);
     color: #fff;
-    font-size: 26px;
-    font-weight: 800;
+    font-size: 28px;
+    font-weight: 900;
     text-align: center;
     display: none;
     white-space: nowrap;
@@ -773,9 +792,9 @@ html, body {
     border-radius: 16px;
     background: rgba(2, 10, 20, 0.96);
     color: #ffffff;
-    font-size: 32px;
+    font-size: 34px;
     font-weight: 900;
-    letter-spacing: 1.8px;
+    letter-spacing: 2px;
     text-align: center;
     box-shadow: 0 0 25px rgba(255, 157, 0, 0.5);
 }
@@ -1067,14 +1086,26 @@ function flushDomElementsInstantly() {
     document.getElementById("bowlerEcon").textContent = "0.00";
 }
 
+/* HD IMAGE ASSET RETRIEVER & OPTIMIZER */
 function renderImageInCircle(elementId, imageUrl) {
     const el = document.getElementById(elementId);
     if (!el) return;
     if (imageUrl && typeof imageUrl === "string" && imageUrl.startsWith("http")) {
-        let highResUrl = imageUrl.replace(/(\?|&)(w|width|h|height)=\d+/gi, "");
+        // Strip downscaler query parameters to load raw uncompressed assets
+        let highResUrl = imageUrl
+            .replace(/(\?|&)(w|width|h|height|quality|q)=\d+/gi, "")
+            .replace(/\/w_\d+,h_\d+/gi, "");
+            
         el.src = highResUrl;
         el.style.display = "block";
-        el.onerror = () => { el.style.display = "none"; };
+        el.onerror = () => { 
+            // Fallback to original URL if CDN modification is rejected
+            if (el.src !== imageUrl) {
+                el.src = imageUrl;
+            } else {
+                el.style.display = "none"; 
+            }
+        };
     } else {
         el.style.display = "none";
     }
@@ -1461,11 +1492,11 @@ function renderScoreData(data, fromCache = false) {
 
     actionEl.textContent = actionText || "•";
     if (actionText === "RUN OUT") {
-        actionEl.style.fontSize = "30px";
+        actionEl.style.fontSize = "38px";
     } else if (String(actionText).length <= 2) {
-        actionEl.style.fontSize = "52px";
+        actionEl.style.fontSize = "68px";
     } else {
-        actionEl.style.fontSize = "36px";
+        actionEl.style.fontSize = "46px";
     }
 
     const chaseEl = document.getElementById("centerChaseEquation");
