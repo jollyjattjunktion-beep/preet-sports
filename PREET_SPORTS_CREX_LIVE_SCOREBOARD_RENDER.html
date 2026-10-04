@@ -8,7 +8,7 @@
 <!-- ULTRA-HD BROADCAST TYPOGRAPHY -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700;800;900&family=Teko:wght@700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700;800;900&family=Teko:wght@600;700;800;900&display=swap" rel="stylesheet">
 
 <style>
 /* =========================================================
@@ -100,7 +100,7 @@ html, body {
 }
 
 /* =========================================================
-   1280 x 720 CANVAS - ULTRA HD CYBER BLUE HYBRID
+   1280 x 720 CANVAS - ACCURATE CYBER BLUE BROADCAST
 ========================================================= */
 .scoreboard {
     position: relative;
@@ -108,8 +108,8 @@ html, body {
     height: 720px;
     min-width: 1280px;
     min-height: 720px;
-    background: #040f1c;
-    border: 2px solid #23476d;
+    background: #030a14;
+    border: 2px solid #1c3d63;
     box-shadow: 0 0 50px rgba(0,0,0,0.95);
     transform-origin: center center;
     flex-shrink: 0;
@@ -120,14 +120,15 @@ html, body {
 .stadium-overlay {
     position: absolute;
     left: 0;
-    top: 185px;
+    top: 175px;
     width: 100%;
-    height: 505px;
+    height: 520px;
     pointer-events: none;
     background: 
-        linear-gradient(180deg, rgba(2, 8, 16, 0.85) 0%, rgba(2, 8, 16, 0.25) 30%, rgba(2, 8, 16, 0.45) 75%, rgba(2, 8, 16, 0.95) 100%),
+        radial-gradient(ellipse 950px 380px at 50% 60%, rgba(0, 140, 95, 0.22) 0%, transparent 80%),
+        linear-gradient(180deg, rgba(2, 9, 18, 0.92) 0%, rgba(2, 9, 18, 0.15) 30%, rgba(2, 9, 18, 0.4) 75%, rgba(2, 9, 18, 0.98) 100%),
         url("https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=1400&q=80") center center/cover no-repeat;
-    opacity: 0.75;
+    opacity: 0.85;
     z-index: 1;
 }
 
@@ -140,12 +141,12 @@ html, body {
     top: 0;
     width: 100%;
     height: 185px;
-    background: linear-gradient(180deg, #010a15 0%, #081a30 50%, #020b17 100%);
-    border-bottom: 2.5px solid #1c4573;
+    background: linear-gradient(180deg, #01060e 0%, #06172b 45%, #01060e 100%);
+    border-bottom: 2.5px solid #14375e;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 24px;
+    padding: 0 16px;
     z-index: 10;
 }
 
@@ -165,7 +166,7 @@ html, body {
 .team-deck {
     display: flex;
     align-items: center;
-    width: 490px;
+    width: 480px;
     height: 145px;
     position: relative;
 }
@@ -232,13 +233,13 @@ html, body {
 .team-score-pod {
     flex: 1;
     height: 78px;
-    background: linear-gradient(180deg, #122844 0%, #07192e 50%, #030e1c 100%);
+    background: linear-gradient(180deg, #102641 0%, #06192d 50%, #020c18 100%);
     border-top: 2px solid #4a75a0;
     border-bottom: 2px solid #4a75a0;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 28px;
+    padding: 0 24px;
     position: relative;
     box-shadow: inset 0 0 18px rgba(0,0,0,0.85), 0 6px 18px rgba(0,0,0,0.7);
 }
@@ -246,15 +247,16 @@ html, body {
 .team-deck.left-side .team-score-pod {
     margin-left: -22px;
     padding-left: 36px;
-    clip-path: polygon(0 0, 88% 0, 100% 50%, 88% 100%, 0 100%);
+    clip-path: polygon(0 0, 86% 0, 100% 50%, 86% 100%, 0 100%);
 }
 
 .team-deck.right-side .team-score-pod {
     margin-right: -22px;
     padding-right: 36px;
-    clip-path: polygon(12% 0, 100% 0, 100% 100%, 12% 100%, 0 50%);
+    clip-path: polygon(14% 0, 100% 0, 100% 100%, 14% 100%, 0 50%);
 }
 
+/* ORANGE FLARE ACCENT STRIPS */
 .team-score-pod::before {
     content: "";
     position: absolute;
@@ -521,7 +523,7 @@ html, body {
 }
 
 /* =========================================================
-   BOTTOM PLAYER CARDS (BIGGER, HIGH-VISIBILITY TYPOGRAPHY)
+   BOTTOM PLAYER CARDS (FIXED PROPORTIONS & ALIGNMENTS)
 ========================================================= */
 .player-section {
     position: absolute;
@@ -646,20 +648,24 @@ html, body {
 }
 
 .icon-badge {
-    margin-left: 8px;
+    margin-left: 10px;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
 }
 
 .bat-svg {
-    width: 26px;
-    height: 26px;
-    transform: rotate(-30deg);
+    width: 24px;
+    height: 24px;
+    transform: rotate(-35deg);
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));
 }
 
 .ball-svg {
-    width: 24px;
-    height: 24px;
+    width: 22px;
+    height: 22px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));
 }
 
 /* SUB-PANEL FOOTER BAR */
@@ -912,7 +918,7 @@ html, body {
             </div>
         </div>
 
-        <!-- BOTTOM PLAYERS SECTION (BIGGER HD FONTS) -->
+        <!-- BOTTOM PLAYERS SECTION -->
         <div class="player-section">
             
             <!-- BATTER 1 -->
