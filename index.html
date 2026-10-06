@@ -405,7 +405,7 @@ html, body {
     left: 0;
     top: 185px;
     width: 100%;
-    height: 44px;
+    height: 46px;
     background: linear-gradient(180deg, #0e233a 0%, #051424 100%);
     border-top: 2px solid #28517c;
     border-bottom: 2px solid #00aaff;
@@ -421,7 +421,7 @@ html, body {
     justify-content: center;
     gap: 8px;
     color: #ffffff;
-    font-size: 22px;
+    font-size: 24px;
     font-weight: 900;
     letter-spacing: 1.2px;
     text-shadow: 2px 2px 4px #000;
@@ -438,9 +438,9 @@ html, body {
 .stats-ribbon-lower {
     position: absolute;
     left: 0;
-    top: 229px;
+    top: 231px;
     width: 100%;
-    height: 48px;
+    height: 50px;
     background: linear-gradient(180deg, #051322 0%, #01070e 100%);
     border-bottom: 2.5px solid #28517c;
     display: flex;
@@ -457,7 +457,7 @@ html, body {
 }
 
 .over-title {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 900;
     color: #ff9d00;
     letter-spacing: 1px;
@@ -472,13 +472,13 @@ html, body {
 }
 
 .ball-circle {
-    width: 34px;
-    height: 34px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     background: #091c33;
     border: 2px solid #5784b1;
     color: #ffffff;
-    font-size: 17px;
+    font-size: 18px;
     font-weight: 900;
     display: flex;
     align-items: center;
@@ -493,7 +493,7 @@ html, body {
 .ball-circle.extra { background: #d97706; border-color: #fed7aa; }
 
 .over-total {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 900;
     color: #ffffff;
     margin-left: 4px;
@@ -502,7 +502,7 @@ html, body {
 
 .over-divider-line {
     width: 2px;
-    height: 28px;
+    height: 30px;
     background: #28517c;
     flex-shrink: 0;
 }
@@ -514,14 +514,14 @@ html, body {
     white-space: nowrap;
 }
 .ticker-info-label {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 900;
     color: #ffd700;
     letter-spacing: 1px;
     text-shadow: 2px 2px 4px #000;
 }
 .ticker-info-val {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 900;
     color: #ffffff;
     letter-spacing: 0.5px;
@@ -628,7 +628,7 @@ html, body {
 }
 
 .player-name-row {
-    font-size: 30px;
+    font-size: 32px;
     font-weight: 900;
     color: #ffffff;
     white-space: nowrap;
@@ -641,7 +641,7 @@ html, body {
 
 .player-score-row {
     font-family: 'Teko', sans-serif;
-    font-size: 54px;
+    font-size: 56px;
     font-weight: 900;
     color: #ffffff;
     line-height: 0.9;
@@ -687,7 +687,7 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: space-evenly;
-    font-size: 18px;
+    font-size: 19px;
     font-weight: 800;
     color: #9cb3ce;
     letter-spacing: 0.8px;
@@ -862,18 +862,18 @@ html, body {
             <!-- UPPER GREEN ACCENT TAB -->
             <div class="top-right-accent-tab"></div>
 
-            <!-- LEFT TEAM CHEVRON -->
+            <!-- LEFT TEAM CHEVRON (ALWAYS THE ACTIVE BATTING TEAM) -->
             <div class="team-deck left-side">
                 <div class="team-crest-box">
                     <div class="team-logo-circle">
-                        <img id="team1Logo" src="" alt="Team 1 Logo">
+                        <img id="team1Logo" src="" alt="Batting Team Logo">
                     </div>
                 </div>
                 <div class="team-score-pod">
                     <div class="team-meta-stack">
                         <div class="team-badge-pill" id="team1BadgeBox">
                             <span id="team1BallIcon" class="badge-ball-icon" style="display: none;"></span>
-                            <span id="team1Badge">AUS</span>
+                            <span id="team1Badge">-</span>
                         </div>
                         <div class="team-overs-pill" id="team1Overs">OVERS: 0.0</div>
                     </div>
@@ -886,21 +886,21 @@ html, body {
                 <div id="centerLiveAction" class="center-live-action">•</div>
             </div>
 
-            <!-- RIGHT TEAM CHEVRON -->
+            <!-- RIGHT TEAM CHEVRON (ALWAYS THE BOWLING TEAM) -->
             <div class="team-deck right-side">
                 <div class="team-score-pod">
                     <div class="team-big-score" id="team2Score">-</div>
                     <div class="team-meta-stack" style="text-align: right; align-items: flex-end;">
                         <div class="team-badge-pill" id="team2BadgeBox">
                             <span id="team2BallIcon" class="badge-ball-icon" style="display: none;"></span>
-                            <span id="team2Badge">IND</span>
+                            <span id="team2Badge">-</span>
                         </div>
                         <div class="team-overs-pill" id="team2Overs">OVERS: 0.0</div>
                     </div>
                 </div>
                 <div class="team-crest-box">
                     <div class="team-logo-circle">
-                        <img id="team2Logo" src="" alt="Team 2 Logo">
+                        <img id="team2Logo" src="" alt="Bowling Team Logo">
                     </div>
                 </div>
             </div>
@@ -1343,6 +1343,34 @@ function showEventFlash(label, type) {
     }, 4500);
 }
 
+// Broadcast abbreviation helper
+function abbreviation(name) {
+    const n = String(name || "").trim().toUpperCase();
+    if (!n) return "-";
+    if (n.includes("WEST INDIES") || n.includes("WIN") || n === "WI") return "WI";
+    if (n.includes("INDIA") || n.includes("INDCH") || n === "IND") return "IND";
+    if (n.includes("AUSTRALIA") || n.includes("AUSCH") || n === "AUS") return "AUS";
+    if (n.includes("SOUTH AFRICA") || n === "SA") return "SA";
+    if (n.includes("ENGLAND") || n === "ENG") return "ENG";
+    if (n.includes("SRI LANKA") || n === "SL") return "SL";
+    if (n.includes("NEW ZEALAND") || n === "NZ") return "NZ";
+    if (n.includes("PAKISTAN") || n === "PAK") return "PAK";
+    if (n.includes("BANGLADESH") || n === "BAN") return "BAN";
+    if (n.includes("AFGHANISTAN") || n === "AFG") return "AFG";
+    if (n.includes("ZIMBABWE") || n === "ZIM") return "ZIM";
+    if (n.includes("IRELAND") || n === "IRE") return "IRE";
+    return n.length <= 6 ? n : n.split(/\s+/).map(x => x[0]).join("").slice(0, 4);
+}
+
+function teamInText(teamShort, teamFull, text) {
+    if (!text) return false;
+    const s = teamShort ? teamShort.toUpperCase() : "";
+    const f = teamFull ? teamFull.toUpperCase() : "";
+    if (s && new RegExp(`\\b${s}\\b`, "i").test(text)) return true;
+    if (f && text.includes(f)) return true;
+    return false;
+}
+
 function renderScoreData(data, fromCache = false) {
     if (!data || data.success === false) {
         throw new Error("Invalid score data");
@@ -1367,79 +1395,143 @@ function renderScoreData(data, fromCache = false) {
         showMatchStatus("");
     }
 
+    /* =========================================================
+       UNIVERSAL BATTING & BOWLING TEAM ROLE RESOLUTION
+       Guarantees:
+       LEFT SIDE = Active Batting Team (underneath: Batter 1 & 2)
+       RIGHT SIDE = Bowling Team (underneath: Bowler)
+       ========================================================= */
+
     const apiTeam1 = (data.team1 && typeof data.team1 === "object") ? data.team1 : {};
     const apiTeam2 = (data.team2 && typeof data.team2 === "object") ? data.team2 : {};
 
-    const t1Name = String(apiTeam1.full_name || apiTeam1.short || (typeof data.team1 === "string" ? data.team1 : "") || "TEAM 1").toUpperCase();
-    let t2Name = String(apiTeam2.full_name || apiTeam2.short || (typeof data.team2 === "string" ? data.team2 : "") || "TEAM 2").toUpperCase();
+    const t1RawName = String(apiTeam1.full_name || apiTeam1.short || (typeof data.team1 === "string" ? data.team1 : "") || "TEAM 1").toUpperCase();
+    const t2RawName = String(apiTeam2.full_name || apiTeam2.short || (typeof data.team2 === "string" ? data.team2 : "") || "TEAM 2").toUpperCase();
 
-    const abbreviation = (name) => {
-        const n = String(name || "").toUpperCase();
-        if (n.includes("AUSTRALIA") || n.includes("AUSCH")) return "AUS";
-        if (n.includes("INDIA") || n.includes("INDCH")) return "IND";
-        if (n.includes("SOUTH AFRICA")) return "SA";
-        if (n.includes("ENGLAND")) return "ENG";
-        if (n.includes("SRI LANKA")) return "SL";
-        if (n.includes("NEW ZEALAND")) return "NZ";
-        if (n.includes("PAKISTAN")) return "PAK";
-        if (n.includes("WEST INDIES")) return "WI";
-        if (n.includes("ZIMBABWE")) return "ZIM";
-        return n.length <= 8 ? n : n.split(/\s+/).map(x => x[0]).join("").slice(0, 4);
-    };
+    const t1Short = abbreviation(t1RawName);
+    const t2Short = abbreviation(t2RawName);
 
-    const t1Badge = abbreviation(t1Name);
-    const t2Badge = abbreviation(t2Name);
+    const t1Logo = apiTeam1.logo || data.team1Logo || "";
+    const t2Logo = apiTeam2.logo || data.team2Logo || "";
+
+    const t1ScoreRaw = apiTeam1.score ? String(apiTeam1.score).replace("/", "-") : "";
+    const t1OversRaw = apiTeam1.overs ? String(apiTeam1.overs).replace(/[()]/g, "") : "";
+    const t2ScoreRaw = apiTeam2.score ? String(apiTeam2.score).replace("/", "-") : "";
+    const t2OversRaw = apiTeam2.overs ? String(apiTeam2.overs).replace(/[()]/g, "") : "";
 
     const equationText = String(data.equation || data.status || "").trim();
-    const australiaBowling = /AUS\s+opt\s+to\s+Bowl/i.test(equationText);
+    const statusUpper = equationText.toUpperCase();
 
-    let t1Score = apiTeam1.score ? String(apiTeam1.score).replace("/", "-") : "0-0";
-    let t1Overs = apiTeam1.overs ? String(apiTeam1.overs).replace(/[()]/g, "") : "0.0";
-    let t2Score = apiTeam2.score ? String(apiTeam2.score).replace("/", "-") : "0-0";
-    let t2Overs = apiTeam2.overs ? String(apiTeam2.overs).replace(/[()]/g, "") : "0.0";
+    // Determine who is batting using toss, chase equations, and player teams
+    let t1IsBatting = null;
 
+    const isBowlingOpt = /OPT(ED)?\s+TO\s+(BOWL|FIELD)|CHOSE\s+TO\s+(BOWL|FIELD)|ELECTED\s+TO\s+(BOWL|FIELD)/i.test(statusUpper);
+    const isBattingOpt = /OPT(ED)?\s+TO\s+BAT|CHOSE\s+TO\s+BAT|ELECTED\s+TO\s+BAT/i.test(statusUpper);
+    const isChasing = /(NEED|REQUIRE|NEEDS|REQUIRES)\s+\d+\s+RUNS/i.test(statusUpper);
+
+    if (isBowlingOpt) {
+        if (teamInText(t1Short, t1RawName, statusUpper)) {
+            t1IsBatting = false; // Team 1 opted to bowl -> Team 2 is BATTING
+        } else if (teamInText(t2Short, t2RawName, statusUpper)) {
+            t1IsBatting = true;  // Team 2 opted to bowl -> Team 1 is BATTING
+        }
+    } else if (isBattingOpt) {
+        if (teamInText(t1Short, t1RawName, statusUpper)) {
+            t1IsBatting = true;  // Team 1 opted to bat -> Team 1 is BATTING
+        } else if (teamInText(t2Short, t2RawName, statusUpper)) {
+            t1IsBatting = false; // Team 2 opted to bat -> Team 2 is BATTING
+        }
+    } else if (isChasing) {
+        if (teamInText(t1Short, t1RawName, statusUpper)) {
+            t1IsBatting = true;  // Team 1 is chasing
+        } else if (teamInText(t2Short, t2RawName, statusUpper)) {
+            t1IsBatting = false; // Team 2 is chasing
+        }
+    }
+
+    // Secondary fallback: check batsman team tag or overs
+    if (t1IsBatting === null) {
+        const bTeam = String(data.batsman1?.team || data.batter1?.team || "").toUpperCase();
+        if (bTeam) {
+            if (teamInText(t1Short, t1RawName, bTeam)) t1IsBatting = true;
+            else if (teamInText(t2Short, t2RawName, bTeam)) t1IsBatting = false;
+        }
+    }
+
+    if (t1IsBatting === null) {
+        const t1HasOvers = t1OversRaw && t1OversRaw !== "0.0" && t1OversRaw !== "0";
+        const t2HasOvers = t2OversRaw && t2OversRaw !== "0.0" && t2OversRaw !== "0";
+        if (t1HasOvers && !t2HasOvers) t1IsBatting = true;
+        else if (t2HasOvers && !t1HasOvers) t1IsBatting = false;
+        else t1IsBatting = true;
+    }
+
+    // Separate into Batting Team (Left) and Bowling Team (Right)
+    let leftBadge = "";
+    let leftLogo = "";
+    let leftScore = "";
+    let leftOvers = "";
+
+    let rightBadge = "";
+    let rightLogo = "";
+    let rightScore = "Yet to bat";
+    let rightOvers = "Yet to bat";
+
+    if (t1IsBatting) {
+        // Team 1 is batting (e.g. IND)
+        leftBadge = t1Short;
+        leftLogo = t1Logo;
+        leftScore = t1ScoreRaw || "0-0";
+        leftOvers = t1OversRaw || "0.0";
+
+        rightBadge = t2Short;
+        rightLogo = t2Logo;
+        if (t2ScoreRaw && t2ScoreRaw !== "0-0" && t2ScoreRaw !== leftScore) {
+            rightScore = t2ScoreRaw;
+            rightOvers = t2OversRaw || "0.0";
+        }
+    } else {
+        // Team 2 is batting (e.g. WI batting, IND bowling)
+        leftBadge = t2Short;
+        leftLogo = t2Logo || t1Logo; // ensure clean logo assignment
+        
+        // Pick the active innings score (e.g. 121-6)
+        leftScore = (t2ScoreRaw && t2ScoreRaw !== "0-0") ? t2ScoreRaw : (t1ScoreRaw || "0-0");
+        leftOvers = (t2OversRaw && t2OversRaw !== "0.0") ? t2OversRaw : (t1OversRaw || "0.0");
+
+        rightBadge = t1Short;
+        rightLogo = t1Logo;
+        if (t1ScoreRaw && t1ScoreRaw !== "0-0" && t1ScoreRaw !== leftScore) {
+            rightScore = t1ScoreRaw;
+            rightOvers = t1OversRaw || "0.0";
+        }
+    }
+
+    // Score change animation detection
     if (!fromCache && !firstLiveRender) {
         const old1 = scoreRuns(previousTeam1Score);
         const old2 = scoreRuns(previousTeam2Score);
-        const new1 = scoreRuns(t1Score);
-        const new2 = scoreRuns(t2Score);
+        const new1 = scoreRuns(leftScore);
+        const new2 = scoreRuns(rightScore);
 
         if (old1 !== null && new1 !== null && old1 !== new1) animateElementByClass("team1Score", "score-change");
         if (old2 !== null && new2 !== null && old2 !== new2) animateElementByClass("team2Score", "score-change");
     }
 
-    let t1Role = "BOWLING";
-    let t2Role = "BATTING";
+    // Render team badges, scores, overs, and logos
+    document.getElementById("team1Badge").textContent = leftBadge;
+    document.getElementById("team1Score").textContent = leftScore;
+    document.getElementById("team1Overs").textContent = `OVERS: ${leftOvers}`;
+    document.getElementById("team1BallIcon").style.display = "none"; // batting team has no ball icon
+    renderImageInCircle("team1Logo", leftLogo);
 
-    if (australiaBowling) {
-        t1Role = "BATTING";
-        t2Role = "BOWLING";
-        if (t2Score === t1Score) {
-            t2Score = "Yet to bat";
-            t2Overs = "Yet to bat";
-        }
-    } else if (/SA\s+opt\s+to\s+Bowl/i.test(equationText)) {
-        t1Role = "BOWLING";
-        t2Role = "BATTING";
-        if (t1Score === t2Score) {
-            t1Score = "Yet to bat";
-            t1Overs = "Yet to bat";
-        }
-    }
+    document.getElementById("team2Badge").textContent = rightBadge;
+    document.getElementById("team2Score").textContent = rightScore;
+    document.getElementById("team2Overs").textContent = (rightOvers === "Yet to bat") ? rightOvers : `OVERS: ${rightOvers}`;
+    document.getElementById("team2BallIcon").style.display = "inline-block"; // bowling team displays ball icon
+    renderImageInCircle("team2Logo", rightLogo);
 
-    renderImageInCircle("team1Logo", apiTeam1.logo || data.team1Logo);
-    renderImageInCircle("team2Logo", apiTeam2.logo || data.team2Logo);
-
-    document.getElementById("team1Badge").textContent = t1Badge;
-    document.getElementById("team1Score").textContent = t1Score;
-    document.getElementById("team1Overs").textContent = `OVERS: ${t1Overs}`;
-    document.getElementById("team1BallIcon").style.display = (t1Role === "BOWLING") ? "inline-block" : "none";
-
-    document.getElementById("team2Badge").textContent = t2Badge;
-    document.getElementById("team2Score").textContent = t2Score;
-    document.getElementById("team2Overs").textContent = `OVERS: ${t2Overs}`;
-    document.getElementById("team2BallIcon").style.display = (t2Role === "BOWLING") ? "inline-block" : "none";
-
+    // Center display box: ball/run/event
     const actionEl = document.getElementById("centerLiveAction");
     const latestBallObject = Array.isArray(data.current_over?.balls) && data.current_over.balls.length
         ? data.current_over.balls[data.current_over.balls.length - 1]
@@ -1449,7 +1541,7 @@ function renderScoreData(data, fromCache = false) {
     const ballType = String(latestBallObject && typeof latestBallObject === "object" ? (latestBallObject.type ?? "") : "").trim();
 
     const currentOverLabel = String(data.current_over?.label || "");
-    const eventSignature = [currentOverLabel, ballText, ballType, String(t1Score), String(t2Score)].join("|");
+    const eventSignature = [currentOverLabel, ballText, ballType, String(leftScore), String(rightScore)].join("|");
 
     let eventLabel = "";
     let eventType = "";
@@ -1561,8 +1653,8 @@ function renderScoreData(data, fromCache = false) {
     }
 
     if (!fromCache) {
-        previousTeam1Score = t1Score;
-        previousTeam2Score = t2Score;
+        previousTeam1Score = leftScore;
+        previousTeam2Score = rightScore;
         firstLiveRender = false;
     }
 
