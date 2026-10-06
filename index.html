@@ -286,18 +286,18 @@ html, body {
 
 .team-badge-pill {
     color: #00f0ff;
-    font-size: 26px;
+    font-size: 28px;
     font-weight: 900;
     letter-spacing: 1.8px;
     display: flex;
     align-items: center;
     gap: 8px;
-    text-shadow: 0 0 12px rgba(0, 240, 255, 0.7), 2px 2px 4px #000;
+    text-shadow: 0 0 14px rgba(0, 240, 255, 0.8), 2px 2px 4px #000;
 }
 
 .badge-ball-icon {
-    width: 14px;
-    height: 14px;
+    width: 15px;
+    height: 15px;
     border-radius: 50%;
     background: radial-gradient(circle at 35% 35%, #ff4d4d, #990000);
     border: 1px solid #ffffff;
@@ -305,16 +305,16 @@ html, body {
 }
 
 .team-overs-pill {
-    color: #c0d8f5;
-    font-size: 14px;
-    font-weight: 800;
+    color: #ffffff;
+    font-size: 17px;
+    font-weight: 900;
     letter-spacing: 1.2px;
-    text-shadow: 1px 1px 3px #000;
+    text-shadow: 2px 2px 4px #000;
 }
 
 .team-big-score {
     font-family: 'Teko', sans-serif;
-    font-size: 64px;
+    font-size: 68px;
     font-weight: 900;
     color: #ffffff;
     line-height: 0.9;
@@ -386,29 +386,29 @@ html, body {
     position: absolute;
     left: 0;
     right: 0;
-    top: 154px;
+    top: 152px;
     text-align: center;
-    font-size: 15px;
-    font-weight: 800;
+    font-size: 20px;
+    font-weight: 900;
     color: #ffd700;
-    letter-spacing: 1px;
-    text-shadow: 0 0 10px rgba(255, 215, 0, 0.7), 2px 2px 4px #000;
+    letter-spacing: 1.2px;
+    text-shadow: 0 0 12px rgba(255, 215, 0, 0.85), 2px 2px 5px #000, -2px -2px 5px #000;
     white-space: nowrap;
     z-index: 15;
 }
 
 /* =========================================================
-   TWO-TIER METALLIC BLUE STATS & TICKER BARS
+   TWO-TIER METALLIC BLUE STATS & TICKER BARS (ENLARGED FOR MOBILE)
 ========================================================= */
 .stats-ribbon-upper {
     position: absolute;
     left: 0;
     top: 185px;
     width: 100%;
-    height: 34px;
+    height: 44px;
     background: linear-gradient(180deg, #0e233a 0%, #051424 100%);
-    border-top: 1.5px solid #28517c;
-    border-bottom: 1.5px solid #00aaff;
+    border-top: 2px solid #28517c;
+    border-bottom: 2px solid #00aaff;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     z-index: 10;
@@ -421,26 +421,28 @@ html, body {
     justify-content: center;
     gap: 8px;
     color: #ffffff;
-    font-size: 16px;
-    font-weight: 800;
-    letter-spacing: 1px;
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: 1.2px;
+    text-shadow: 2px 2px 4px #000;
 }
 .ribbon-cell:last-child {
     border-right: none;
 }
 .ribbon-label {
-    color: #00f0ff;
+    color: #00f5ff;
     font-weight: 900;
+    text-shadow: 0 0 8px rgba(0,245,255,0.6);
 }
 
 .stats-ribbon-lower {
     position: absolute;
     left: 0;
-    top: 219px;
+    top: 229px;
     width: 100%;
-    height: 38px;
+    height: 48px;
     background: linear-gradient(180deg, #051322 0%, #01070e 100%);
-    border-bottom: 2px solid #28517c;
+    border-bottom: 2.5px solid #28517c;
     display: flex;
     align-items: center;
     justify-content: space-evenly;
@@ -451,14 +453,15 @@ html, body {
 .over-column {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
 }
 
 .over-title {
-    font-size: 15px;
+    font-size: 20px;
     font-weight: 900;
     color: #ff9d00;
-    letter-spacing: 0.5px;
+    letter-spacing: 1px;
+    text-shadow: 2px 2px 4px #000;
     white-space: nowrap;
 }
 
@@ -469,17 +472,19 @@ html, body {
 }
 
 .ball-circle {
-    width: 26px;
-    height: 26px;
+    width: 34px;
+    height: 34px;
     border-radius: 50%;
     background: #091c33;
-    border: 1.5px solid #5784b1;
+    border: 2px solid #5784b1;
     color: #ffffff;
-    font-size: 13px;
+    font-size: 17px;
     font-weight: 900;
     display: flex;
     align-items: center;
     justify-content: center;
+    text-shadow: 1px 1px 2px #000;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.6);
 }
 
 .ball-circle.four { background: #0275d8; border-color: #70baff; }
@@ -488,15 +493,16 @@ html, body {
 .ball-circle.extra { background: #d97706; border-color: #fed7aa; }
 
 .over-total {
-    font-size: 15px;
+    font-size: 20px;
     font-weight: 900;
     color: #ffffff;
-    margin-left: 2px;
+    margin-left: 4px;
+    text-shadow: 2px 2px 4px #000;
 }
 
 .over-divider-line {
-    width: 1.5px;
-    height: 22px;
+    width: 2px;
+    height: 28px;
     background: #28517c;
     flex-shrink: 0;
 }
@@ -504,26 +510,29 @@ html, body {
 .ticker-info-block {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     white-space: nowrap;
 }
 .ticker-info-label {
-    font-size: 15px;
+    font-size: 20px;
     font-weight: 900;
-    color: #ff9d00;
-    letter-spacing: 0.5px;
+    color: #ffd700;
+    letter-spacing: 1px;
+    text-shadow: 2px 2px 4px #000;
 }
 .ticker-info-val {
-    font-size: 15px;
+    font-size: 20px;
     font-weight: 900;
     color: #ffffff;
-    max-width: 280px;
+    letter-spacing: 0.5px;
+    text-shadow: 2px 2px 4px #000;
+    max-width: 340px;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
 /* =========================================================
-   BOTTOM PLAYER CARDS (FIXED PROPORTIONS & ALIGNMENTS)
+   BOTTOM PLAYER CARDS (BIGGER, HIGH-VISIBILITY TYPOGRAPHY)
 ========================================================= */
 .player-section {
     position: absolute;
@@ -567,7 +576,7 @@ html, body {
     right: 20px;
     border-radius: 8px 8px 0 0;
     padding: 4px 26px;
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 900;
     letter-spacing: 2px;
     text-transform: uppercase;
@@ -615,11 +624,11 @@ html, body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    height: 90px;
+    height: 86px;
 }
 
 .player-name-row {
-    font-size: 29px;
+    font-size: 30px;
     font-weight: 900;
     color: #ffffff;
     white-space: nowrap;
@@ -632,7 +641,7 @@ html, body {
 
 .player-score-row {
     font-family: 'Teko', sans-serif;
-    font-size: 52px;
+    font-size: 54px;
     font-weight: 900;
     color: #ffffff;
     line-height: 0.9;
@@ -656,32 +665,33 @@ html, body {
 }
 
 .bat-svg {
-    width: 24px;
-    height: 24px;
+    width: 26px;
+    height: 26px;
     transform: rotate(-35deg);
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));
 }
 
 .ball-svg {
-    width: 22px;
-    height: 22px;
+    width: 24px;
+    height: 24px;
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));
 }
 
 /* SUB-PANEL FOOTER BAR */
 .player-sub-pill {
     width: 100%;
-    height: 38px;
+    height: 44px;
     background: #01060d;
     border-top: 1.5px solid #1a395b;
     border-radius: 0 0 10px 10px;
     display: flex;
     align-items: center;
     justify-content: space-evenly;
-    font-size: 15px;
+    font-size: 18px;
     font-weight: 800;
-    color: #8da4be;
-    letter-spacing: 0.5px;
+    color: #9cb3ce;
+    letter-spacing: 0.8px;
+    text-shadow: 1px 1px 3px #000;
 }
 .player-sub-pill .val {
     color: #ffffff;
@@ -918,7 +928,7 @@ html, body {
             </div>
         </div>
 
-        <!-- BOTTOM PLAYERS SECTION -->
+        <!-- BOTTOM PLAYERS SECTION (BIGGER HD FONTS) -->
         <div class="player-section">
             
             <!-- BATTER 1 -->
@@ -1115,7 +1125,7 @@ function renderImageInCircle(elementId, imageUrl) {
             }
         };
     } else {
-        el.style.display = "none";
+        el.style.display = "none"; 
     }
 }
 
