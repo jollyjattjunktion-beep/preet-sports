@@ -320,6 +320,16 @@ html, body {
     line-height: 0.9;
     letter-spacing: 1.5px;
     text-shadow: 0 0 15px rgba(255,255,255,0.45), 3px 3px 6px #000;
+    white-space: nowrap;
+}
+
+.team-big-score.text-mode {
+    font-family: 'Rajdhani', sans-serif !important;
+    font-size: 28px !important;
+    font-weight: 900 !important;
+    letter-spacing: 1px !important;
+    color: #c5dcfa !important;
+    line-height: 1.1 !important;
 }
 
 /* =========================================================
@@ -1081,6 +1091,8 @@ if (urlInput) urlInput.value = activeTargetUrl;
 function flushDomElementsInstantly() {
     document.getElementById("team1Score").textContent = "-";
     document.getElementById("team2Score").textContent = "-";
+    document.getElementById("team1Score").classList.remove("text-mode");
+    document.getElementById("team2Score").classList.remove("text-mode");
     document.getElementById("team1Overs").textContent = "OVERS: 0.0";
     document.getElementById("team2Overs").textContent = "OVERS: 0.0";
     document.getElementById("centerLiveAction").textContent = "•";
@@ -1396,10 +1408,10 @@ function renderScoreData(data, fromCache = false) {
     }
 
     /* =========================================================
-       UNIVERSAL BATTING & BOWLING TEAM ROLE RESOLUTION
+       TRUE TEAM IDENTIFICATION & ROLE RESOLVER
        Guarantees:
-       LEFT SIDE = Active Batting Team (underneath: Batter 1 & 2)
-       RIGHT SIDE = Bowling Team (underneath: Bowler)
+       LEFT SIDE = Active Batting Team + Correct Logo
+       RIGHT SIDE = Bowling Team + Correct Logo
        ========================================================= */
 
     const apiTeam1 = (data.team1 && typeof data.team1 === "object") ? data.team1 : {};
@@ -1411,8 +1423,8 @@ function renderScoreData(data, fromCache = false) {
     const t1Short = abbreviation(t1RawName);
     const t2Short = abbreviation(t2RawName);
 
-    const t1Logo = apiTeam1.logo || data.team1Logo || "";
-    const t2Logo = apiTeam2.logo || data.team2Logo || "";
+    const t1Logo = apiTeam1.logo || apiTeam1.image || data.team1Logo || "";
+    const t2Logo = apiTeam2.logo || apiTeam2.image || data.team2Logo || "";
 
     const t1ScoreRaw = apiTeam1.score ? String(apiTeam1.score).replace("/", "-") : "";
     const t1OversRaw = apiTeam1.overs ? String(apiTeam1.overs).replace(/[()]/g, "") : "";
@@ -1422,7 +1434,6 @@ function renderScoreData(data, fromCache = false) {
     const equationText = String(data.equation || data.status || "").trim();
     const statusUpper = equationText.toUpperCase();
 
-    // Determine who is batting using toss, chase equations, and player teams
     let t1IsBatting = null;
 
     const isBowlingOpt = /OPT(ED)?\s+TO\s+(BOWL|FIELD)|CHOSE\s+TO\s+(BOWL|FIELD)|ELECTED\s+TO\s+(BOWL|FIELD)/i.test(statusUpper);
@@ -1431,25 +1442,24 @@ function renderScoreData(data, fromCache = false) {
 
     if (isBowlingOpt) {
         if (teamInText(t1Short, t1RawName, statusUpper)) {
-            t1IsBatting = false; // Team 1 opted to bowl -> Team 2 is BATTING
+            t1IsBatting = false; 
         } else if (teamInText(t2Short, t2RawName, statusUpper)) {
-            t1IsBatting = true;  // Team 2 opted to bowl -> Team 1 is BATTING
+            t1IsBatting = true;  
         }
     } else if (isBattingOpt) {
         if (teamInText(t1Short, t1RawName, statusUpper)) {
-            t1IsBatting = true;  // Team 1 opted to bat -> Team 1 is BATTING
+            t1IsBatting = true;  
         } else if (teamInText(t2Short, t2RawName, statusUpper)) {
-            t1IsBatting = false; // Team 2 opted to bat -> Team 2 is BATTING
+            t1IsBatting = false; 
         }
     } else if (isChasing) {
         if (teamInText(t1Short, t1RawName, statusUpper)) {
-            t1IsBatting = true;  // Team 1 is chasing
+            t1IsBatting = true;  
         } else if (teamInText(t2Short, t2RawName, statusUpper)) {
-            t1IsBatting = false; // Team 2 is chasing
+            t1IsBatting = false; 
         }
     }
 
-    // Secondary fallback: check batsman team tag or overs
     if (t1IsBatting === null) {
         const bTeam = String(data.batsman1?.team || data.batter1?.team || "").toUpperCase();
         if (bTeam) {
@@ -1466,7 +1476,6 @@ function renderScoreData(data, fromCache = false) {
         else t1IsBatting = true;
     }
 
-    // Separate into Batting Team (Left) and Bowling Team (Right)
     let leftBadge = "";
     let leftLogo = "";
     let leftScore = "";
@@ -1478,7 +1487,6 @@ function renderScoreData(data, fromCache = false) {
     let rightOvers = "Yet to bat";
 
     if (t1IsBatting) {
-        // Team 1 is batting (e.g. IND)
         leftBadge = t1Short;
         leftLogo = t1Logo;
         leftScore = t1ScoreRaw || "0-0";
@@ -1491,11 +1499,8 @@ function renderScoreData(data, fromCache = false) {
             rightOvers = t2OversRaw || "0.0";
         }
     } else {
-        // Team 2 is batting (e.g. WI batting, IND bowling)
         leftBadge = t2Short;
-        leftLogo = t2Logo || t1Logo; // ensure clean logo assignment
-        
-        // Pick the active innings score (e.g. 121-6)
+        leftLogo = t2Logo;
         leftScore = (t2ScoreRaw && t2ScoreRaw !== "0-0") ? t2ScoreRaw : (t1ScoreRaw || "0-0");
         leftOvers = (t2OversRaw && t2OversRaw !== "0.0") ? t2OversRaw : (t1OversRaw || "0.0");
 
@@ -1518,17 +1523,30 @@ function renderScoreData(data, fromCache = false) {
         if (old2 !== null && new2 !== null && old2 !== new2) animateElementByClass("team2Score", "score-change");
     }
 
-    // Render team badges, scores, overs, and logos
+    // Render left side (Batting team)
+    const t1ScoreEl = document.getElementById("team1Score");
     document.getElementById("team1Badge").textContent = leftBadge;
-    document.getElementById("team1Score").textContent = leftScore;
-    document.getElementById("team1Overs").textContent = `OVERS: ${leftOvers}`;
-    document.getElementById("team1BallIcon").style.display = "none"; // batting team has no ball icon
+    t1ScoreEl.textContent = leftScore;
+    if (leftScore.toLowerCase().includes("bat")) {
+        t1ScoreEl.classList.add("text-mode");
+    } else {
+        t1ScoreEl.classList.remove("text-mode");
+    }
+    document.getElementById("team1Overs").textContent = (leftOvers === "Yet to bat") ? leftOvers : `OVERS: ${leftOvers}`;
+    document.getElementById("team1BallIcon").style.display = "none";
     renderImageInCircle("team1Logo", leftLogo);
 
+    // Render right side (Bowling team)
+    const t2ScoreEl = document.getElementById("team2Score");
     document.getElementById("team2Badge").textContent = rightBadge;
-    document.getElementById("team2Score").textContent = rightScore;
+    t2ScoreEl.textContent = rightScore;
+    if (rightScore.toLowerCase().includes("bat")) {
+        t2ScoreEl.classList.add("text-mode");
+    } else {
+        t2ScoreEl.classList.remove("text-mode");
+    }
     document.getElementById("team2Overs").textContent = (rightOvers === "Yet to bat") ? rightOvers : `OVERS: ${rightOvers}`;
-    document.getElementById("team2BallIcon").style.display = "inline-block"; // bowling team displays ball icon
+    document.getElementById("team2BallIcon").style.display = "inline-block";
     renderImageInCircle("team2Logo", rightLogo);
 
     // Center display box: ball/run/event
