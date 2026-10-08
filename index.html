@@ -256,7 +256,6 @@ html, body {
     clip-path: polygon(14% 0, 100% 0, 100% 100%, 14% 100%, 0 50%);
 }
 
-/* ORANGE FLARE ACCENT STRIPS */
 .team-score-pod::before {
     content: "";
     position: absolute;
@@ -408,7 +407,7 @@ html, body {
 }
 
 /* =========================================================
-   TWO-TIER METALLIC BLUE STATS & TICKER BARS (ENLARGED FOR MOBILE)
+   TWO-TIER METALLIC BLUE STATS & TICKER BARS (ENLARGED)
 ========================================================= */
 .stats-ribbon-upper {
     position: absolute;
@@ -1152,8 +1151,9 @@ let previousEventSignature = null;
 let firstLiveRender = true;
 let eventHideTimer = null;
 
-const POLL_INTERVAL = 3000;
-const REQUEST_TIMEOUT = 15000;
+// FAST 2.0s CREX POLLING PAUSE + 4.5s OBS ANTI-FREEZE ABORT
+const POLL_INTERVAL = 2000;
+const REQUEST_TIMEOUT = 4500;
 
 function renderOversTicker(recentOvers, lastWicket) {
     const ticker = document.getElementById("oversTicker");
@@ -1355,7 +1355,6 @@ function showEventFlash(label, type) {
     }, 4500);
 }
 
-// Broadcast abbreviation helper
 function abbreviation(name) {
     const n = String(name || "").trim().toUpperCase();
     if (!n) return "-";
@@ -1364,7 +1363,7 @@ function abbreviation(name) {
     if (n.includes("AUSTRALIA") || n.includes("AUSCH") || n === "AUS") return "AUS";
     if (n.includes("SOUTH AFRICA") || n === "SA") return "SA";
     if (n.includes("ENGLAND") || n === "ENG") return "ENG";
-    if (n.includes("SRI LANKA") || n === "SL") return "SL";
+    if (n.includes("SRI LANKA")) return "SL";
     if (n.includes("NEW ZEALAND") || n === "NZ") return "NZ";
     if (n.includes("PAKISTAN") || n === "PAK") return "PAK";
     if (n.includes("BANGLADESH") || n === "BAN") return "BAN";
@@ -1408,12 +1407,8 @@ function renderScoreData(data, fromCache = false) {
     }
 
     /* =========================================================
-       TRUE TEAM IDENTIFICATION & ROLE RESOLVER
-       Guarantees:
-       LEFT SIDE = Active Batting Team + Correct Logo
-       RIGHT SIDE = Bowling Team + Correct Logo
+       DYNAMIC TEAM ROLE RESOLUTION
        ========================================================= */
-
     const apiTeam1 = (data.team1 && typeof data.team1 === "object") ? data.team1 : {};
     const apiTeam2 = (data.team2 && typeof data.team2 === "object") ? data.team2 : {};
 
@@ -1512,7 +1507,6 @@ function renderScoreData(data, fromCache = false) {
         }
     }
 
-    // Score change animation detection
     if (!fromCache && !firstLiveRender) {
         const old1 = scoreRuns(previousTeam1Score);
         const old2 = scoreRuns(previousTeam2Score);
@@ -1523,7 +1517,6 @@ function renderScoreData(data, fromCache = false) {
         if (old2 !== null && new2 !== null && old2 !== new2) animateElementByClass("team2Score", "score-change");
     }
 
-    // Render left side (Batting team)
     const t1ScoreEl = document.getElementById("team1Score");
     document.getElementById("team1Badge").textContent = leftBadge;
     t1ScoreEl.textContent = leftScore;
@@ -1536,7 +1529,6 @@ function renderScoreData(data, fromCache = false) {
     document.getElementById("team1BallIcon").style.display = "none";
     renderImageInCircle("team1Logo", leftLogo);
 
-    // Render right side (Bowling team)
     const t2ScoreEl = document.getElementById("team2Score");
     document.getElementById("team2Badge").textContent = rightBadge;
     t2ScoreEl.textContent = rightScore;
@@ -1549,7 +1541,7 @@ function renderScoreData(data, fromCache = false) {
     document.getElementById("team2BallIcon").style.display = "inline-block";
     renderImageInCircle("team2Logo", rightLogo);
 
-    // Center display box: ball/run/event
+    // Center live display box
     const actionEl = document.getElementById("centerLiveAction");
     const latestBallObject = Array.isArray(data.current_over?.balls) && data.current_over.balls.length
         ? data.current_over.balls[data.current_over.balls.length - 1]
@@ -1687,6 +1679,7 @@ async function fetchScores() {
     fetchInProgress = true;
     setConnectionStatus("SYNCING LIVE DATA...", "#00d2ff");
 
+    // Enforce 4.5s request timeout to protect OBS from freezing
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT);
 
@@ -1740,6 +1733,7 @@ async function fetchScores() {
     } finally {
         clearTimeout(timeoutId);
         fetchInProgress = false;
+        // 2.0 second pause
         scheduleNextFetch(POLL_INTERVAL);
     }
 }
