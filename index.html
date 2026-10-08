@@ -256,6 +256,7 @@ html, body {
     clip-path: polygon(14% 0, 100% 0, 100% 100%, 14% 100%, 0 50%);
 }
 
+/* ORANGE FLARE ACCENT STRIPS */
 .team-score-pod::before {
     content: "";
     position: absolute;
@@ -407,7 +408,7 @@ html, body {
 }
 
 /* =========================================================
-   TWO-TIER METALLIC BLUE STATS & TICKER BARS (ENLARGED)
+   TWO-TIER METALLIC BLUE STATS & TICKER BARS (4K ANTI-SHRINK LOCK)
 ========================================================= */
 .stats-ribbon-upper {
     position: absolute;
@@ -434,6 +435,7 @@ html, body {
     font-weight: 900;
     letter-spacing: 1.2px;
     text-shadow: 2px 2px 4px #000;
+    white-space: nowrap;
 }
 .ribbon-cell:last-child {
     border-right: none;
@@ -457,12 +459,14 @@ html, body {
     justify-content: space-evenly;
     padding: 0 16px;
     z-index: 10;
+    white-space: nowrap;
 }
 
 .over-column {
     display: flex;
     align-items: center;
     gap: 8px;
+    flex-shrink: 0 !important;
 }
 
 .over-title {
@@ -472,18 +476,25 @@ html, body {
     letter-spacing: 1px;
     text-shadow: 2px 2px 4px #000;
     white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .balls-container {
     display: flex;
     align-items: center;
     gap: 6px;
+    flex-shrink: 0 !important;
 }
 
+/* 4K LOCKED BALL CIRCLES: PREVENTS COMPRESSION OR SQUISHING */
 .ball-circle {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px !important;
+    min-height: 38px !important;
+    max-width: 38px !important;
+    max-height: 38px !important;
+    border-radius: 50% !important;
     background: #091c33;
     border: 2px solid #5784b1;
     color: #ffffff;
@@ -494,6 +505,10 @@ html, body {
     justify-content: center;
     text-shadow: 1px 1px 2px #000;
     box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+    flex-shrink: 0 !important;
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
 }
 
 .ball-circle.four { background: #0275d8; border-color: #70baff; }
@@ -507,6 +522,7 @@ html, body {
     color: #ffffff;
     margin-left: 4px;
     text-shadow: 2px 2px 4px #000;
+    flex-shrink: 0;
 }
 
 .over-divider-line {
@@ -514,6 +530,7 @@ html, body {
     height: 32px;
     background: #28517c;
     flex-shrink: 0;
+    margin: 0 4px;
 }
 
 .ticker-info-block {
@@ -521,6 +538,7 @@ html, body {
     align-items: center;
     gap: 8px;
     white-space: nowrap;
+    flex-shrink: 0;
 }
 .ticker-info-label {
     font-size: 24px;
@@ -528,6 +546,7 @@ html, body {
     color: #ffd700;
     letter-spacing: 1px;
     text-shadow: 2px 2px 4px #000;
+    flex-shrink: 0;
 }
 .ticker-info-val {
     font-size: 24px;
@@ -535,9 +554,10 @@ html, body {
     color: #ffffff;
     letter-spacing: 0.5px;
     text-shadow: 2px 2px 4px #000;
-    max-width: 350px;
+    max-width: 360px;
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 /* =========================================================
@@ -578,7 +598,6 @@ html, body {
     border-color: #cf7c2b;
 }
 
-/* LARGER BOLD FLOATING PILL TABS */
 .player-tab-header {
     position: absolute;
     top: -28px;
@@ -603,7 +622,6 @@ html, body {
     border-bottom: none;
 }
 
-/* ELEVATED GLASS-CHROME PORTRAIT FRAME */
 .player-crest-wrap {
     position: absolute;
     top: -34px;
@@ -626,7 +644,6 @@ html, body {
     border-color: #e5a769;
 }
 
-/* ENLARGED PLAYER DETAILS */
 .player-metrics-stack {
     margin-left: 130px;
     padding-right: 14px;
@@ -686,7 +703,6 @@ html, body {
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));
 }
 
-/* SUB-PANEL FOOTER BAR */
 .player-sub-pill {
     width: 100%;
     height: 44px;
@@ -927,7 +943,7 @@ html, body {
             <div class="ribbon-cell"><span class="ribbon-label">TARGET:</span> <span id="target">--</span></div>
         </div>
 
-        <!-- LOWER TICKER RIBBON -->
+        <!-- LOWER TICKER RIBBON (PROTECTED AGAINST SQUISHING) -->
         <div class="stats-ribbon-lower" id="oversTicker">
             <div class="over-column">
                 <span class="over-title">Over --</span>
@@ -1363,13 +1379,15 @@ function abbreviation(name) {
     if (n.includes("AUSTRALIA") || n.includes("AUSCH") || n === "AUS") return "AUS";
     if (n.includes("SOUTH AFRICA") || n === "SA") return "SA";
     if (n.includes("ENGLAND") || n === "ENG") return "ENG";
-    if (n.includes("SRI LANKA")) return "SL";
+    if (n.includes("SRI LANKA") || n === "SL") return "SL";
     if (n.includes("NEW ZEALAND") || n === "NZ") return "NZ";
     if (n.includes("PAKISTAN") || n === "PAK") return "PAK";
     if (n.includes("BANGLADESH") || n === "BAN") return "BAN";
     if (n.includes("AFGHANISTAN") || n === "AFG") return "AFG";
     if (n.includes("ZIMBABWE") || n === "ZIM") return "ZIM";
     if (n.includes("IRELAND") || n === "IRE") return "IRE";
+    if (n.includes("DUBAI")) return "DUBAI";
+    if (n.includes("EMIRATES")) return "EB";
     return n.length <= 6 ? n : n.split(/\s+/).map(x => x[0]).join("").slice(0, 4);
 }
 
@@ -1679,7 +1697,7 @@ async function fetchScores() {
     fetchInProgress = true;
     setConnectionStatus("SYNCING LIVE DATA...", "#00d2ff");
 
-    // Enforce 4.5s request timeout to protect OBS from freezing
+    // Fast 4.5s request timeout to protect OBS from freezing
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT);
 
@@ -1733,7 +1751,7 @@ async function fetchScores() {
     } finally {
         clearTimeout(timeoutId);
         fetchInProgress = false;
-        // 2.0 second pause
+        // Fast 2.0s polling cycle
         scheduleNextFetch(POLL_INTERVAL);
     }
 }
