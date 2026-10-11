@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Playing XI Jersey Stack</title>
+
+<style>
+
+:root{
+  --bg1:#0a7c32;
+  --bg2:#042912;
+  --textColor:#111111;
+  --cardBg1:#f8f8f8;
+  --cardBg2:#ffffff;
+  --borderColor:#9aa3ad;
+  --hoverAccent:#0b1020;
+}
+
+body{
+  font-family:Arial, sans-serif;
+  background:radial-gradient(circle at top,var(--bg1),var(--bg2));
+  color:var(--textColor);
+  text-align:center;
+  margin:0;
+}
+
+.control-panel{
+  position:fixed;
+  right:0;
+  top:0;
+  height:100vh;
+  width:210px;
+  background:#111;
+  border-left:2px solid #333;
+  padding:15px;
+  box-sizing:border-box;
+  overflow-y:auto;
+}
+
+.control-panel h3{
+  margin-top:0;
+  font-size:16px;
+  color:#ffffff;
+}
+
+.control-panel label{
+  font-size:12px;
+  display:block;
+  margin-top:12px;
+  color:#ffffff;
+}
+
+.control-panel input{
+  width:100%;
+  height:35px;
+  border:none;
+  margin-top:5px;
+}
+
+.live-block{
+  background:rgba(255,255,255,0.06);
+  border:1px solid #333;
+  border-radius:12px;
+  padding:10px;
+  margin-bottom:14px;
+}
+
+.live-list{
+  max-height:260px;
+  overflow-y:auto;
+  margin-top:8px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.live-item{
+  background:rgba(0,0,0,0.35);
+  border:1px solid #444;
+  border-radius:10px;
+  padding:8px;
+  text-align:left;
+}
+
+.live-title{font-weight:700; color:#fff; margin:0 0 4px;}
+.live-meta{font-size:12px; color:#bcd;}
+.live-btn{
+  margin-top:6px;
+  width:100%;
+  border:none;
+  border-radius:8px;
+  padding:8px;
+  background:#00c4ff;
+  color:#041120;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.main{
+  margin-right:210px;
+  padding-bottom:40px;
+}
+
+.tabs{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  margin-top:20px;
+}
+
+.tab{
+  padding:10px 22px;
+  border-radius:30px;
+  background:#1c1c1c;
+  cursor:pointer;
+  font-weight:bold;
+  letter-spacing:0.5px;
+  transition:0.3s;
+  border:1px solid #333;
+}
+
+.tab:hover{background:#2a2a2a}
+
+.tab.active{
+  background:linear-gradient(90deg,#00ffff,#00ff99);
+  color:black;
+  box-shadow:0 0 10px #00ffff;
+}
+
+.grid{
+  margin-top:25px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:18px;
+  width:85%;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+.card{
+  position:relative;
+  padding:16px;
+  border-radius:16px;
+  text-align:center;
+  color:var(--textColor);
+  overflow:hidden;
+  background:linear-gradient(135deg,var(--cardBg1),var(--cardBg2));
+  border:1px solid #e5e5e5;
+  background-clip:padding-box;
+  transition:0.35s;
+  box-shadow:0 12px 28px rgba(0,0,0,0.12);
+  transform-style:preserve-3d;
+  perspective:900px;
+}
+
+.card::before{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  border-radius:16px;
+  background:linear-gradient(120deg,rgba(255,255,255,0),rgba(200,200,200,0.5),rgba(255,255,255,0));
+  background-size:200%;
+  animation:metalSweep 5s linear infinite;
+  z-index:-1;
+}
+
+.card::after{
+  content:"";
+  position:absolute;
+  top:-100%;
+  left:-50%;
+  width:200%;
+  height:300%;
+  background:linear-gradient(120deg,transparent,rgba(255,255,255,0.2),transparent);
+  transform:rotate(25deg);
+  animation:shineMove 6s infinite;
+}
+
+.card:hover,
+.card.autoHover{
+  transform:translateY(-4px);
+  box-shadow:0 18px 32px rgba(0,0,0,0.18), 0 0 18px rgba(86,142,255,0.45), 0 0 32px rgba(86,142,255,0.35);
+  background:linear-gradient(135deg, rgba(15,23,42,0.9), var(--hoverAccent), rgba(15,23,42,0.7));
+  background-size:200% 200%;
+  border:1px solid rgba(86,142,255,0.6);
+  color:#ffffff;
+}
+
+.card:hover .name,
+.card.autoHover .name,
+.card:hover .role,
+.card.autoHover .role,
+.card:hover .live-meta,
+.card.autoHover .live-meta{
+  color:#ffffff;
+}
+
+.avatar-wrap{
+  position:relative;
+  width:110px;
+  height:110px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  background:none;
+  overflow:hidden;
+}
+
+.jersey{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  border-radius:50%;
+  object-fit:cover;
+  transform:none;
+  z-index:1;
+  filter:drop-shadow(0 6px 12px rgba(0,0,0,0.35));
+  opacity:0.95;
+}
+
+.avatar{
+  width:96%;
+  height:96%;
+  border-radius:50%;
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  z-index:2;
+  object-fit:cover;
+}
+
+.name{
+  font-family:"Arial Black", Arial, sans-serif;
+  font-weight:800;
+  margin-top:12px;
+  font-size:20px;
+  text-transform:uppercase;
+  text-shadow:0 2px 4px rgba(0,0,0,0.25);
+}
+
+.role{margin-top:6px}
+
+.role svg{
+  width:18px;
+  height:18px;
+  fill:#00ffff;
+  animation:spinIcon 2s linear infinite;
+}
+
+.badge{
+  position:absolute;
+  top:6px;
+  right:6px;
+  font-size:10px;
+  padding:3px 6px;
+  border-radius:10px;
+  font-weight:bold;
+}
+
+.badge.captain{
+  background:#ffcc00;
+  color:black;
+  box-shadow:0 0 10px #ffcc00,0 0 20px #ffcc00;
+}
+
+.badge.wk{
+  background:#00ffff;
+  color:black;
+  box-shadow:0 0 10px #00ffff,0 0 20px #00ffff;
+}
+
+@keyframes metalSweep{0%{background-position:0% 0}100%{background-position:200% 0}}
+@keyframes shineMove{0%{left:-120%}100%{left:120%}}
+@keyframes shineSweep{
+  0%{background-position:100vw 50%}
+  100%{background-position:-100vw 50%}
+}
+@keyframes spinIcon{
+  0%{transform:rotate(0deg)}
+  100%{transform:rotate(360deg)}
+}
+
+@keyframes cardFlip{
+  0%{transform:rotateY(0deg);}
+  40%{transform:rotateY(180deg);}
+  60%{transform:rotateY(180deg);}
+  100%{transform:rotateY(360deg);}
+}
+
+@media(max-width:900px){
+  .grid{grid-template-columns:repeat(2,1fr);width:95%}
+  .main{margin-right:0;padding:0 10px}
+  .control-panel{position:static;width:100%;height:auto;display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.control-panel input{width:90px}
+}
+
+.top-links{
+  width:85%;
+  margin:10px auto 8px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+  position:relative;
+  z-index:2;
+}
+
+.brand-chip{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 14px;
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.2);
+  border-radius:12px;
+  color:#ffffff;
+  text-decoration:none;
+  box-shadow:0 8px 18px rgba(0,0,0,0.12);
+}
+
+.brand-logo{
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  background:#ffffff;
+  box-shadow:0 4px 12px rgba(0,0,0,0.18);
+}
+
+.brand-logo-img{
+  width:100%;
+  height:100%;
+  border-radius:50%;
+  object-fit:cover;
+}
+
+.brand-text{
+  display:flex;
+  flex-direction:column;
+  line-height:1.1;
+}
+
+.brand-name{font-weight:800; color:#ffffff;}
+.brand-url{font-size:12px; color:#dfe8ff;}
+
+.yt-sub{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 14px;
+  background:#ffffff;
+  border-radius:12px;
+  box-shadow:0 8px 18px rgba(0,0,0,0.12);
+  text-decoration:none;
+  color:#111;
+  position:relative;
+  z-index:2;
+}
+
+.yt-icon{
+  width:36px;
+  height:26px;
+  background:#ff0000;
+  border-radius:8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 4px 10px rgba(255,0,0,0.35);
+}
+
+.yt-icon svg{fill:white;width:16px;height:16px}
+
+.yt-logo{
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  object-fit:cover;
+  box-shadow:0 4px 10px rgba(0,0,0,0.25);
+}
+
+.yt-text{
+  display:flex;
+  flex-direction:column;
+  line-height:1.1;
+}
+
+.yt-name{font-weight:700}
+.yt-cta{font-size:12px;color:#0a5bd8}
+
+.watermark{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  opacity:0.08;
+  background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="320" height="200" viewBox="0 0 320 200"><text x="20" y="120" fill="%23000000" fill-opacity="0.35" font-size="28" font-family="Arial" transform="rotate(-20 160 100)">Smart Tech Nepal</text></svg>');
+  background-repeat:repeat;
+  z-index:0;
+}
+
+.control-panel{z-index:2;}
+.main{z-index:2; position:relative;}
+
+</style>
+</head>
+
+<body>
+
+<div id="watermark" class="watermark"></div>
+
+<div class="control-panel">
+  <div class="live-block">
+    <h3 style="margin:0 0 6px;">Live Matches</h3>
+    <button class="live-btn" onclick="fetchLive()">Fetch All Live</button>
+    <div id="liveList" class="live-list"></div>
+  </div>
+  <h3>Color Panel</h3>
+  <label>Main Background</label>
+  <input type="color" onchange="setColor('--bg1',this.value)">
+  <label>Secondary Background</label>
+  <input type="color" onchange="setColor('--bg2',this.value)">
+  <label>Text Color</label>
+  <input type="color" onchange="setColor('--textColor',this.value)">
+  <label>Player Card</label>
+  <input type="color" onchange="setColor('--cardBg1',this.value)">
+  <label>Card Border</label>
+  <input type="color" onchange="setColor('--borderColor',this.value)">
+
+  <label>Hover Accent</label>
+  <input type="color" onchange="setColor('--hoverAccent',this.value)">
+</div>
+
+<div class="main">
+
+  <div class="top-links">
+    <a class="brand-chip" href="https://www.cricketlivenow.com" target="_blank" rel="noopener">
+      <div class="brand-logo">
+        <img class="brand-logo-img" src="https://www.cricketlivenow.com/favicon.ico" alt="Cricket Live Now">
+      </div>
+      <div class="brand-text">
+        <div class="brand-name">Cricket Live Now</div>
+        <div class="brand-url">www.cricketlivenow.com</div>
+      </div>
+    </a>
+    <a class="yt-sub" href="https://www.youtube.com/@smartechnepal?sub_confirmation=1" target="_blank" rel="noopener">
+      <img class="yt-logo" src="https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg" alt="YouTube logo" onerror="this.src='https://www.youtube.com/s/desktop/157fa3fc/img/favicon_144x144.png';">
+      <div class="yt-text">
+        <div class="yt-name">Smartechnepal</div>
+        <div class="yt-cta">Subscribe on YouTube</div>
+      </div>
+    </a>
+  </div>
+
+  <h2>Playing Xi Fetcher-By Smartechnepal</h2>
+
+  <input id="link" placeholder="Paste CricTracker /squads/ link" style="width:320px;height:34px;border:none;padding:0 10px;border-radius:8px;">
+  <button onclick="load()" style="height:36px;border:none;padding:0 16px;border-radius:8px;background:#00ffff;font-weight:bold;cursor:pointer;">Load</button>
+
+  <div class="tabs">
+    <div id="teamA" class="tab active" onclick="showTeam(1)">Team A</div>
+    <div id="teamB" class="tab" onclick="showTeam(2)">Team B</div>
+  </div>
+
+  <div id="grid" class="grid"></div>
+
+</div>
+
+<script>
+
+let team1=[]
+let team2=[]
+let currentTeam=1
+let hoverIndex=0
+let hoverTimer=null
+let currentOrigin=""
+let globalJerseyFallback=""
+let globalAvatarFallback=""
+const CRICTRACKER_HOST="https://www.crictracker.com"
+const DEFAULT_JERSEY=`${CRICTRACKER_HOST}/_next/image/?url=%2F_next%2Fstatic%2Fmedia%2Fjersey-placeholder.8c99a70c.png&w=120&q=75`
+const DEFAULT_AVATAR=`${CRICTRACKER_HOST}/_next/image/?url=%2F_next%2Fstatic%2Fmedia%2Fhead-placeholder.b0dc1f9c.png&w=120&q=75`
+
+function setColor(variable,value){
+  document.documentElement.style.setProperty(variable,value)
+}
+
+function fixImage(url){
+  if(!url) return ""
+  let out=url
+  if(out.startsWith("//")) out="https:"+out
+  if(out.startsWith("http") || out.startsWith("data:")) return out
+  if(currentOrigin){
+    return currentOrigin + (out.startsWith("/") ? "" : "/") + out
+  }
+  return out
+}
+
+function extractImg(el){
+  if(!el) return ""
+  const src=el.getAttribute("src") || el.getAttribute("data-src") || el.getAttribute("data-lazy") || el.getAttribute("data-original") || ""
+  if(src) return fixImage(src)
+  const srcset=el.getAttribute("srcset") || ""
+  if(srcset){
+    return fixImage(srcset.split(/[,\\s]/).filter(Boolean)[0] || "")
+  }
+  return ""
+}
+
+function extractBgImage(el){
+  if(!el) return ""
+  const style=el.getAttribute("style") || ""
+  const match=style.match(/url\(['"]?(.*?)['"]?\)/)
+  return match ? fixImage(match[1]) : ""
+}
+
+function findPlaceholder(html,key){
+  let found=""
+  const re=new RegExp(`['\"]([^'\" ]*${key}[^'\" ]*)['\"]`,"gi")
+  let m
+  while((m=re.exec(html))!==null){
+    const url=m[1]
+    if(url){
+      found=fixImage(url)
+      // prefer _next assets which are the real placeholders
+      if(url.includes("_next")) break
+    }
+  }
+  return found
+}
+
+function capturePlaceholders(doc){
+  doc.querySelectorAll("img").forEach(img=>{
+    const parts=[]
+    const src=extractImg(img); if(src) parts.push(src)
+    const ss=img.getAttribute("srcset") || ""
+    if(ss){
+      ss.split(",").forEach(part=>{
+        const first=part.trim().split(/\s+/)[0]
+        if(first) parts.push(fixImage(first))
+      })
+    }
+    parts.forEach(u=>{
+      const url=u||""
+      if(url.includes("jersey-placeholder") || /jersey.*placeholder/i.test(url)){
+        globalJerseyFallback=url
+      }
+      if(url.includes("head-placeholder") || /head.*placeholder/i.test(url)){
+        globalAvatarFallback=url
+      }
+    })
+  })
+}
+
+async function fetchHtml(url){
+  const proxy="https://api.codetabs.com/v1/proxy?quest="
+  const sep=url.includes("?") ? "&" : "?"
+  const freshUrl=`${url}${sep}_ct=${Date.now()}`
+  const res=await fetch(proxy+encodeURIComponent(freshUrl), {cache:"no-store"})
+  return res.text()
+}
+
+function normalizeText(text){
+  return (text || "").replace(/\s+/g," ").trim()
+}
+
+function getLivePriority(text){
+  const status=normalizeText(text).toLowerCase()
+  if(/play ongoing|live|innings break|inning break|drinks|lunch|tea|rain delay|rain interruption|delayed|toss/.test(status)) return 0
+  if(/stumps|day [1-5]|trail by|lead by|need \d+ runs|need \d+/.test(status)) return 1
+  if(/upcoming|starts at|match yet to start/.test(status)) return 2
+  if(/result|won by|default|abandoned|cancelled|reserve day/.test(status)) return 3
+  return 4
+}
+
+function parseLiveCards(doc, origin){
+  const cards=[...doc.querySelectorAll(".style_scorecardSlider__HF3_8 .style_item__k51FO")]
+  return cards.map(card=>{
+    const anchor=card.querySelector(".style_scoreCardLink__1sZ7H")
+    if(!anchor) return null
+    const href=anchor.getAttribute("href") || ""
+    const url=new URL(href, origin).href
+    const title=normalizeText(anchor.textContent) || normalizeText(card.querySelector(".style_team__OxaiX span:last-child")?.textContent) || url
+    const comp=normalizeText(card.querySelector("p.font-medium")?.textContent)
+    const statusLine=normalizeText(card.querySelector(".danger-text, .success-text, .theme-text")?.textContent)
+    const venueLine=normalizeText(card.querySelector(".style_head__4_PUy p")?.textContent)
+    const meta=[statusLine, comp, venueLine].filter(Boolean).join(" • ")
+    return {title, url, meta, priority:getLivePriority(`${statusLine} ${venueLine}`)}
+  }).filter(Boolean)
+}
+
+function parseFallbackLiveLinks(doc, origin){
+  return [...doc.querySelectorAll("a[href*='/live-scores/']")].map(anchor=>{
+    const href=anchor.getAttribute("href") || ""
+    const url=new URL(href, origin).href
+    const title=normalizeText(anchor.textContent) || url
+    return {title, url, meta:"Live score link", priority:4}
+  }).filter(match=>match.title && !/fantasy tips|points table|schedule|fixtures/i.test(match.title))
+}
+
+function renderLive(matches){
+  const box=document.getElementById("liveList")
+  if(!box) return
+  if(!matches || !matches.length){
+    box.innerHTML="<div class='live-meta'>No live matches found.</div>"
+    return
+  }
+  box.innerHTML=matches.map(m=>{
+    const safeTitle=(m.title||"").replace(/</g,"&lt;")
+    const safeMeta=(m.meta||"").replace(/</g,"&lt;")
+    const safeUrl=(m.url||"").replace(/'/g,"&#39;")
+    return `<div class="live-item"><div class="live-title">${safeTitle}</div><div class="live-meta">${safeMeta}</div><button class="live-btn" onclick="loadFromList('${safeUrl}')">Load Playing XI</button></div>`
+  }).join("")
+}
+
+async function fetchLive(){
+  const origin="https://www.crictracker.com"
+  const box=document.getElementById("liveList")
+  if(box) box.innerHTML="<div class='live-meta'>Loading live matches...</div>"
+  try{
+    const homeHtml=await fetchHtml(origin)
+    const homeDoc=new DOMParser().parseFromString(homeHtml,"text/html")
+    let matches=parseLiveCards(homeDoc, origin)
+
+    if(!matches.length){
+      const liveHtml=await fetchHtml(`${origin}/live-scores/`)
+      const liveDoc=new DOMParser().parseFromString(liveHtml,"text/html")
+      matches=parseLiveCards(liveDoc, origin)
+      if(!matches.length) matches=parseFallbackLiveLinks(liveDoc, origin)
+    }
+
+    if(!matches.length) matches=parseFallbackLiveLinks(homeDoc, origin)
+
+    // Prefer truly live or same-day cards; fall back to the full slider if needed.
+    const liveFirst=matches
+      .filter(match=>match.priority <= 2)
+      .sort((a,b)=>a.priority - b.priority)
+    const finalMatches=(liveFirst.length ? liveFirst : matches)
+      .filter((match, index, arr)=>arr.findIndex(item=>item.url === match.url) === index)
+      .slice(0, 20)
+      .map(({priority, ...match})=>match)
+
+    renderLive(finalMatches)
+  }catch(e){
+    if(box) box.innerHTML="<div class='live-meta'>Could not fetch live matches.</div>"
+  }
+}
+
+function loadFromList(url){
+  const input=document.getElementById("link")
+  if(input) input.value=url
+  load(url)
+}
+
+function render(players){
+  let grid=document.getElementById("grid")
+  grid.innerHTML=""
+
+  players.forEach(p=>{
+    let badge=""
+    if(p.name.includes("(C)")) badge='<div class="badge captain">C</div>'
+    if(p.name.includes("(WK)")) badge='<div class="badge wk">WK</div>'
+
+    let jerseySrc=p.jersey || globalJerseyFallback || DEFAULT_JERSEY
+    let jerseyMarkup=`<img class="jersey" src="${jerseySrc}" alt="${p.name} jersey" onerror="this.src=globalJerseyFallback || DEFAULT_JERSEY">`
+
+    let card=document.createElement("div")
+    card.className="card"
+
+    card.innerHTML=`
+      ${badge}
+      <div class="avatar-wrap">
+        ${jerseyMarkup}
+        <img class="avatar" src="${p.img || DEFAULT_AVATAR}" alt="${p.name}" onerror="this.src=globalAvatarFallback || DEFAULT_AVATAR">
+      </div>
+      <div class="name">${p.name}</div>
+      <div class="role">${p.role}</div>
+    `
+
+    grid.appendChild(card)
+  })
+
+  startAutoHover()
+}
+
+function showTeam(n){
+  currentTeam=n
+  hoverIndex=0
+  clearInterval(hoverTimer)
+
+  document.getElementById("teamA").classList.remove("active")
+  document.getElementById("teamB").classList.remove("active")
+
+  if(n===1){
+    document.getElementById("teamA").classList.add("active")
+    render(team1)
+  }else{
+    document.getElementById("teamB").classList.add("active")
+    render(team2)
+  }
+}
+
+function startAutoHover(){
+  let cards=document.querySelectorAll(".card")
+  hoverTimer=setInterval(()=>{
+    cards.forEach(c=>c.classList.remove("autoHover"))
+    if(cards[hoverIndex]){cards[hoverIndex].classList.add("autoHover")}
+    hoverIndex++
+    if(hoverIndex>=cards.length){
+      hoverIndex=0
+      currentTeam===1 ? showTeam(2) : showTeam(1)
+    }
+  },5000)
+}
+
+async function load(linkOverride){
+  let input=document.getElementById("link")
+  let base=(linkOverride || input?.value || "").trim()
+  if(!base) return
+
+  let candidates=[base]
+  const withSlash = base.endsWith("/") ? base : base+"/"
+  candidates.push(withSlash+"squads/")
+  candidates.push(base.replace(/\/$/,"")+"/squads/")
+
+  let doc=null, html=""
+
+  const tryFetch = async (url)=>{
+    try{ currentOrigin=new URL(url).origin }catch(e){ return null }
+    try{
+      const page=await fetchHtml(url)
+      const parsed=new DOMParser().parseFromString(page,"text/html")
+      return {page, parsed}
+    }catch(e){ return null }
+  }
+
+  for(const cand of candidates){
+    const res=await tryFetch(cand)
+    if(!res) continue
+    html=res.page
+    let temp=res.parsed
+    // if not squads, try to locate a squads link inside
+    if(temp.querySelectorAll(".style_teamItem__M_fUo").length<2){
+      const sq = temp.querySelector("a[href*='squads']")
+      if(sq){
+        const sqUrl=new URL(sq.getAttribute("href"), currentOrigin).href
+        const resSq=await tryFetch(sqUrl)
+        if(resSq && resSq.parsed.querySelectorAll(".style_teamItem__M_fUo").length>=2){
+          doc=resSq.parsed
+          html=resSq.page
+          if(input) input.value=sqUrl
+          break
+        }
+      }
+    }
+    if(temp.querySelectorAll(".style_teamItem__M_fUo").length>=2){
+      doc=temp
+      if(input) input.value=cand
+      break
+    }
+  }
+
+  if(!doc){
+    document.getElementById("grid").innerHTML="<div style='color:#fff;text-align:center;'>Could not load Playing XI for this link.</div>"
+    return
+  }
+
+  // pull placeholders directly from raw HTML first
+  const jerseyFromHtml=findPlaceholder(html,"jersey-placeholder")
+  const headFromHtml=findPlaceholder(html,"head-placeholder")
+  if(jerseyFromHtml) globalJerseyFallback=jerseyFromHtml
+  if(headFromHtml) globalAvatarFallback=headFromHtml
+  if(!globalJerseyFallback) globalJerseyFallback=DEFAULT_JERSEY
+  if(!globalAvatarFallback) globalAvatarFallback=DEFAULT_AVATAR
+
+  // then scan DOM images as a secondary source
+  capturePlaceholders(doc)
+
+  let names=[...doc.querySelectorAll(".small-head span:first-child")]
+  document.getElementById("teamA").innerText=names[0]?.innerText || "Team A"
+  document.getElementById("teamB").innerText=names[1]?.innerText || "Team B"
+
+  let teams=doc.querySelectorAll(".style_teamItem__M_fUo")
+
+  const parsePlayer=(p)=>{
+    const urls=[]
+    const add=(u)=>{ if(u){ const clean=fixImage(u); if(clean && !urls.includes(clean)) urls.push(clean) } }
+
+    // collect from common attributes and styles across all descendants
+    p.querySelectorAll("*").forEach(el=>{
+      ["src","data-src","data-lazy","data-original"].forEach(attr=>add(el.getAttribute(attr)))
+      const srcset=el.getAttribute("srcset") || el.getAttribute("data-srcset")
+      if(srcset){
+        srcset.split(",").forEach(part=>{
+          const first=part.trim().split(/\s+/)[0]
+          add(first)
+        })
+      }
+      add(extractBgImage(el))
+    })
+
+    const imgWrap=p.querySelector(".style_playerImg__bY37r")
+    const wrapImgs=imgWrap ? imgWrap.querySelectorAll("img") : []
+    const jerseySecond=extractImg(wrapImgs[1]) || extractImg(wrapImgs[0])
+    const imgs=p.querySelectorAll("img")
+
+    const avatarImg=extractImg(wrapImgs[0]) || urls.find(u=>/(face|player|avatar|head|profile)/i.test(u)) || urls[0] || globalAvatarFallback || DEFAULT_AVATAR
+    let jerseyImg=jerseySecond || urls.find(u=>/(jersey|kit|shirt)/i.test(u)) || urls.find(u=>u!==avatarImg) || globalJerseyFallback || DEFAULT_JERSEY
+    if(jerseyImg===avatarImg) jerseyImg=urls.find(u=>u!==avatarImg) || DEFAULT_JERSEY
+
+    return {
+      name:p.querySelector(".style_name__Fulgp")?.innerText.trim() || "",
+      img:avatarImg,
+      jersey:jerseyImg,
+      role:p.querySelector(".style_icon__uR0cW")?.innerHTML || ""
+    }
+  }
+
+  team1=[...(teams[0]?.querySelectorAll(".style_item__PqDA5") || [])].map(parsePlayer)
+  team2=[...(teams[1]?.querySelectorAll(".style_item__PqDA5") || [])].map(parsePlayer)
+
+  const applyTeamJerseyFallback=(team)=>{
+    const teamFallback=team.find(p=>p.jersey)?.jersey || globalJerseyFallback || DEFAULT_JERSEY
+    return team.map(p=>({...p, jersey:p.jersey || teamFallback}))
+  }
+
+  team1=applyTeamJerseyFallback(team1)
+  team2=applyTeamJerseyFallback(team2)
+
+  showTeam(1)
+}
+
+</script>
+
+</body>
+</html>
