@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="referrer" content="no-referrer">
 <title>Preet Sports OBS Scoreboard - 1280x720</title>
 
 <!-- ULTRA-HD BROADCAST TYPOGRAPHY -->
@@ -229,7 +230,11 @@ html, body {
     transform: translateZ(0);
     backface-visibility: hidden;
     filter: contrast(1.08) brightness(1.04);
-    display: block;
+    display: none;
+}
+.team-logo-circle img.loaded,
+.player-crest-wrap img.loaded {
+    display: block !important;
 }
 
 /* CHEVRON SCORE PODS */
@@ -1136,15 +1141,23 @@ function cleanCrexUrl(url) {
 }
 
 function normalizeInput(val) {
-    if (!val) return "";
+    if (!val) return "https://crex.com/cricket-live-score/ind-vs-wi-4th-t20i-west-indies-tour-of-india-2026-match-updates-11AO";
     let clean = cleanCrexUrl(val);
-    if (!clean.startsWith("http") && clean.length <= 8) {
+    
+    // Auto-fix truncated URLs like the one seen in screenshot
+    if (clean.includes("ind-vs-wi-4th-t20i") && !clean.includes("11A")) {
+        clean = "https://crex.com/cricket-live-score/ind-vs-wi-4th-t20i-west-indies-tour-of-india-2026-match-updates-11AO";
+    } else if (!clean.startsWith("http") && clean.length <= 8) {
         clean = `https://crex.com/cricket-live-score/match-updates-${clean.toUpperCase()}`;
     }
     return clean;
 }
 
-let activeTargetUrl = localStorage.getItem("crex_match_input") || "";
+let activeTargetUrl = localStorage.getItem("crex_match_input") || "https://crex.com/cricket-live-score/ind-vs-wi-4th-t20i-west-indies-tour-of-india-2026-match-updates-11AO";
+if (activeTargetUrl.includes("ind-vs-wi-4th-t20i") && !activeTargetUrl.includes("11A")) {
+    activeTargetUrl = "https://crex.com/cricket-live-score/ind-vs-wi-4th-t20i-west-indies-tour-of-india-2026-match-updates-11AO";
+    localStorage.setItem("crex_match_input", activeTargetUrl);
+}
 
 function applyUrlFlagsImmediately(url) {
     if (!url) return;
@@ -1203,7 +1216,17 @@ function flushDomElementsInstantly() {
     document.getElementById("bowlerEcon").textContent = "0.00";
 }
 
-/* HD IMAGE ASSET RETRIEVER & OPTIMIZER */
+/* HD IMAGE ASSET RETRIEVER & ZERO-FAIL OPTIMIZER */
+const EMBEDDED_FLAGS = {
+    "IND": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgMTIwIDEyMCI+CiAgPHJlY3Qgd2lkdGg9IjEyMCIgaGVpZ2h0PSIxMjAiIHJ4PSI2MCIgZmlsbD0iIzAwMzhhOCIvPgogIDxjaXJjbGUgY3g9IjYwIiBjeT0iNjAiIHI9IjU0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZjk5MzMiIHN0cm9rZS13aWR0aD0iNSIvPgogIDx0ZXh0IHg9IjYwIiB5PSI3NCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMzgiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPklORDwvdGV4dD4KPC9zdmc+",
+    "WI": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgMTIwIDEyMCI+CiAgPHJlY3Qgd2lkdGg9IjEyMCIgaGVpZ2h0PSIxMjAiIHJ4PSI2MCIgZmlsbD0iIzdiMDAyYyIvPgogIDxjaXJjbGUgY3g9IjYwIiBjeT0iNjAiIHI9IjU0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZGI5MTMiIHN0cm9rZS13aWR0aD0iNSIvPgogIDx0ZXh0IHg9IjYwIiB5PSI3NCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMzgiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPldJPC90ZXh0Pgo8L3N2Zz4=",
+    "AUS": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgMTIwIDEyMCI+CiAgPHJlY3Qgd2lkdGg9IjEyMCIgaGVpZ2h0PSIxMjAiIHJ4PSI2MCIgZmlsbD0iIzAwNTMzNiIvPgogIDxjaXJjbGUgY3g9IjYwIiBjeT0iNjAiIHI9IjU0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmNkMDAiIHN0cm9rZS13aWR0aD0iNSIvPgogIDx0ZXh0IHg9IjYwIiB5PSI3NCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMzgiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkFVUzwvdGV4dD4KPC9zdmc+",
+    "ENG": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgMTIwIDEyMCI+CiAgPHJlY3Qgd2lkdGg9IjEyMCIgaGVpZ2h0PSIxMjAiIHJ4PSI2MCIgZmlsbD0iIzBhMWUzZiIvPgogIDxjaXJjbGUgY3g9IjYwIiBjeT0iNjAiIHI9IjU0IiBmaWxsPSJub25lIiBzdHJva2U9IiNjZjE0MmIiIHN0cm9rZS13aWR0aD0iNSIvPgogIDx0ZXh0IHg9IjYwIiB5PSI3NCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMzgiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkVORzwvdGV4dD4KPC9zdmc+",
+    "PAK": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgMTIwIDEyMCI+CiAgPHJlY3Qgd2lkdGg9IjEyMCIgaGVpZ2h0PSIxMjAiIHJ4PSI2MCIgZmlsbD0iIzAwNDAxYSIvPgogIDxjaXJjbGUgY3g9IjYwIiBjeT0iNjAiIHI9IjU0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iNSIvPgogIDx0ZXh0IHg9IjYwIiB5PSI3NCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMzgiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlBBSzwvdGV4dD4KPC9zdmc+",
+    "SA": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgMTIwIDEyMCI+CiAgPHJlY3Qgd2lkdGg9IjEyMCIgaGVpZ2h0PSIxMjAiIHJ4PSI2MCIgZmlsbD0iIzAwNzc0OSIvPgogIDxjaXJjbGUgY3g9IjYwIiBjeT0iNjAiIHI9IjU0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmI2MTIiIHN0cm9rZS13aWR0aD0iNSIvPgogIDx0ZXh0IHg9IjYwIiB5PSI3NCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMzgiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlNBPC90ZXh0Pgo8L3N2Zz4=",
+    "NZ": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgMTIwIDEyMCI+CiAgPHJlY3Qgd2lkdGg9IjEyMCIgaGVpZ2h0PSIxMjAiIHJ4PSI2MCIgZmlsbD0iIzExMTExMSIvPgogIDxjaXJjbGUgY3g9IjYwIiBjeT0iNjAiIHI9IjU0IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMGQyZmYiIHN0cm9rZS13aWR0aD0iNSIvPgogIDx0ZXh0IHg9IjYwIiB5PSI3NCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMzgiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk5aPC90ZXh0Pgo8L3N2Zz4="
+};
+
 function renderImageInCircle(elementId, imageUrl, fallbackCode = "") {
     const el = document.getElementById(elementId);
     if (!el) return;
@@ -1214,20 +1237,30 @@ function renderImageInCircle(elementId, imageUrl, fallbackCode = "") {
     const isValidUrl = finalSrc && typeof finalSrc === "string" && finalSrc.startsWith("http") && !finalSrc.includes("default") && !finalSrc.includes("undefined");
 
     if (!isValidUrl) {
-        finalSrc = CDN_FLAGS[code] || getInlineFallbackSvg(code);
+        finalSrc = CDN_FLAGS[code] || EMBEDDED_FLAGS[code] || getInlineFallbackSvg(code);
     }
 
-    el.src = finalSrc;
-    el.style.display = "block";
-    el.style.opacity = "1";
+    el.onload = () => {
+        el.classList.add("loaded");
+        el.style.display = "block";
+    };
 
     el.onerror = () => {
-        if (CDN_FLAGS[code] && el.src !== CDN_FLAGS[code]) {
-            el.src = CDN_FLAGS[code];
+        if (EMBEDDED_FLAGS[code] && el.src !== EMBEDDED_FLAGS[code]) {
+            el.src = EMBEDDED_FLAGS[code];
+            el.classList.add("loaded");
+            el.style.display = "block";
         } else {
-            el.src = getInlineFallbackSvg(code);
+            el.classList.remove("loaded");
+            el.style.display = "none";
         }
     };
+
+    el.src = finalSrc;
+    if (finalSrc.startsWith("data:image")) {
+        el.classList.add("loaded");
+        el.style.display = "block";
+    }
 }
 
 let fetchInProgress = false;
