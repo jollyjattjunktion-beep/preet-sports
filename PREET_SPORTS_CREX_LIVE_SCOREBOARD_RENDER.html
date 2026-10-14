@@ -1145,6 +1145,30 @@ function normalizeInput(val) {
 }
 
 let activeTargetUrl = localStorage.getItem("crex_match_input") || "";
+
+function applyUrlFlagsImmediately(url) {
+    if (!url) return;
+    const teams = extractTeamsFromCrexUrl(url);
+    if (teams && teams.teamA && teams.teamB) {
+        // Pre-fill logos and badges immediately so circles are NEVER blank
+        const t1Badge = document.getElementById("team1Badge").textContent;
+        const t2Badge = document.getElementById("team2Badge").textContent;
+        
+        // If already identified as WI batting vs IND bowling or vice-versa
+        let batting = teams.teamB;
+        let bowling = teams.teamA;
+        if (url.toLowerCase().includes("wi-vs-ind")) {
+            batting = "WI"; bowling = "IND";
+        } else if (url.toLowerCase().includes("ind-vs-wi")) {
+            // Check if match status or URL indicates who is batting
+            batting = "WI"; bowling = "IND";
+        }
+        
+        renderImageInCircle("team1Logo", CDN_FLAGS[batting] || "", batting);
+        renderImageInCircle("team2Logo", CDN_FLAGS[bowling] || "", bowling);
+    }
+}
+
 const urlInput = document.getElementById("crexUrlInput");
 const statusInd = document.getElementById("statusIndicator");
 if (urlInput) urlInput.value = activeTargetUrl;
@@ -1824,6 +1848,7 @@ async function triggerMatchLoad() {
     activeTargetUrl = target;
     localStorage.setItem("crex_match_input", target);
     urlInput.value = target;
+    applyUrlFlagsImmediately(target);
 
     if (retryTimer) {
         clearTimeout(retryTimer);
@@ -1921,6 +1946,9 @@ window.addEventListener("load", () => {
         setConnectionStatus("Cached • Connecting...", "#00d2ff");
     } else {
         setConnectionStatus("Ready", "#00d2ff");
+    }
+    if (activeTargetUrl) {
+        applyUrlFlagsImmediately(activeTargetUrl);
     }
     if (activeTargetUrl || OBS_TOKEN) {
         fetchScores();
