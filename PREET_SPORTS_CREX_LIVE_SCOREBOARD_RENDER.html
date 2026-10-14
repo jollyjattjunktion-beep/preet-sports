@@ -901,7 +901,7 @@ html, body {
 
             <!-- CENTER NOTCHED CYBER EVENT MONITOR -->
             <div class="center-event-monitor">
-                <div id="centerLiveAction" class="center-live-action">•</div>
+                <div id="centerLiveAction" class="center-live-action">â€¢</div>
             </div>
 
             <!-- RIGHT TEAM CHEVRON (ALWAYS THE BOWLING TEAM) -->
@@ -941,7 +941,7 @@ html, body {
             <div class="over-column">
                 <span class="over-title">Over --</span>
                 <div class="balls-container">
-                    <div class="ball-circle">•</div>
+                    <div class="ball-circle">â€¢</div>
                 </div>
             </div>
         </div>
@@ -1141,12 +1141,12 @@ function cleanCrexUrl(url) {
 }
 
 function normalizeInput(val) {
-    if (!val) return "https://crex.com/cricket-live-score/ind-vs-wi-4th-t20i-west-indies-tour-of-india-2026-match-updates-11AO";
-    let clean = cleanCrexUrl(val);
+    if (!val) return "https://crex.com/cricket-live-score/ind-vs-wi-4th-t20i-west-indies-tour-of-india-2026-match-updates-11A0";
+    let clean = cleanCrexUrl(val).trim();
     
-    // Auto-fix truncated URLs like the one seen in screenshot
-    if (clean.includes("ind-vs-wi-4th-t20i") && !clean.includes("11A")) {
-        clean = "https://crex.com/cricket-live-score/ind-vs-wi-4th-t20i-west-indies-tour-of-india-2026-match-updates-11AO";
+    // Auto-fix truncated CREX URLs
+    if (clean.includes("ind-vs-wi") && !clean.match(/-[0-9a-zA-Z]{3,5}$/)) {
+        clean = "https://crex.com/cricket-live-score/ind-vs-wi-4th-t20i-west-indies-tour-of-india-2026-match-updates-11A0";
     } else if (!clean.startsWith("http") && clean.length <= 8) {
         clean = `https://crex.com/cricket-live-score/match-updates-${clean.toUpperCase()}`;
     }
@@ -1193,7 +1193,7 @@ function flushDomElementsInstantly() {
     document.getElementById("team2Score").classList.remove("text-mode");
     document.getElementById("team1Overs").textContent = "OVERS: 0.0";
     document.getElementById("team2Overs").textContent = "OVERS: 0.0";
-    document.getElementById("centerLiveAction").textContent = "•";
+    document.getElementById("centerLiveAction").textContent = "â€¢";
     document.getElementById("centerChaseEquation").style.display = "none";
     document.getElementById("crr").textContent = "--";
     document.getElementById("rrr").textContent = "--";
@@ -1313,7 +1313,7 @@ function renderOversTicker(recentOvers, lastWicket) {
             const ballText = String(b && typeof b === "object" ? (b.text ?? b.value ?? "") : (b ?? "")).trim();
             const ballType = String(b && typeof b === "object" ? (b.type ?? "") : "").trim().toLowerCase();
 
-            ball.textContent = ballText || "•";
+            ball.textContent = ballText || "â€¢";
 
             if (ballType === "four" || ballText === "4") {
                 ball.classList.add("four");
@@ -1732,7 +1732,7 @@ function renderScoreData(data, fromCache = false) {
 
     previousEventSignature = eventSignature;
 
-    let actionText = ballText || data.last_event || data.live_event || "•";
+    let actionText = ballText || data.last_event || data.live_event || "â€¢";
     actionText = String(actionText).trim();
 
     const eventUpper = actionText.toUpperCase();
@@ -1742,9 +1742,9 @@ function renderScoreData(data, fromCache = false) {
     else if (eventUpper === "NO BALL" || eventUpper === "NO-BALL") actionText = "NB";
     else if (eventUpper === "FOUR") actionText = "4";
     else if (eventUpper === "SIX") actionText = "6";
-    else if (actionText.length > 8) actionText = ballText || "•";
+    else if (actionText.length > 8) actionText = ballText || "â€¢";
 
-    actionEl.textContent = actionText || "•";
+    actionEl.textContent = actionText || "â€¢";
     if (actionText === "RUN OUT") {
         actionEl.style.fontSize = "42px";
     } else if (String(actionText).length <= 2) {
@@ -1803,7 +1803,7 @@ function renderScoreData(data, fromCache = false) {
     }
 
     if (fromCache) {
-        setConnectionStatus("Cached • Reconnecting...", "#ff9d00");
+        setConnectionStatus("Cached â€¢ Reconnecting...", "#ff9d00");
     }
 }
 
@@ -1854,12 +1854,12 @@ async function fetchScores() {
 
         renderScoreData(data, false);
         saveLastSuccessfulData(data);
-        setConnectionStatus("LIVE • SYNCED", "#6cf598");
+        setConnectionStatus("LIVE â€¢ SYNCED", "#6cf598");
 
     } catch (err) {
         const msg = err?.message || "Network error";
         if (err?.name === "AbortError") {
-            setConnectionStatus("RETRYING • TIMEOUT", "#ff9d00");
+            setConnectionStatus("RETRYING â€¢ TIMEOUT", "#ff9d00");
         } else {
             setConnectionStatus("RETRYING...", "#ff9d00");
         }
@@ -1945,7 +1945,7 @@ document.getElementById("generateObsBtn").addEventListener("click", async () => 
             temp.remove();
         }
 
-        setConnectionStatus("OBS URL COPIED ✓", "#6cf598");
+        setConnectionStatus("OBS URL COPIED âœ“", "#6cf598");
         alert("OBS Browser Source URL copied to clipboard:\n\n" + obsUrl);
 
     } catch (error) {
@@ -1976,7 +1976,7 @@ window.addEventListener("keydown", (e) => {
 window.addEventListener("load", () => {
     const restored = restoreLastSuccessfulData();
     if (restored) {
-        setConnectionStatus("Cached • Connecting...", "#00d2ff");
+        setConnectionStatus("Cached â€¢ Connecting...", "#00d2ff");
     } else {
         setConnectionStatus("Ready", "#00d2ff");
     }
