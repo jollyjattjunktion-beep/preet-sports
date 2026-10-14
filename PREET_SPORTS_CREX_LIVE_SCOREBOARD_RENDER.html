@@ -1266,7 +1266,8 @@ function renderImageInCircle(elementId, imageUrl, fallbackCode = "") {
 let fetchInProgress = false;
 let retryTimer = null;
 let lastSuccessfulData = null;
-let lastSuccessfulTimestamp = 0;
+let lastSuccessfulTimestamp = Date.now();
+let lastFetchAttemptTimestamp = Date.now();
 let previousTeam1Score = null;
 let previousTeam2Score = null;
 let previousBallSignature = null;
@@ -1274,8 +1275,32 @@ let previousEventSignature = null;
 let firstLiveRender = true;
 let eventHideTimer = null;
 
-const POLL_INTERVAL = 3000;
-const REQUEST_TIMEOUT = 15000;
+const POLL_INTERVAL = 3500;
+const REQUEST_TIMEOUT = 12000;
+
+// =========================================================
+// OBS BROWSER FREEZE WATCHDOG (SELF-HEALING SYSTEM)
+// =========================================================
+setInterval(() => {
+    const now = Date.now();
+    // 1. If fetchInProgress is stuck for more than 14 seconds, forcibly unfreeze it
+    if (fetchInProgress && (now - lastFetchAttemptTimestamp > 14000)) {
+        console.warn("[Watchdog] Forcibly resetting stuck fetchInProgress flag.");
+        fetchInProgress = false;
+        fetchScores();
+    }
+    // 2. If no fetch completed in 20 seconds, kickstart fetchScores
+    if (!fetchInProgress && (now - lastFetchAttemptTimestamp > 18000)) {
+        console.warn("[Watchdog] Triggering kickstart fetch.");
+        fetchScores();
+    }
+    // 3. Ultimate OBS recovery: If totally frozen with no data for > 60 seconds, reload page cleanly
+    if (now - lastSuccessfulTimestamp > 60000 && activeTargetUrl) {
+        console.warn("[Watchdog] No live data for 60s, reloading OBS browser source...");
+        window.location.reload();
+    }
+}, 5000);
+
 
 function renderOversTicker(recentOvers, lastWicket) {
     const ticker = document.getElementById("oversTicker");
@@ -1808,13 +1833,23 @@ function renderScoreData(data, fromCache = false) {
 }
 
 async function fetchScores() {
-    if (fetchInProgress) return;
+    if (fetchInProgress) {
+        // If it has been stuck for more than 12s, allow re-entry
+        if (Date.now() - lastFetchAttemptTimestamp > 12000) {
+            fetchInProgress = false;
+        } else {
+            return;
+        }
+    }
 
     fetchInProgress = true;
+    lastFetchAttemptTimestamp = Date.now();
     setConnectionStatus("SYNCING LIVE DATA...", "#00d2ff");
 
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT);
+    const timeoutId = setTimeout(() => {
+        try { controller.abort(); } catch(e){}
+    }, REQUEST_TIMEOUT);
 
     try {
         let fetchEndpoint = "";
