@@ -1168,6 +1168,67 @@ body.controls-visible .top-brand-wrap { margin-top: 53px !important; }
 @media (prefers-reduced-motion: reduce) { .ball-circle { transition: none !important; } .ball-circle.wicket { animation: none !important; } }
 </style>
 
+
+<style id="preetSportsV4BroadcastTheme">
+:root { --v4-navy:#040D1A; --v4-blue:#0877D5; --v4-cyan:#22D8F4; --v4-red:#D90435; --v4-maroon:#830026; --v4-gold:#FFB800; }
+.scoreboard { justify-content:flex-start !important; gap:0 !important; }
+.top-brand-wrap { flex-shrink:0; }
+.match-fixture-bar { flex-shrink:0; margin-top:6px !important; padding:0 18px !important; }
+.fixture-pod { height:103px !important; min-width:0; align-items:center; gap:12px; padding:10px 16px !important; }
+.fixture-pod.left-side { border-radius:14px 5px 5px 14px !important; }
+.fixture-pod.right-side { border-radius:5px 14px 14px 5px !important; }
+.crest-shield { width:64px !important; height:64px !important; min-width:64px; overflow:hidden; border-radius:50%; background:rgba(255,255,255,.96); border:2px solid var(--v4-gold); box-shadow:0 4px 11px rgba(0,0,0,.28); padding:5px; }
+.crest-shield img { width:100%; height:100%; object-fit:contain !important; border-radius:50%; }
+.team-hero-copy { min-width:0; display:flex; flex-direction:column; gap:4px; flex:1; }
+.left-copy { align-items:flex-start; text-align:left; }
+.right-copy { align-items:flex-end; text-align:right; }
+.team-name-hero { font-size:31px !important; letter-spacing:.65px !important; line-height:1.04 !important; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.team-name-hero.long-team-name { font-size:25px !important; letter-spacing:.2px !important; }
+.team-hero-scoreline { display:flex; align-items:baseline; gap:10px; line-height:1; white-space:nowrap; }
+.team-hero-scoreline strong { font-family:'Montserrat',sans-serif; color:#fff; font-size:25px; font-weight:900; letter-spacing:-.45px; text-shadow:0 2px 4px rgba(0,0,0,.38); }
+.team-hero-scoreline span { color:#DCEBFF; font-family:'Rajdhani',sans-serif; font-size:15px; font-weight:900; letter-spacing:.45px; }
+.right-side .team-hero-scoreline { justify-content:flex-end; }
+.center-vs-trap { flex-shrink:0; }
+.live-score-row { flex-shrink:0; margin-top:15px !important; padding:0 18px !important; }
+.score-card-main { flex:1.04 !important; }
+.current-over-card { flex:.96 !important; }
+.last-two-overs-panel { position:relative; z-index:11; flex-shrink:0; display:grid; grid-template-columns:150px 1fr 1fr; gap:8px; align-items:stretch; min-height:54px; margin:8px 18px 0; padding:6px 8px; border:1px solid rgba(255,184,0,.7); border-radius:10px; background:linear-gradient(90deg,rgba(3,13,27,.97),rgba(8,31,55,.97),rgba(3,13,27,.97)); box-shadow:0 5px 14px rgba(0,0,0,.24); }
+.last-two-title { display:flex; flex-direction:column; justify-content:center; padding:0 9px; border-right:1px solid rgba(112,161,205,.32); color:#fff; line-height:1.05; }
+.last-two-kicker { color:#62E6F8; font:800 10px 'Montserrat',sans-serif; letter-spacing:1.2px; }
+.last-two-title strong { color:#FFCA36; font:900 18px 'Montserrat',sans-serif; margin-top:4px; white-space:nowrap; }
+.last-over-card { min-width:0; display:grid; grid-template-columns:76px minmax(0,1fr) 74px; gap:7px; align-items:center; padding:0 7px; border:1px solid rgba(60,117,166,.35); border-radius:7px; background:rgba(7,29,52,.75); }
+.last-over-card.current-last-over { border-color:rgba(255,184,0,.5); background:rgba(30,34,31,.62); }
+.last-over-label { color:#CFE2F4; font:900 11px 'Montserrat',sans-serif; letter-spacing:.25px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.last-over-balls { display:flex; justify-content:center; align-items:center; gap:4px; min-width:0; }
+.mini-ball { display:flex; align-items:center; justify-content:center; width:22px; height:22px; min-width:0; border-radius:50%; background:linear-gradient(180deg,#12385B,#08223D); border:1px solid #2D6596; color:#fff; font:900 11px 'Montserrat',sans-serif; overflow:hidden; white-space:nowrap; }
+.mini-ball.four { background:linear-gradient(180deg,#FFE27C,#FFB800); color:#07111E; border-color:#FFE79B; }
+.mini-ball.six { background:linear-gradient(180deg,#FFA13B,#F36B00); color:#fff; border-color:#FFC079; }
+.mini-ball.wicket { background:linear-gradient(180deg,#FF4D69,#B90028); color:#fff; border-color:#FF9CAB; }
+.mini-ball.extra { background:linear-gradient(180deg,#19C6E5,#047F9F); color:#fff; border-color:#8CEEFF; }
+.mini-ball.muted { color:#8DA5BD; opacity:.65; }
+.last-over-total { text-align:center; color:#FFCE42; font:900 13px 'Montserrat',sans-serif; white-space:nowrap; }
+.match-stats-bar { flex-shrink:0; margin-top:8px !important; }
+.tables-row { flex-shrink:0; margin-top:9px !important; }
+.player-name-cell { min-width:0; display:flex; align-items:center; gap:8px; overflow:hidden; }
+.player-name-cell .col-name { display:block; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.player-avatar-initials, .player-avatar-photo { width:30px; height:30px; min-width:30px; border-radius:50%; border:1.5px solid rgba(255,184,0,.85); box-shadow:0 2px 6px rgba(0,0,0,.28); }
+.player-avatar-initials { display:flex; align-items:center; justify-content:center; background:linear-gradient(145deg,#1B659C,#0B2949); color:#fff; font:900 10px 'Montserrat',sans-serif; }
+.bowler-avatar { background:linear-gradient(145deg,#B51C42,#4B071B); }
+.player-avatar-photo { display:none; object-fit:cover; background:#122941; }
+.batters-panel .table-header-blue, .batters-panel .table-row-item { grid-template-columns:2.25fr .72fr .72fr .72fr .72fr .9fr !important; }
+.bowler-panel .table-header-red, .bowler-panel .table-row-item { grid-template-columns:2.05fr .65fr .65fr .65fr .65fr .85fr !important; }
+.table-row-item { min-height:35px; }
+.bottom-meta-ribbon { margin-top:auto !important; flex-shrink:0; }
+@media (max-width:1100px) {
+  .last-two-overs-panel { grid-template-columns:130px 1fr 1fr; }
+  .last-over-card { grid-template-columns:66px minmax(0,1fr) 62px; gap:4px; padding:0 4px; }
+  .mini-ball { width:20px; height:20px; font-size:10px; }
+  .team-name-hero { font-size:28px !important; }
+  .team-name-hero.long-team-name { font-size:22px !important; }
+}
+@media (prefers-reduced-motion: reduce) { .mini-ball, .player-avatar-photo { transition:none !important; } }
+</style>
+
 </head>
 
 <body>
@@ -1197,28 +1258,25 @@ body.controls-visible .top-brand-wrap { margin-top: 53px !important; }
             <div class="live-badge" id="liveStatusBadge">LIVE</div>
         </div>
 
-        <!-- MATCH FIXTURE CHEVRONS (IND vs WI) -->
+        <!-- TEAM FLAGS, TEAM SCORES, AND MATCH FIXTURE -->
         <div class="match-fixture-bar">
-            <!-- LEFT TEAM (IND) -->
             <div class="fixture-pod left-side">
-                <div class="crest-shield">
-                    <img id="team1HeroCrest" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgMTIwIDEyMCI+CiAgPHJlY3Qgd2lkdGg9IjEyMCIgaGVpZ2h0PSIxMjAiIHJ4PSI2MCIgZmlsbD0iIzAwMzhhOCIvPgogIDxjaXJjbGUgY3g9IjYwIiBjeT0iNjAiIHI9IjU0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZjk5MzMiIHN0cm9rZS13aWR0aD0iNiIvPgogIDx0ZXh0IHg9IjYwIiB5PSI3NSIgZm9udC1mYW1pbHk9IidSYWpkaGFuaScsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNDAiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPklORDwvdGV4dD4KPC9zdmc+" alt="India">
+                <div class="crest-shield"><img id="team1HeroCrest" alt="Team 1 flag" src="https://flagcdn.com/w160/in.png"></div>
+                <div class="team-hero-copy left-copy">
+                    <div class="team-name-hero" id="team1HeroName">INDIA</div>
+                    <div class="team-hero-scoreline"><strong id="team1HeroScore">—</strong><span id="team1HeroOvers">—</span></div>
                 </div>
-                <div class="team-name-hero" id="team1HeroName">IND</div>
             </div>
-
-            <!-- CENTER 3D GOLD VS PIECE -->
             <div class="center-vs-trap">
                 <span class="vs-text-gold">Vs</span>
-                <div class="sub-fixture-pill" id="matchSubTitle">4th T20I</div>
+                <div class="sub-fixture-pill" id="matchSubTitle">LIVE MATCH</div>
             </div>
-
-            <!-- RIGHT TEAM (WI) -->
             <div class="fixture-pod right-side">
-                <div class="team-name-hero" id="team2HeroName">WI</div>
-                <div class="crest-shield">
-                    <img id="team2HeroCrest" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgMTIwIDEyMCI+CiAgPHJlY3Qgd2lkdGg9IjEyMCIgaGVpZ2h0PSIxMjAiIHJ4PSI2MCIgZmlsbD0iIzdiMDAyYyIvPgogIDxjaXJjbGUgY3g9IjYwIiBjeT0iNjAiIHI9IjU0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZGI5MTMiIHN0cm9rZS13aWR0aD0iNiIvPgogIDx0ZXh0IHg9IjYwIiB5PSI3NSIgZm9udC1mYW1pbHk9IidSYWpkaGFuaScsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNDAiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPldJPC90ZXh0Pgo8L3N2Zz4=" alt="West Indies">
+                <div class="team-hero-copy right-copy">
+                    <div class="team-name-hero" id="team2HeroName">WEST INDIES</div>
+                    <div class="team-hero-scoreline"><strong id="team2HeroScore">—</strong><span id="team2HeroOvers">—</span></div>
                 </div>
+                <div class="crest-shield"><img id="team2HeroCrest" alt="Team 2 flag" src="https://commons.wikimedia.org/wiki/Special:FilePath/Cricket_West_Indies_flag_2017.svg"></div>
             </div>
         </div>
 
@@ -1245,6 +1303,21 @@ body.controls-visible .top-brand-wrap { margin-top: 53px !important; }
                     <div class="ball-circle dot empty-ball">–</div>
                     <div class="ball-circle dot empty-ball">–</div>
                 </div>
+            </div>
+        </div>
+
+        <!-- RECENT FORM: LAST TWO OVERS AND RUNS -->
+        <div class="last-two-overs-panel" aria-label="Last two overs run summary">
+            <div class="last-two-title"><span class="last-two-kicker">RECENT FORM</span><strong>LAST 2 OVERS</strong></div>
+            <div class="last-over-card" id="lastOverCard1">
+                <span class="last-over-label" id="lastOver1Label">OVER —</span>
+                <div class="last-over-balls" id="lastOver1Balls"><span class="mini-ball muted">—</span><span class="mini-ball muted">—</span><span class="mini-ball muted">—</span><span class="mini-ball muted">—</span><span class="mini-ball muted">—</span><span class="mini-ball muted">—</span></div>
+                <strong class="last-over-total" id="lastOver1Runs">— RUNS</strong>
+            </div>
+            <div class="last-over-card current-last-over" id="lastOverCard2">
+                <span class="last-over-label" id="lastOver2Label">CURRENT OVER</span>
+                <div class="last-over-balls" id="lastOver2Balls"><span class="mini-ball muted">—</span><span class="mini-ball muted">—</span><span class="mini-ball muted">—</span><span class="mini-ball muted">—</span><span class="mini-ball muted">—</span><span class="mini-ball muted">—</span></div>
+                <strong class="last-over-total" id="lastOver2Runs">— RUNS</strong>
             </div>
         </div>
 
@@ -1284,7 +1357,7 @@ body.controls-visible .top-brand-wrap { margin-top: 53px !important; }
                     <span style="text-align: center;">SR</span>
                 </div>
                 <div class="table-row-item" id="batter1Row">
-                    <span class="col-name" id="b1Name">AWAITING DATA</span>
+                    <div class="player-name-cell"><span class="player-avatar-initials" id="b1Initials">B1</span><img class="player-avatar-photo" id="b1Photo" alt="" loading="eager"><span class="col-name" id="b1Name">AWAITING DATA</span></div>
                     <span style="text-align: center;" class="striker-highlight" id="b1Runs">—</span>
                     <span style="text-align: center;" id="b1Balls">—</span>
                     <span style="text-align: center;" id="b1Fours">—</span>
@@ -1292,7 +1365,7 @@ body.controls-visible .top-brand-wrap { margin-top: 53px !important; }
                     <span style="text-align: center;" id="b1SR">—</span>
                 </div>
                 <div class="table-row-item" id="batter2Row">
-                    <span class="col-name" id="b2Name">—</span>
+                    <div class="player-name-cell"><span class="player-avatar-initials" id="b2Initials">B2</span><img class="player-avatar-photo" id="b2Photo" alt="" loading="eager"><span class="col-name" id="b2Name">—</span></div>
                     <span style="text-align: center;" id="b2Runs">—</span>
                     <span style="text-align: center;" id="b2Balls">—</span>
                     <span style="text-align: center;" id="b2Fours">—</span>
@@ -1312,7 +1385,7 @@ body.controls-visible .top-brand-wrap { margin-top: 53px !important; }
                     <span style="text-align: center;">ECO</span>
                 </div>
                 <div class="table-row-item" id="bowlerRow">
-                    <span class="col-name" id="bwlName">—</span>
+                    <div class="player-name-cell"><span class="player-avatar-initials bowler-avatar" id="bwlInitials">BW</span><img class="player-avatar-photo" id="bwlPhoto" alt="" loading="eager"><span class="col-name" id="bwlName">—</span></div>
                     <span style="text-align: center;" id="bwlOvers">—</span>
                     <span style="text-align: center;" id="bwlMaidens">—</span>
                     <span style="text-align: center;" id="bwlRuns">—</span>
@@ -1368,17 +1441,158 @@ const urlParams = new URLSearchParams(window.location.search);
 const OBS_TOKEN = urlParams.get("token") || "";
 
 const CDN_FLAGS = {
-    "IND": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgMTIwIDEyMCI+CiAgPHJlY3Qgd2lkdGg9IjEyMCIgaGVpZ2h0PSIxMjAiIHJ4PSI2MCIgZmlsbD0iIzAwMzhhOCIvPgogIDxjaXJjbGUgY3g9IjYwIiBjeT0iNjAiIHI9IjU0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZjk5MzMiIHN0cm9rZS13aWR0aD0iNiIvPgogIDx0ZXh0IHg9IjYwIiB5PSI3NSIgZm9udC1mYW1pbHk9IidSYWpkaGFuaScsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNDAiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPklORDwvdGV4dD4KPC9zdmc+",
-    "WI": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgMTIwIDEyMCI+CiAgPHJlY3Qgd2lkdGg9IjEyMCIgaGVpZ2h0PSIxMjAiIHJ4PSI2MCIgZmlsbD0iIzdiMDAyYyIvPgogIDxjaXJjbGUgY3g9IjYwIiBjeT0iNjAiIHI9IjU0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZGI5MTMiIHN0cm9rZS13aWR0aD0iNiIvPgogIDx0ZXh0IHg9IjYwIiB5PSI3NSIgZm9udC1mYW1pbHk9IidSYWpkaGFuaScsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNDAiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPldJPC90ZXh0Pgo8L3N2Zz4=",
-    "PAK": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgMTIwIDEyMCI+CiAgPHJlY3Qgd2lkdGg9IjEyMCIgaGVpZ2h0PSIxMjAiIHJ4PSI2MCIgZmlsbD0iIzAwNDAxYSIvPgogIDxjaXJjbGUgY3g9IjYwIiBjeT0iNjAiIHI9IjU0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iNiIvPgogIDx0ZXh0IHg9IjYwIiB5PSI3NSIgZm9udC1mYW1pbHk9IidSYWpkaGFuaScsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNDAiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlBBSzwvdGV4dD4KPC9zdmc+",
-    "AUS": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgMTIwIDEyMCI+CiAgPHJlY3Qgd2lkdGg9IjEyMCIgaGVpZ2h0PSIxMjAiIHJ4PSI2MCIgZmlsbD0iIzAwNTMzNiIvPgogIDxjaXJjbGUgY3g9IjYwIiBjeT0iNjAiIHI9IjU0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmNkMDAiIHN0cm9rZS13aWR0aD0iNiIvPgogIDx0ZXh0IHg9IjYwIiB5PSI3NSIgZm9udC1mYW1pbHk9IidSYWpkaGFuaScsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNDAiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkFVUzwvdGV4dD4KPC9zdmc+",
-    "ENG": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgMTIwIDEyMCI+CiAgPHJlY3Qgd2lkdGg9IjEyMCIgaGVpZ2h0PSIxMjAiIHJ4PSI2MCIgZmlsbD0iIzBhMWUzZiIvPgogIDxjaXJjbGUgY3g9IjYwIiBjeT0iNjAiIHI9IjU0IiBmaWxsPSJub25lIiBzdHJva2U9IiNjZjE0MmIiIHN0cm9rZS13aWR0aD0iNiIvPgogIDx0ZXh0IHg9IjYwIiB5PSI3NSIgZm9udC1mYW1pbHk9IidSYWpkaGFuaScsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNDAiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkVORzwvdGV4dD4KPC9zdmc+",
-    "SA": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgMTIwIDEyMCI+CiAgPHJlY3Qgd2lkdGg9IjEyMCIgaGVpZ2h0PSIxMjAiIHJ4PSI2MCIgZmlsbD0iIzAwNzc0OSIvPgogIDxjaXJjbGUgY3g9IjYwIiBjeT0iNjAiIHI9IjU0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmI2MTIiIHN0cm9rZS13aWR0aD0iNiIvPgogIDx0ZXh0IHg9IjYwIiB5PSI3NSIgZm9udC1mYW1pbHk9IidSYWpkaGFuaScsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNDAiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlNBPC90ZXh0Pgo8L3N2Zz4=",
-    "NZ": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgMTIwIDEyMCI+CiAgPHJlY3Qgd2lkdGg9IjEyMCIgaGVpZ2h0PSIxMjAiIHJ4PSI2MCIgZmlsbD0iIzExMTExMSIvPgogIDxjaXJjbGUgY3g9IjYwIiBjeT0iNjAiIHI9IjU0IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMGQyZmYiIHN0cm9rZS13aWR0aD0iNiIvPgogIDx0ZXh0IHg9IjYwIiB5PSI3NSIgZm9udC1mYW1pbHk9IidSYWpkaGFuaScsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNDAiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk5aPC90ZXh0Pgo8L3N2Zz4=",
-    "SL": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Flag_of_Sri_Lanka.svg/320px-Flag_of_Sri_Lanka.svg.png",
-    "BAN": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Flag_of_Bangladesh.svg/320px-Flag_of_Bangladesh.svg.png",
-    "AFG": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Flag_of_the_Taliban.svg/320px-Flag_of_the_Taliban.svg.png"
+    "IND": "https://flagcdn.com/w160/in.png",
+    "WI": "https://commons.wikimedia.org/wiki/Special:FilePath/Cricket_West_Indies_flag_2017.svg",
+    "PAK": "https://flagcdn.com/w160/pk.png",
+    "AUS": "https://flagcdn.com/w160/au.png",
+    "ENG": "https://flagcdn.com/w160/gb-eng.png",
+    "SA": "https://flagcdn.com/w160/za.png",
+    "NZ": "https://flagcdn.com/w160/nz.png",
+    "SL": "https://flagcdn.com/w160/lk.png",
+    "BAN": "https://flagcdn.com/w160/bd.png",
+    "AFG": "https://flagcdn.com/w160/af.png",
+    "ZIM": "https://flagcdn.com/w160/zw.png",
+    "IRE": "https://flagcdn.com/w160/ie.png",
+    "NED": "https://flagcdn.com/w160/nl.png",
+    "USA": "https://flagcdn.com/w160/us.png",
+    "CAN": "https://flagcdn.com/w160/ca.png",
+    "NEP": "https://flagcdn.com/w160/np.png",
+    "UAE": "https://flagcdn.com/w160/ae.png",
+    "OMA": "https://flagcdn.com/w160/om.png",
+    "NAM": "https://flagcdn.com/w160/na.png",
+    "SCO": "https://flagcdn.com/w160/gb-sct.png",
+    "PNG": "https://flagcdn.com/w160/pg.png",
+    "HK": "https://flagcdn.com/w160/hk.png"
 };
+
+const TEAM_NAMES = {
+    IND: "INDIA", WI: "WEST INDIES", PAK: "PAKISTAN", AUS: "AUSTRALIA",
+    ENG: "ENGLAND", SA: "SOUTH AFRICA", NZ: "NEW ZEALAND", SL: "SRI LANKA",
+    BAN: "BANGLADESH", AFG: "AFGHANISTAN", ZIM: "ZIMBABWE", IRE: "IRELAND",
+    NED: "NETHERLANDS", USA: "USA", CAN: "CANADA", NEP: "NEPAL", UAE: "UAE",
+    OMA: "OMAN", NAM: "NAMIBIA", SCO: "SCOTLAND", PNG: "PAPUA NEW GUINEA", HK: "HONG KONG"
+};
+
+function firstUseful(...values) {
+    for (const value of values) {
+        if (value !== undefined && value !== null && String(value).trim() !== "") return value;
+    }
+    return null;
+}
+function getImageUrl(value) {
+    if (!value) return "";
+    if (typeof value === "string") {
+        const text = value.trim();
+        if (/^https?:\/\/|^data:image\//i.test(text)) return text;
+        if (text.startsWith("//")) return `https:${text}`;
+        if (text.startsWith("/")) return `https://crex.com${text}`;
+        return "";
+    }
+    if (typeof value === "object") {
+        return getImageUrl(value.url || value.src || value.href || value.image_url || value.imageUrl || value.path);
+    }
+    return "";
+}
+function imageFromObject(obj) {
+    if (!obj || typeof obj !== "object") return "";
+    const fields = [
+        obj.icc_flag_url, obj.iccFlagUrl, obj.crex_flag_url, obj.crexFlagUrl,
+        obj.flag_url, obj.flagUrl, obj.flag_image, obj.flagImage, obj.flag_img, obj.flagImg, obj.flag,
+        obj.icc_logo_url, obj.iccLogoUrl, obj.crex_logo_url, obj.crexLogoUrl,
+        obj.logo_url, obj.logoUrl, obj.team_logo_url, obj.teamLogoUrl, obj.team_logo, obj.teamLogo, obj.logo,
+        obj.crest_url, obj.crestUrl, obj.crest, obj.image_url, obj.imageUrl,
+        obj.photo_url, obj.photoUrl, obj.image, obj.photo, obj.avatar, obj.icon,
+        obj.profile_image, obj.profileImage, obj.picture
+    ];
+    for (const field of fields) {
+        const url = getImageUrl(field);
+        if (url) return url;
+    }
+    return "";
+}
+function setImageWithFallback(img, preferredUrl, fallbackUrl) {
+    if (!img) return;
+    const preferred = getImageUrl(preferredUrl);
+    const fallback = getImageUrl(fallbackUrl);
+    img.dataset.fallbackUrl = fallback;
+    img.onerror = () => {
+        const next = img.dataset.fallbackUrl || "";
+        if (next && img.src !== next) {
+            img.onerror = () => { img.style.visibility = "hidden"; };
+            img.src = next;
+        } else {
+            img.style.visibility = "hidden";
+        }
+    };
+    img.style.visibility = "visible";
+    img.src = preferred || fallback || "";
+    if (!img.src) img.style.visibility = "hidden";
+}
+function teamDisplayName(team, shortCode) {
+    const full = String((team && (team.full_name || team.fullName || team.name || team.team_name)) || "").trim();
+    if (full) return full.toUpperCase();
+    return TEAM_NAMES[shortCode] || shortCode || "TEAM";
+}
+function formatScore(value) {
+    if (value === undefined || value === null || String(value).trim() === "") return "—";
+    return String(value).replace(/-/g, "/").replace(/\s*\(.*?\)\s*$/, "").trim();
+}
+function formatOvers(value) {
+    if (value === undefined || value === null || String(value).trim() === "") return "";
+    const v = String(value).replace(/[()]/g, "").trim();
+    return /\bOV(?:ERS?)?\b/i.test(v) ? v.toUpperCase() : `${v} OV`;
+}
+function setTeamHero(team, shortCode, side) {
+    const nameEl = document.getElementById(`team${side}HeroName`);
+    const scoreEl = document.getElementById(`team${side}HeroScore`);
+    const oversEl = document.getElementById(`team${side}HeroOvers`);
+    const crestEl = document.getElementById(`team${side}HeroCrest`);
+    const displayName = teamDisplayName(team, shortCode);
+    if (nameEl) {
+        nameEl.textContent = displayName;
+        nameEl.classList.toggle("long-team-name", displayName.length > 11);
+    }
+    if (scoreEl) scoreEl.textContent = formatScore(team && (team.score ?? team.runs ?? team.total));
+    if (oversEl) oversEl.textContent = formatOvers(team && (team.overs ?? team.over ?? team.overs_played));
+    const apiImage = imageFromObject(team);
+    setImageWithFallback(crestEl, apiImage, CDN_FLAGS[shortCode] || "");
+}
+function playerImageUrl(player, data) {
+    const fields = player && typeof player === "object" ? [
+        player.icc_photo_url, player.iccPhotoUrl, player.crex_photo_url, player.crexPhotoUrl,
+        player.crex_image_url, player.crexImageUrl, player.player_photo_url, player.playerPhotoUrl,
+        player.photo_url, player.photoUrl, player.player_image, player.playerImage,
+        player.image_url, player.imageUrl, player.profile_image, player.profileImage,
+        player.profile_pic, player.profilePic, player.avatar, player.photo,
+        player.image, player.pic, player.picture, player.headshot, player.headshot_url
+    ] : [];
+    for (const field of fields) {
+        const url = getImageUrl(field);
+        if (url) return url;
+    }
+    const name = String(player && (player.name || player.short_name || player.shortName) || "").trim().toLowerCase();
+    const all = data && (data.players || data.player_images || data.playerImages || data.squad);
+    const list = Array.isArray(all) ? all : (all && typeof all === "object" ? Object.values(all) : []);
+    const match = list.find(p => p && String(p.name || p.short_name || p.shortName || "").trim().toLowerCase() === name);
+    return imageFromObject(match);
+}
+function setPlayerPortrait(photoId, initialsId, player, data, name) {
+    const img = document.getElementById(photoId);
+    const initials = document.getElementById(initialsId);
+    const label = String(name || (player && (player.short_name || player.name)) || "?").trim();
+    if (initials) initials.textContent = label.split(/\s+/).filter(Boolean).slice(0, 2).map(part => part[0]).join("").toUpperCase() || "•";
+    const url = playerImageUrl(player, data);
+    if (!img) return;
+    img.onerror = () => { img.style.display = "none"; if (initials) initials.style.display = "flex"; };
+    if (url) {
+        img.onload = () => { img.style.display = "block"; if (initials) initials.style.display = "none"; };
+        img.src = url;
+    } else {
+        img.removeAttribute("src");
+        img.style.display = "none";
+        if (initials) initials.style.display = "flex";
+    }
+}
 
 function abbreviation(name) {
     const n = String(name || "").trim().toUpperCase();
@@ -1442,11 +1656,15 @@ function applyUrlFlagsImmediately(url) {
     if (!url) return;
     const teams = extractTeamsFromCrexUrl(url);
     if (teams && teams.teamA && teams.teamB) {
-        document.getElementById("team1HeroName").textContent = teams.teamA;
-        document.getElementById("team2HeroName").textContent = teams.teamB;
+        const name1 = document.getElementById("team1HeroName");
+        const name2 = document.getElementById("team2HeroName");
+        if (name1) name1.textContent = TEAM_NAMES[teams.teamA] || teams.teamA;
+        if (name2) name2.textContent = TEAM_NAMES[teams.teamB] || teams.teamB;
+        if (name1) name1.classList.toggle("long-team-name", name1.textContent.length > 11);
+        if (name2) name2.classList.toggle("long-team-name", name2.textContent.length > 11);
         document.getElementById("mainScoreTag").textContent = teams.teamA;
-        if (CDN_FLAGS[teams.teamA]) document.getElementById("team1HeroCrest").src = CDN_FLAGS[teams.teamA];
-        if (CDN_FLAGS[teams.teamB]) document.getElementById("team2HeroCrest").src = CDN_FLAGS[teams.teamB];
+        setImageWithFallback(document.getElementById("team1HeroCrest"), "", CDN_FLAGS[teams.teamA] || "");
+        setImageWithFallback(document.getElementById("team2HeroCrest"), "", CDN_FLAGS[teams.teamB] || "");
     }
     const slug = cleanCrexUrl(url).toLowerCase();
     const subtitle = document.getElementById("matchSubTitle");
@@ -1543,6 +1761,154 @@ function setConnectionStatus(text, color) {
     statusInd.style.color = color;
 }
 
+
+function oversNumber(value) {
+    const m = String(value ?? "").match(/(\d+)(?:\.(\d+))?/);
+    return m ? Number(m[1]) : null;
+}
+function getOversList(data) {
+    const fields = ["last_two_overs", "lastTwoOvers", "last2_overs", "last2Overs", "recent_overs", "recentOvers", "recent_over_data", "recentOverData", "last_overs", "lastOvers", "over_history", "overHistory", "over_scores", "overScores", "over_by_over", "overByOver", "overs_summary", "oversSummary", "over_summary", "overSummary", "last_2_overs"];
+    for (const field of fields) {
+        const value = data && data[field];
+        if (Array.isArray(value) && value.length) return value;
+        if (value && typeof value === "object") {
+            if (Array.isArray(value.overs) && value.overs.length) return value.overs;
+            const vals = Object.values(value);
+            if (vals.length && vals.every(v => v && typeof v === "object")) return vals;
+        }
+    }
+    const nested = data && data.innings && (data.innings.overs || data.innings.over_history || data.innings.recent_overs);
+    if (Array.isArray(nested) && nested.length) return nested;
+    return [];
+}
+function overNo(entry) {
+    if (!entry || typeof entry !== "object") return null;
+    const raw = firstUseful(entry.over_number, entry.overNumber, entry.over_no, entry.overNo, entry.number, entry.over, entry.label);
+    if (raw === null) return null;
+    const match = String(raw).match(/(\d+)/);
+    return match ? Number(match[1]) : null;
+}
+function overBalls(entry) {
+    if (Array.isArray(entry)) return entry;
+    if (!entry || typeof entry !== "object") return [];
+    for (const key of ["balls", "deliveries", "events", "ball_by_ball", "ballByBall", "results"]) {
+        if (Array.isArray(entry[key])) return entry[key];
+    }
+    return [];
+}
+function oneBallRuns(ball) {
+    if (ball && typeof ball === "object") {
+        const direct = firstUseful(ball.total_runs, ball.totalRuns, ball.total, ball.run_total, ball.runTotal);
+        if (direct !== null && Number.isFinite(Number(direct))) return Number(direct);
+        const nested = ball.runs && typeof ball.runs === "object" ? firstUseful(ball.runs.total, ball.runs.total_runs, ball.runs.totalRuns) : null;
+        if (nested !== null && Number.isFinite(Number(nested))) return Number(nested);
+        const bat = firstUseful(ball.batsman_runs, ball.batsmanRuns, ball.batter_runs, ball.batterRuns);
+        const extras = firstUseful(ball.extra_runs, ball.extraRuns, ball.extras_runs, ball.extrasRuns);
+        if (bat !== null || extras !== null) return (Number(bat) || 0) + (Number(extras) || 0);
+        ball = firstUseful(ball.text, ball.value, ball.label, ball.result, ball.event);
+    }
+    const label = String(ball ?? "").toLowerCase().replace(/\s+/g, "");
+    if (!label || label === "-" || label === "•" || label === "." || label === "w" || label === "wk" || label === "out") return 0;
+    const number = Number((label.match(/^\d+/) || [""])[0]);
+    if (label.includes("wd") || label.includes("wide")) return (number || 0) + 1;
+    if (label.includes("nb") || label.includes("noball") || label.includes("no-ball")) return (number || 0) + 1;
+    return Number.isFinite(number) ? number : 0;
+}
+function overRuns(entry) {
+    if (entry && typeof entry === "object") {
+        for (const field of ["total_runs", "totalRuns", "over_runs", "overRuns", "runs_scored", "runsScored", "run_total", "runTotal", "runs", "total"]) {
+            const value = entry[field];
+            if (value && typeof value === "object") {
+                const nested = firstUseful(value.total, value.total_runs, value.totalRuns, value.value);
+                if (nested !== null && Number.isFinite(Number(nested))) return Number(nested);
+            } else if (value !== undefined && value !== null && String(value).trim() !== "" && Number.isFinite(Number(value))) {
+                return Number(value);
+            }
+        }
+    }
+    const balls = overBalls(entry);
+    return balls.length ? balls.reduce((sum, ball) => sum + oneBallRuns(ball), 0) : null;
+}
+function ballLabelAndClass(ball) {
+    if (ball && typeof ball === "object") {
+        const label = firstUseful(ball.text, ball.value, ball.label, ball.result, ball.event);
+        if (label !== null) ball = label;
+        else if (ball.is_wicket || ball.isWicket || ball.wicket) return { label: "W", className: "wicket" };
+        else ball = firstUseful(ball.total_runs, ball.totalRuns, ball.runs, "•");
+    }
+    const source = String(ball ?? "").trim();
+    const compact = source.replace(/\s+/g, "").replace(/[()]/g, "");
+    const low = compact.toLowerCase();
+    if (/^(w|wk|out|wicket)$/.test(low) || low.includes("wicket")) return { label: "W", className: "wicket" };
+    if (low.includes("wd") || low.includes("wide")) return { label: (compact.match(/^\d+/) || [""])[0] + "WD" || "WD", className: "extra" };
+    if (low.includes("nb") || low.includes("noball") || low.includes("no-ball")) return { label: (compact.match(/^\d+/) || [""])[0] + "NB" || "NB", className: "extra" };
+    if (compact === "4") return { label: "4", className: "four" };
+    if (compact === "6") return { label: "6", className: "six" };
+    if (/^(0|\.|dot|•|-)$/.test(low)) return { label: "•", className: "muted" };
+    return { label: compact || "•", className: "" };
+}
+function renderMiniBallList(containerId, balls) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    container.replaceChildren();
+    const list = Array.isArray(balls) ? balls.slice(-6) : [];
+    for (let i = 0; i < 6; i++) {
+        const chip = document.createElement("span");
+        if (i >= list.length) {
+            chip.className = "mini-ball muted";
+            chip.textContent = "—";
+        } else {
+            const info = ballLabelAndClass(list[i]);
+            chip.className = `mini-ball ${info.className || ""}`.trim();
+            chip.textContent = info.label;
+            chip.title = String(typeof list[i] === "object" ? (list[i].text || list[i].value || list[i].label || info.label) : list[i]);
+        }
+        container.appendChild(chip);
+    }
+}
+function renderLastTwoOvers(data, battingOvers) {
+    const list = getOversList(data).slice();
+    const current = data && (data.current_over || data.currentOver);
+    const previous = data && (data.previous_over || data.previousOver || data.last_completed_over || data.lastCompletedOver);
+    const overToken = String(battingOvers || "").match(/^(\d+)(?:\.(\d+))?/);
+    const currentNo = overToken ? Number(overToken[1]) : null;
+    const ballsIntoCurrent = overToken && overToken[2] ? Number(overToken[2]) : 0;
+    const urlAndFormat = `${activeTargetUrl || ""} ${data && (data.format || data.match_type || data.matchType) || ""}`.toLowerCase();
+    const limit = Number(data && (data.max_overs || data.overs_limit || data.match_overs)) || (/t10|\b10.?over/.test(urlAndFormat) ? 10 : /\bodi\b|one.day/.test(urlAndFormat) ? 50 : 20);
+    const currentOverNumber = currentNo === null ? null : (currentNo >= limit && ballsIntoCurrent === 0 ? currentNo : currentNo + 1);
+
+    const records = list.map((entry, index) => ({ entry, number: overNo(entry), index }));
+    if (previous && typeof previous === "object") records.push({ entry: previous, number: overNo(previous), index: records.length + 1 });
+    if (current && typeof current === "object" && overBalls(current).length) {
+        const existingCurrent = records.some(r => currentOverNumber !== null && r.number === currentOverNumber);
+        if (!existingCurrent) records.push({ entry: current, number: overNo(current) ?? currentOverNumber, index: records.length + 1, isCurrent: true });
+    }
+    if (records.length > 1 && records.every(r => r.number !== null)) records.sort((a, b) => a.number - b.number);
+    const unique = [];
+    for (const record of records) {
+        const existing = record.number !== null ? unique.findIndex(r => r.number === record.number) : -1;
+        if (existing >= 0) unique[existing] = record;
+        else unique.push(record);
+    }
+    const recent = unique.slice(-2);
+    while (recent.length < 2) recent.unshift(null);
+
+    recent.forEach((record, index) => {
+        const n = index + 1;
+        const labelEl = document.getElementById(`lastOver${n}Label`);
+        const runsEl = document.getElementById(`lastOver${n}Runs`);
+        const balls = record ? overBalls(record.entry) : [];
+        if (labelEl) {
+            if (!record) labelEl.textContent = index === 1 ? "CURRENT OVER" : "PREVIOUS OVER";
+            else if (record.number !== null) labelEl.textContent = `OVER ${record.number}`;
+            else labelEl.textContent = record.isCurrent ? "CURRENT OVER" : (index === 0 ? "RECENT OVER" : "CURRENT OVER");
+        }
+        renderMiniBallList(`lastOver${n}Balls`, balls);
+        const runs = record ? overRuns(record.entry) : null;
+        if (runsEl) runsEl.textContent = runs === null ? "— RUNS" : `${runs} RUN${runs === 1 ? "" : "S"}`;
+    });
+}
+
 function renderScoreData(data) {
     if (!data || data.success === false) return;
 
@@ -1557,14 +1923,13 @@ function renderScoreData(data) {
     const t1Short = abbreviation(t1Name);
     const t2Short = abbreviation(t2Name);
 
-    document.getElementById("team1HeroName").textContent = t1Short;
-    document.getElementById("team2HeroName").textContent = t2Short;
-    if (CDN_FLAGS[t1Short]) document.getElementById("team1HeroCrest").src = CDN_FLAGS[t1Short];
-    if (CDN_FLAGS[t2Short]) document.getElementById("team2HeroCrest").src = CDN_FLAGS[t2Short];
+    setTeamHero(apiTeam1, t1Short, 1);
+    setTeamHero(apiTeam2, t2Short, 2);
 
     // Determine Batting Team Score
-    let battingScore = apiTeam1.score ? String(apiTeam1.score) : "0/0";
-    let battingOvers = apiTeam1.overs ? String(apiTeam1.overs).replace(/[()]/g, "") : "0.0";
+    let battingScore = firstUseful(apiTeam1.score, apiTeam1.runs, apiTeam1.total, "0/0");
+    battingScore = String(battingScore);
+    let battingOvers = String(firstUseful(apiTeam1.overs, apiTeam1.over, apiTeam1.overs_played, "0.0")).replace(/[()]/g, "");
     let battingTeam = t1Short;
 
     const statusUpper = String(data.equation || data.status || "").toUpperCase();
@@ -1577,8 +1942,21 @@ function renderScoreData(data) {
     }
     if (statusUpper.includes("OPT") && statusUpper.includes("BOWL")) {
         if (statusUpper.includes(t1Short)) {
-            battingScore = apiTeam2.score ? String(apiTeam2.score) : battingScore;
-            battingOvers = apiTeam2.overs ? String(apiTeam2.overs).replace(/[()]/g, "") : battingOvers;
+            battingScore = String(firstUseful(apiTeam2.score, apiTeam2.runs, apiTeam2.total, battingScore));
+            battingOvers = String(firstUseful(apiTeam2.overs, apiTeam2.over, apiTeam2.overs_played, battingOvers)).replace(/[()]/g, "");
+            battingTeam = t2Short;
+        }
+    }
+    const explicitBatting = String(firstUseful(data.batting_team, data.battingTeam, data.current_batting_team, data.currentBattingTeam, data.team_batting, "")).toUpperCase();
+    if (explicitBatting) {
+        const explicitShort = abbreviation(explicitBatting);
+        if (explicitShort === t1Short) {
+            battingScore = String(firstUseful(apiTeam1.score, apiTeam1.runs, apiTeam1.total, battingScore));
+            battingOvers = String(firstUseful(apiTeam1.overs, apiTeam1.over, apiTeam1.overs_played, battingOvers)).replace(/[()]/g, "");
+            battingTeam = t1Short;
+        } else if (explicitShort === t2Short) {
+            battingScore = String(firstUseful(apiTeam2.score, apiTeam2.runs, apiTeam2.total, battingScore));
+            battingOvers = String(firstUseful(apiTeam2.overs, apiTeam2.over, apiTeam2.overs_played, battingOvers)).replace(/[()]/g, "");
             battingTeam = t2Short;
         }
     }
@@ -1590,6 +1968,7 @@ function renderScoreData(data) {
     // Current Over Balls
     const activeBalls = Array.isArray(data.current_over?.balls) ? data.current_over.balls : [];
     renderCurrentOverBalls(activeBalls);
+    renderLastTwoOvers(data, battingOvers);
 
     // REQUESTED SECTIONS UPDATE: TARGET, PARTNERSHIP, RRR, LAST WICKET
     document.getElementById("valTarget").textContent = (data.target !== undefined && data.target !== null && String(data.target).trim() !== "") ? data.target : "--";
@@ -1600,7 +1979,9 @@ function renderScoreData(data) {
     // Batters
     const b1 = data.batsman1 || data.batter1;
     if (b1) {
-        document.getElementById("b1Name").textContent = String(b1.short_name || b1.name || "BATTER 1").toUpperCase();
+        const b1Name = String(b1.short_name || b1.shortName || b1.name || "BATTER 1").toUpperCase();
+        document.getElementById("b1Name").textContent = b1Name;
+        setPlayerPortrait("b1Photo", "b1Initials", b1, data, b1Name);
         document.getElementById("b1Runs").textContent = b1.runs ?? 0;
         document.getElementById("b1Balls").textContent = b1.balls ?? 0;
         document.getElementById("b1Fours").textContent = b1.fours ?? 0;
@@ -1612,7 +1993,9 @@ function renderScoreData(data) {
 
     const b2 = data.batsman2 || data.batter2;
     if (b2) {
-        document.getElementById("b2Name").textContent = String(b2.short_name || b2.name || "BATTER 2").toUpperCase();
+        const b2Name = String(b2.short_name || b2.shortName || b2.name || "BATTER 2").toUpperCase();
+        document.getElementById("b2Name").textContent = b2Name;
+        setPlayerPortrait("b2Photo", "b2Initials", b2, data, b2Name);
         document.getElementById("b2Runs").textContent = b2.runs ?? 0;
         document.getElementById("b2Balls").textContent = b2.balls ?? 0;
         document.getElementById("b2Fours").textContent = b2.fours ?? 0;
@@ -1625,7 +2008,9 @@ function renderScoreData(data) {
     // Bowler
     const bowler = data.bowler;
     if (bowler) {
-        document.getElementById("bwlName").textContent = String(bowler.short_name || bowler.name || "BOWLER").toUpperCase();
+        const bowlerName = String(bowler.short_name || bowler.shortName || bowler.name || "BOWLER").toUpperCase();
+        document.getElementById("bwlName").textContent = bowlerName;
+        setPlayerPortrait("bwlPhoto", "bwlInitials", bowler, data, bowlerName);
         document.getElementById("bwlOvers").textContent = String(bowler.overs ?? "0.0").replace(/[()]/g, "");
         document.getElementById("bwlMaidens").textContent = bowler.maidens ?? 0;
         document.getElementById("bwlRuns").textContent = bowler.runs ?? (bowler.figures ? bowler.figures.split("-")[1] : 0);
