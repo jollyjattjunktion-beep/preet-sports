@@ -25,7 +25,7 @@ html, body {
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background-color: #030811;
+    background-color: #000000;
     font-family: 'Montserrat', 'Rajdhani', sans-serif;
 }
 
@@ -40,7 +40,7 @@ html, body {
     background: #000000;
 }
 
-/* FLOATING URL CONTROL BAR */
+/* FLOATING URL CONTROL BAR (Press 'H' or add ?hide=1 in OBS) */
 .url-control-bar {
     position: absolute;
     top: 8px;
@@ -102,7 +102,7 @@ html, body {
 }
 
 /* =========================================================
-   1280 x 720 CANVAS - ZERO EMPTY DEAD SPACE
+   1280 x 720 CANVAS - COMPLETE BROADCAST TELECAST
 ========================================================= */
 .scoreboard {
     position: relative;
@@ -144,27 +144,27 @@ html, body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 14px;
+    margin-top: 10px;
 }
 
 .brand-capsule {
     background: linear-gradient(180deg, #091f3b 0%, #030d1a 100%);
     border: 2px solid #336699;
     border-radius: 8px;
-    padding: 6px 36px;
+    padding: 5px 32px;
     display: flex;
     align-items: center;
     gap: 8px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.2);
 }
 .brand-capsule .brand-white {
-    font-size: 32px;
+    font-size: 28px;
     font-weight: 900;
     color: #ffffff;
     letter-spacing: 2px;
 }
 .brand-capsule .brand-gold {
-    font-size: 32px;
+    font-size: 28px;
     font-weight: 900;
     color: #FFB800;
     letter-spacing: 2px;
@@ -173,13 +173,13 @@ html, body {
 .live-badge {
     background: linear-gradient(180deg, #ff1a2b 0%, #c40010 100%);
     border: 1.5px solid #ff6675;
-    border-radius: 10px;
-    padding: 2px 28px;
+    border-radius: 8px;
+    padding: 2px 24px;
     color: #ffffff;
-    font-size: 26px;
+    font-size: 22px;
     font-weight: 900;
     letter-spacing: 3px;
-    margin-top: 6px;
+    margin-top: 4px;
     box-shadow: 0 4px 15px rgba(255, 26, 43, 0.5), inset 0 1px 0 rgba(255,255,255,0.4);
     text-shadow: 1px 1px 3px #000;
 }
@@ -194,14 +194,14 @@ html, body {
     align-items: center;
     justify-content: center;
     width: 100%;
-    margin-top: 8px;
+    margin-top: 6px;
     padding: 0 20px;
 }
 
 .fixture-pod {
     display: flex;
     align-items: center;
-    height: 104px;
+    height: 96px;
     flex: 1;
     position: relative;
     box-shadow: 0 8px 30px rgba(0,0,0,0.85);
@@ -210,24 +210,24 @@ html, body {
 .fixture-pod.left-side {
     background: linear-gradient(90deg, #021a3a 0%, #0052b4 40%, #003373 100%);
     border: 2.5px solid #00d2ff;
-    border-radius: 18px 0 0 18px;
-    padding-left: 20px;
-    padding-right: 25px;
+    border-radius: 16px 0 0 16px;
+    padding-left: 18px;
+    padding-right: 22px;
     justify-content: space-between;
 }
 
 .fixture-pod.right-side {
     background: linear-gradient(270deg, #3d0213 0%, #8b0029 40%, #520018 100%);
     border: 2.5px solid #ff3b69;
-    border-radius: 0 18px 18px 0;
-    padding-right: 20px;
-    padding-left: 25px;
+    border-radius: 0 16px 16px 0;
+    padding-right: 18px;
+    padding-left: 22px;
     justify-content: space-between;
 }
 
 .crest-shield {
-    width: 82px;
-    height: 82px;
+    width: 76px;
+    height: 76px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -242,7 +242,7 @@ html, body {
 
 .team-name-hero {
     font-family: 'Montserrat', sans-serif;
-    font-size: 64px;
+    font-size: 58px;
     font-weight: 900;
     color: #ffffff;
     letter-spacing: 2px;
@@ -251,8 +251,8 @@ html, body {
 
 /* 3D GOLD VS CENTER PIECE */
 .center-vs-trap {
-    width: 156px;
-    height: 106px;
+    width: 148px;
+    height: 98px;
     background: linear-gradient(180deg, #2b1f06 0%, #150f02 100%);
     border-top: 2.5px solid #FFB800;
     border-bottom: 2.5px solid #FFB800;
@@ -266,7 +266,7 @@ html, body {
 }
 
 .vs-text-gold {
-    font-size: 48px;
+    font-size: 44px;
     font-weight: 900;
     font-style: italic;
     color: #ffd700;
@@ -275,15 +275,15 @@ html, body {
 
 .sub-fixture-pill {
     position: absolute;
-    bottom: -22px;
+    bottom: -20px;
     left: 50%;
     transform: translateX(-50%);
     background: #020814;
     border: 1.5px solid #00d2ff;
     border-radius: 8px;
-    padding: 2px 24px;
+    padding: 2px 22px;
     color: #ffffff;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 900;
     letter-spacing: 1.5px;
     white-space: nowrap;
@@ -298,23 +298,23 @@ html, body {
     position: relative;
     z-index: 10;
     display: flex;
-    gap: 16px;
+    gap: 14px;
     width: 100%;
-    padding: 0 24px;
-    margin-top: 26px;
+    padding: 0 20px;
+    margin-top: 20px;
 }
 
-/* MAIN SCORE CARD (LEFT) */
+/* BIG MAIN SCORE CARD (LEFT) */
 .score-card-main {
     flex: 1.15;
-    height: 98px;
+    height: 92px;
     background: linear-gradient(180deg, #09264f 0%, #031429 100%);
     border: 2px solid #00a8ff;
-    border-radius: 16px;
+    border-radius: 14px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-right: 28px;
+    padding-right: 26px;
     overflow: hidden;
     box-shadow: 0 8px 25px rgba(0,0,0,0.9), inset 0 0 15px rgba(0, 168, 255, 0.2);
 }
@@ -322,12 +322,12 @@ html, body {
 .score-team-tag {
     background: #ffffff;
     height: 100%;
-    width: 160px;
+    width: 150px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: 'Montserrat', sans-serif;
-    font-size: 52px;
+    font-size: 48px;
     font-weight: 900;
     color: #052654;
     clip-path: polygon(0% 0%, 82% 0%, 100% 100%, 0% 100%);
@@ -336,7 +336,7 @@ html, body {
 
 .score-digits-hero {
     font-family: 'Montserrat', sans-serif;
-    font-size: 72px;
+    font-size: 68px;
     font-weight: 900;
     color: #ffffff;
     letter-spacing: 1px;
@@ -352,27 +352,27 @@ html, body {
 }
 .overs-num {
     font-family: 'Montserrat', sans-serif;
-    font-size: 38px;
+    font-size: 36px;
     font-weight: 900;
     color: #ffffff;
     line-height: 1;
     text-shadow: 2px 2px 4px #000;
 }
 .overs-text {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 900;
     color: #9cb3ce;
     letter-spacing: 1px;
     margin-top: 2px;
 }
 
-/* CURRENT OVER BALL PILLS (RIGHT) */
+/* CURRENT OVER BALL PILLS CARD (RIGHT) */
 .current-over-card {
     flex: 0.95;
-    height: 98px;
+    height: 92px;
     background: #06182e;
     border: 2px solid #FFB800;
-    border-radius: 16px;
+    border-radius: 14px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -381,12 +381,12 @@ html, body {
 
 .over-card-header {
     background: linear-gradient(90deg, #FFB800 0%, #e6a100 100%);
-    height: 28px;
+    height: 26px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #030811;
-    font-size: 17px;
+    font-size: 16px;
     font-weight: 900;
     letter-spacing: 2px;
     text-transform: uppercase;
@@ -397,18 +397,18 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: space-evenly;
-    padding: 0 10px;
+    padding: 0 8px;
     background: #04101e;
 }
 
 .ball-circle {
-    width: 48px;
-    height: 48px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     background: #0d2c54;
     border: 2px solid #205994;
     color: #ffffff;
-    font-size: 26px;
+    font-size: 24px;
     font-weight: 900;
     display: flex;
     align-items: center;
@@ -422,16 +422,69 @@ html, body {
 .ball-circle.dot { color: #889fb8; }
 
 /* =========================================================
-   TABLE SECTION (BATTERS & BOWLER SIDE BY SIDE)
+   REQUESTED SECTION: TARGET, PARTNERSHIP, RRR, LAST WICKET
+========================================================= */
+.match-stats-bar {
+    position: relative;
+    z-index: 10;
+    width: calc(100% - 40px);
+    margin: 10px 20px 0 20px;
+    height: 44px;
+    background: linear-gradient(90deg, #020b18 0%, #061933 50%, #020b18 100%);
+    border: 1.5px solid #FFB800;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.85);
+}
+
+.stat-metric {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 21px;
+    font-weight: 900;
+    color: #ffffff;
+    letter-spacing: 0.8px;
+    white-space: nowrap;
+}
+.stat-metric .lbl {
+    color: #00f0ff;
+    font-weight: 900;
+}
+.stat-metric .val {
+    color: #FFB800;
+    font-weight: 900;
+}
+.stat-metric.last-wkt-metric {
+    max-width: 320px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.stat-metric.last-wkt-metric .val {
+    color: #ff4d6d;
+}
+
+.stat-divider {
+    width: 1.5px;
+    height: 24px;
+    background: #1f3f66;
+}
+
+/* =========================================================
+   TABLE DETAIL SECTION (BATTERS & BOWLER SIDE BY SIDE)
 ========================================================= */
 .tables-row {
     position: relative;
     z-index: 10;
     display: flex;
-    gap: 16px;
+    gap: 14px;
     width: 100%;
-    padding: 0 24px;
-    margin-top: 14px;
+    padding: 0 20px;
+    margin-top: 10px;
 }
 
 /* BATTER TABLE */
@@ -439,31 +492,31 @@ html, body {
     flex: 1.15;
     background: linear-gradient(180deg, #081d36 0%, #030d19 100%);
     border: 2px solid #0077cc;
-    border-radius: 14px;
+    border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 8px 25px rgba(0,0,0,0.85);
 }
 
 .table-header-blue {
     background: linear-gradient(90deg, #005bb5 0%, #004080 100%);
-    height: 32px;
+    height: 30px;
     display: grid;
     grid-template-columns: 2.2fr 0.8fr 0.8fr 0.8fr 0.8fr 1fr;
     align-items: center;
-    padding: 0 16px;
-    font-size: 15px;
+    padding: 0 14px;
+    font-size: 14px;
     font-weight: 900;
     color: #ffffff;
     letter-spacing: 1.2px;
 }
 
 .table-row-item {
-    height: 38px;
+    height: 36px;
     display: grid;
     grid-template-columns: 2.2fr 0.8fr 0.8fr 0.8fr 0.8fr 1fr;
     align-items: center;
-    padding: 0 16px;
-    font-size: 17px;
+    padding: 0 14px;
+    font-size: 16px;
     font-weight: 800;
     color: #ffffff;
     border-bottom: 1px solid rgba(255,255,255,0.06);
@@ -485,38 +538,38 @@ html, body {
     flex: 0.95;
     background: linear-gradient(180deg, #2a050f 0%, #120106 100%);
     border: 2px solid #d90429;
-    border-radius: 14px;
+    border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 8px 25px rgba(0,0,0,0.85);
 }
 
 .table-header-red {
     background: linear-gradient(90deg, #c40026 0%, #850019 100%);
-    height: 32px;
+    height: 30px;
     display: grid;
     grid-template-columns: 2.2fr 0.8fr 0.8fr 0.8fr 0.8fr 1fr;
     align-items: center;
-    padding: 0 16px;
-    font-size: 15px;
+    padding: 0 14px;
+    font-size: 14px;
     font-weight: 900;
     color: #ffffff;
     letter-spacing: 1.2px;
 }
 
 /* =========================================================
-   BOTTOM RIBBON (CRR, PROJECTED, TOSS)
+   BOTTOM RIBBON (CRR, CHASE / TOSS, PROJECTED)
 ========================================================= */
 .bottom-meta-ribbon {
     position: relative;
     z-index: 10;
     width: 100%;
-    height: 44px;
+    height: 42px;
     background: #02070f;
     border-top: 2px solid #1a3c66;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 24px;
+    padding: 0 20px;
     margin-top: auto;
 }
 
@@ -524,34 +577,35 @@ html, body {
     background: #0a264a;
     border: 1.5px solid #00a8ff;
     border-radius: 20px;
-    padding: 4px 18px;
+    padding: 3px 16px;
     color: #ffffff;
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 900;
     letter-spacing: 1px;
 }
 .ribbon-pill-left .num {
-    color: #ffffff;
+    color: #FFB800;
     margin-left: 6px;
 }
 
 .ribbon-proj-center {
-    font-size: 20px;
+    font-size: 19px;
     font-weight: 900;
     color: #00d2ff;
     letter-spacing: 1.5px;
 }
 .ribbon-proj-center .proj-score {
     color: #ffffff;
-    font-size: 24px;
-    margin-left: 8px;
+    font-size: 22px;
+    margin-left: 6px;
 }
 
 .ribbon-toss-right {
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 900;
     color: #ffffff;
-    letter-spacing: 1.5px;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
 }
 </style>
 </head>
@@ -588,7 +642,7 @@ html, body {
             <!-- LEFT TEAM (IND) -->
             <div class="fixture-pod left-side">
                 <div class="crest-shield">
-                    <img id="team1HeroCrest" src="https://upload.wikimedia.org/wikipedia/en/thumb/4/41/Flag_of_India.svg/320px-Flag_of_India.svg.png" alt="India">
+                    <img id="team1HeroCrest" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgMTIwIDEyMCI+CiAgPHJlY3Qgd2lkdGg9IjEyMCIgaGVpZ2h0PSIxMjAiIHJ4PSI2MCIgZmlsbD0iIzAwMzhhOCIvPgogIDxjaXJjbGUgY3g9IjYwIiBjeT0iNjAiIHI9IjU0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZjk5MzMiIHN0cm9rZS13aWR0aD0iNiIvPgogIDx0ZXh0IHg9IjYwIiB5PSI3NSIgZm9udC1mYW1pbHk9IidSYWpkaGFuaScsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNDAiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPklORDwvdGV4dD4KPC9zdmc+" alt="India">
                 </div>
                 <div class="team-name-hero" id="team1HeroName">IND</div>
             </div>
@@ -603,7 +657,7 @@ html, body {
             <div class="fixture-pod right-side">
                 <div class="team-name-hero" id="team2HeroName">WI</div>
                 <div class="crest-shield">
-                    <img id="team2HeroCrest" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/WestIndiesCricketFlagPre1999.svg/320px-WestIndiesCricketFlagPre1999.svg.png" alt="West Indies">
+                    <img id="team2HeroCrest" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgMTIwIDEyMCI+CiAgPHJlY3Qgd2lkdGg9IjEyMCIgaGVpZ2h0PSIxMjAiIHJ4PSI2MCIgZmlsbD0iIzdiMDAyYyIvPgogIDxjaXJjbGUgY3g9IjYwIiBjeT0iNjAiIHI9IjU0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZGI5MTMiIHN0cm9rZS13aWR0aD0iNiIvPgogIDx0ZXh0IHg9IjYwIiB5PSI3NSIgZm9udC1mYW1pbHk9IidSYWpkaGFuaScsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNDAiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPldJPC90ZXh0Pgo8L3N2Zz4=" alt="West Indies">
                 </div>
             </div>
         </div>
@@ -631,6 +685,29 @@ html, body {
                     <div class="ball-circle dot">-</div>
                     <div class="ball-circle dot">-</div>
                 </div>
+            </div>
+        </div>
+
+        <!-- NEW REQUESTED SECTION: TARGET, PARTNERSHIP, RRR, LAST WICKET -->
+        <div class="match-stats-bar">
+            <div class="stat-metric">
+                <span class="lbl">TARGET:</span>
+                <span class="val" id="valTarget">--</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-metric">
+                <span class="lbl">PARTNERSHIP:</span>
+                <span class="val" id="valPartnership">--</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-metric">
+                <span class="lbl">RRR:</span>
+                <span class="val" id="valRRR">--</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-metric last-wkt-metric">
+                <span class="lbl">LAST WKT:</span>
+                <span class="val" id="valLastWkt">--</span>
             </div>
         </div>
 
@@ -731,13 +808,13 @@ const urlParams = new URLSearchParams(window.location.search);
 const OBS_TOKEN = urlParams.get("token") || "";
 
 const CDN_FLAGS = {
-    "IND": "https://upload.wikimedia.org/wikipedia/en/thumb/4/41/Flag_of_India.svg/320px-Flag_of_India.svg.png",
-    "WI": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/WestIndiesCricketFlagPre1999.svg/320px-WestIndiesCricketFlagPre1999.svg.png",
-    "PAK": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Flag_of_Pakistan.svg/320px-Flag_of_Pakistan.svg.png",
-    "AUS": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Flag_of_Australia_%28converted%29.svg/320px-Flag_of_Australia_%28converted%29.svg.png",
-    "ENG": "https://upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/320px-Flag_of_England.svg.png",
-    "SA": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Flag_of_South_Africa.svg/320px-Flag_of_South_Africa.svg.png",
-    "NZ": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Flag_of_New_Zealand.svg/320px-Flag_of_New_Zealand.svg.png",
+    "IND": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgMTIwIDEyMCI+CiAgPHJlY3Qgd2lkdGg9IjEyMCIgaGVpZ2h0PSIxMjAiIHJ4PSI2MCIgZmlsbD0iIzAwMzhhOCIvPgogIDxjaXJjbGUgY3g9IjYwIiBjeT0iNjAiIHI9IjU0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZjk5MzMiIHN0cm9rZS13aWR0aD0iNiIvPgogIDx0ZXh0IHg9IjYwIiB5PSI3NSIgZm9udC1mYW1pbHk9IidSYWpkaGFuaScsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNDAiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPklORDwvdGV4dD4KPC9zdmc+",
+    "WI": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgMTIwIDEyMCI+CiAgPHJlY3Qgd2lkdGg9IjEyMCIgaGVpZ2h0PSIxMjAiIHJ4PSI2MCIgZmlsbD0iIzdiMDAyYyIvPgogIDxjaXJjbGUgY3g9IjYwIiBjeT0iNjAiIHI9IjU0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZGI5MTMiIHN0cm9rZS13aWR0aD0iNiIvPgogIDx0ZXh0IHg9IjYwIiB5PSI3NSIgZm9udC1mYW1pbHk9IidSYWpkaGFuaScsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNDAiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPldJPC90ZXh0Pgo8L3N2Zz4=",
+    "PAK": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgMTIwIDEyMCI+CiAgPHJlY3Qgd2lkdGg9IjEyMCIgaGVpZ2h0PSIxMjAiIHJ4PSI2MCIgZmlsbD0iIzAwNDAxYSIvPgogIDxjaXJjbGUgY3g9IjYwIiBjeT0iNjAiIHI9IjU0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iNiIvPgogIDx0ZXh0IHg9IjYwIiB5PSI3NSIgZm9udC1mYW1pbHk9IidSYWpkaGFuaScsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNDAiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlBBSzwvdGV4dD4KPC9zdmc+",
+    "AUS": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgMTIwIDEyMCI+CiAgPHJlY3Qgd2lkdGg9IjEyMCIgaGVpZ2h0PSIxMjAiIHJ4PSI2MCIgZmlsbD0iIzAwNTMzNiIvPgogIDxjaXJjbGUgY3g9IjYwIiBjeT0iNjAiIHI9IjU0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmNkMDAiIHN0cm9rZS13aWR0aD0iNiIvPgogIDx0ZXh0IHg9IjYwIiB5PSI3NSIgZm9udC1mYW1pbHk9IidSYWpkaGFuaScsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNDAiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkFVUzwvdGV4dD4KPC9zdmc+",
+    "ENG": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgMTIwIDEyMCI+CiAgPHJlY3Qgd2lkdGg9IjEyMCIgaGVpZ2h0PSIxMjAiIHJ4PSI2MCIgZmlsbD0iIzBhMWUzZiIvPgogIDxjaXJjbGUgY3g9IjYwIiBjeT0iNjAiIHI9IjU0IiBmaWxsPSJub25lIiBzdHJva2U9IiNjZjE0MmIiIHN0cm9rZS13aWR0aD0iNiIvPgogIDx0ZXh0IHg9IjYwIiB5PSI3NSIgZm9udC1mYW1pbHk9IidSYWpkaGFuaScsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNDAiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkVORzwvdGV4dD4KPC9zdmc+",
+    "SA": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgMTIwIDEyMCI+CiAgPHJlY3Qgd2lkdGg9IjEyMCIgaGVpZ2h0PSIxMjAiIHJ4PSI2MCIgZmlsbD0iIzAwNzc0OSIvPgogIDxjaXJjbGUgY3g9IjYwIiBjeT0iNjAiIHI9IjU0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmI2MTIiIHN0cm9rZS13aWR0aD0iNiIvPgogIDx0ZXh0IHg9IjYwIiB5PSI3NSIgZm9udC1mYW1pbHk9IidSYWpkaGFuaScsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNDAiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlNBPC90ZXh0Pgo8L3N2Zz4=",
+    "NZ": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgMTIwIDEyMCI+CiAgPHJlY3Qgd2lkdGg9IjEyMCIgaGVpZ2h0PSIxMjAiIHJ4PSI2MCIgZmlsbD0iIzExMTExMSIvPgogIDxjaXJjbGUgY3g9IjYwIiBjeT0iNjAiIHI9IjU0IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMGQyZmYiIHN0cm9rZS13aWR0aD0iNiIvPgogIDx0ZXh0IHg9IjYwIiB5PSI3NSIgZm9udC1mYW1pbHk9IidSYWpkaGFuaScsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNDAiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk5aPC90ZXh0Pgo8L3N2Zz4=",
     "SL": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Flag_of_Sri_Lanka.svg/320px-Flag_of_Sri_Lanka.svg.png",
     "BAN": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Flag_of_Bangladesh.svg/320px-Flag_of_Bangladesh.svg.png",
     "AFG": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Flag_of_the_Taliban.svg/320px-Flag_of_the_Taliban.svg.png"
@@ -903,6 +980,12 @@ function renderScoreData(data) {
     // Current Over Balls
     const activeBalls = Array.isArray(data.current_over?.balls) ? data.current_over.balls : [];
     renderCurrentOverBalls(activeBalls);
+
+    // REQUESTED SECTIONS UPDATE: TARGET, PARTNERSHIP, RRR, LAST WICKET
+    document.getElementById("valTarget").textContent = (data.target && data.target !== "") ? data.target : "--";
+    document.getElementById("valPartnership").textContent = data.partnership || "--";
+    document.getElementById("valRRR").textContent = data.rrr ?? "--";
+    document.getElementById("valLastWkt").textContent = data.last_wicket || "--";
 
     // Batters
     const b1 = data.batsman1 || data.batter1;
