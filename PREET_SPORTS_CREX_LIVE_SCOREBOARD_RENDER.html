@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="referrer" content="no-referrer">
-<title>PREET SPORTS | V5 Broadcast Cricket Scoreboard</title>
+<title>PREET SPORTS | V6 Mobile Broadcast Scoreboard</title>
 
 <!-- ULTRA-HD BROADCAST TYPOGRAPHY -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1320,16 +1320,16 @@ body.controls-visible .top-brand-wrap { margin-top: 53px !important; }
                 <span class="brand-white">PREET</span>
                 <span class="brand-gold">SPORTS</span>
             </div>
-            <div class="live-badge" id="liveStatusBadge">LIVE</div>
+            <div class="live-badge result" id="liveStatusBadge">RESULT</div>
         </div>
 
         <!-- TEAM FLAGS, TEAM SCORES, AND MATCH FIXTURE -->
         <div class="match-fixture-bar">
             <div class="fixture-pod left-side">
-                <div class="crest-shield"><img id="team1HeroCrest" alt="Team 1 flag" src="https://flagcdn.com/w160/in.png"></div>
+                <div class="crest-shield"><img id="team1HeroCrest" alt="Pakistan flag" src="https://flagcdn.com/w320/pk.png"></div>
                 <div class="team-hero-copy left-copy">
-                    <div class="team-name-hero" id="team1HeroName">INDIA</div>
-                    <div class="team-hero-scoreline"><strong id="team1HeroScore">—</strong><span id="team1HeroOvers">—</span></div>
+                    <div class="team-name-hero" id="team1HeroName">PAKISTAN</div>
+                    <div class="team-hero-scoreline"><strong id="team1HeroScore">168/8</strong><span id="team1HeroOvers">20.0 OV</span></div>
                 </div>
             </div>
             <div class="center-vs-trap">
@@ -1338,10 +1338,10 @@ body.controls-visible .top-brand-wrap { margin-top: 53px !important; }
             </div>
             <div class="fixture-pod right-side">
                 <div class="team-hero-copy right-copy">
-                    <div class="team-name-hero" id="team2HeroName">WEST INDIES</div>
-                    <div class="team-hero-scoreline"><strong id="team2HeroScore">—</strong><span id="team2HeroOvers">—</span></div>
+                    <div class="team-name-hero" id="team2HeroName">SRI LANKA</div>
+                    <div class="team-hero-scoreline"><strong id="team2HeroScore">172/2</strong><span id="team2HeroOvers">17.1 OV</span></div>
                 </div>
-                <div class="crest-shield"><img id="team2HeroCrest" alt="Team 2 flag" src="https://commons.wikimedia.org/wiki/Special:FilePath/Cricket_West_Indies_flag_2017.svg"></div>
+                <div class="crest-shield"><img id="team2HeroCrest" alt="Sri Lanka flag" src="https://flagcdn.com/w320/lk.png"></div>
             </div>
         </div>
 
@@ -1349,10 +1349,10 @@ body.controls-visible .top-brand-wrap { margin-top: 53px !important; }
         <div class="live-score-row">
             <!-- MAIN SCORE CARD -->
             <div class="score-card-main">
-                <div class="score-team-tag" id="mainScoreTag">IND</div>
-                <div class="score-digits-hero" id="mainScoreHero">0/0</div>
+                <div class="score-team-tag" id="mainScoreTag">SL</div>
+                <div class="score-digits-hero" id="mainScoreHero">172/2</div>
                 <div class="overs-stack">
-                    <span class="overs-num" id="mainOversHero">0.0</span>
+                    <span class="overs-num" id="mainOversHero">17.1</span>
                     <span class="overs-text">OVERS</span>
                 </div>
             </div>
@@ -1369,6 +1369,13 @@ body.controls-visible .top-brand-wrap { margin-top: 53px !important; }
                     <div class="ball-circle dot empty-ball">–</div>
                 </div>
             </div>
+        </div>
+
+        <!-- V6 MATCH CONTEXT: TOSS + CURRENT/LAST INNINGS -->
+        <div class="match-context-bar" aria-label="Toss, batting and bowling teams">
+            <div class="context-toss"><span class="context-label">TOSS</span><strong id="tossUpdate">SRI LANKA WON TOSS • OPTED TO BOWL</strong></div>
+            <div><span class="context-label">BATTING</span><strong id="battingNow">SRI LANKA</strong></div>
+            <div><span class="context-label">BOWLING</span><strong id="bowlingNow">PAKISTAN</strong></div>
         </div>
 
         <!-- NEW REQUESTED SECTION: TARGET, PARTNERSHIP, RRR, LAST WICKET -->
@@ -1390,7 +1397,7 @@ body.controls-visible .top-brand-wrap { margin-top: 53px !important; }
             <div class="stat-divider"></div>
             <div class="stat-metric last-wkt-metric">
                 <span class="lbl">LAST WKT:</span>
-                <span class="val" id="valLastWkt">--</span>
+                <span class="val" id="valLastWkt">Sineth Jayawardena 38 (26)</span>
             </div>
         </div>
 
@@ -1399,7 +1406,7 @@ body.controls-visible .top-brand-wrap { margin-top: 53px !important; }
             <!-- BATTERS PANEL -->
             <div class="batters-panel">
                 <div class="table-header-blue">
-                    <span>BATTER</span>
+                    <span>BATTERS • NEXT UP</span>
                     <span style="text-align: center;">R</span>
                     <span style="text-align: center;">B</span>
                     <span style="text-align: center;">4s</span>
@@ -1407,27 +1414,35 @@ body.controls-visible .top-brand-wrap { margin-top: 53px !important; }
                     <span style="text-align: center;">SR</span>
                 </div>
                 <div class="table-row-item" id="batter1Row">
-                    <div class="player-name-cell"><span class="player-avatar-initials" id="b1Initials">B1</span><img class="player-avatar-photo" id="b1Photo" alt="Batter 1 portrait" loading="eager"><span class="col-name" id="b1Name">AWAITING DATA</span></div>
-                    <span style="text-align: center;" class="striker-highlight" id="b1Runs">—</span>
-                    <span style="text-align: center;" id="b1Balls">—</span>
-                    <span style="text-align: center;" id="b1Fours">—</span>
-                    <span style="text-align: center;" id="b1Sixes">—</span>
-                    <span style="text-align: center;" id="b1SR">—</span>
+                    <div class="player-name-cell"><span class="player-avatar-initials" id="b1Initials">B1</span><img class="player-avatar-photo" id="b1Photo" alt="Batter 1 portrait" loading="eager"><span class="col-name" id="b1Name">KUSAL MENDIS</span></div>
+                    <span style="text-align: center;" class="striker-highlight" id="b1Runs">87</span>
+                    <span style="text-align: center;" id="b1Balls">48</span>
+                    <span style="text-align: center;" id="b1Fours">9</span>
+                    <span style="text-align: center;" id="b1Sixes">4</span>
+                    <span style="text-align: center;" id="b1SR">181.25</span>
                 </div>
                 <div class="table-row-item" id="batter2Row">
-                    <div class="player-name-cell"><span class="player-avatar-initials" id="b2Initials">B2</span><img class="player-avatar-photo" id="b2Photo" alt="Batter 2 portrait" loading="eager"><span class="col-name" id="b2Name">—</span></div>
-                    <span style="text-align: center;" id="b2Runs">—</span>
-                    <span style="text-align: center;" id="b2Balls">—</span>
-                    <span style="text-align: center;" id="b2Fours">—</span>
-                    <span style="text-align: center;" id="b2Sixes">—</span>
-                    <span style="text-align: center;" id="b2SR">—</span>
+                    <div class="player-name-cell"><span class="player-avatar-initials" id="b2Initials">B2</span><img class="player-avatar-photo" id="b2Photo" alt="Batter 2 portrait" loading="eager"><span class="col-name" id="b2Name">KAMINDU MENDIS</span></div>
+                    <span style="text-align: center;" id="b2Runs">40</span>
+                    <span style="text-align: center;" id="b2Balls">27</span>
+                    <span style="text-align: center;" id="b2Fours">4</span>
+                    <span style="text-align: center;" id="b2Sixes">0</span>
+                    <span style="text-align: center;" id="b2SR">148.15</span>
+                </div>
+                <div class="table-row-item upcoming-row" id="batter3Row">
+                    <div class="player-name-cell"><span class="player-avatar-initials" id="b3Initials">N3</span><img class="player-avatar-photo" id="b3Photo" alt="Next batter 1 portrait" loading="eager"><span class="col-name" id="b3Name">NEXT BATTER 1</span><span class="upcoming-tag" id="b3RoleTag">NEXT</span></div>
+                    <span style="text-align:center;" id="b3Runs">—</span><span style="text-align:center;" id="b3Balls">—</span><span style="text-align:center;" id="b3Fours">—</span><span style="text-align:center;" id="b3Sixes">—</span><span style="text-align:center;" id="b3SR">—</span>
+                </div>
+                <div class="table-row-item upcoming-row" id="batter4Row">
+                    <div class="player-name-cell"><span class="player-avatar-initials" id="b4Initials">N4</span><img class="player-avatar-photo" id="b4Photo" alt="Next batter 2 portrait" loading="eager"><span class="col-name" id="b4Name">NEXT BATTER 2</span><span class="upcoming-tag" id="b4RoleTag">NEXT</span></div>
+                    <span style="text-align:center;" id="b4Runs">—</span><span style="text-align:center;" id="b4Balls">—</span><span style="text-align:center;" id="b4Fours">—</span><span style="text-align:center;" id="b4Sixes">—</span><span style="text-align:center;" id="b4SR">—</span>
                 </div>
             </div>
 
             <!-- BOWLER PANEL -->
             <div class="bowler-panel">
                 <div class="table-header-red">
-                    <span>BOWLER</span>
+                    <span>BOWLING OPTIONS</span>
                     <span style="text-align: center;">O</span>
                     <span style="text-align: center;">M</span>
                     <span style="text-align: center;">R</span>
@@ -1435,17 +1450,21 @@ body.controls-visible .top-brand-wrap { margin-top: 53px !important; }
                     <span style="text-align: center;">ECO</span>
                 </div>
                 <div class="table-row-item" id="bowlerRow">
-                    <div class="player-name-cell"><span class="player-avatar-initials bowler-avatar" id="bwlInitials">BW</span><img class="player-avatar-photo" id="bwlPhoto" alt="Bowler portrait" loading="eager"><span class="col-name" id="bwlName">—</span></div>
-                    <span style="text-align: center;" id="bwlOvers">—</span>
-                    <span style="text-align: center;" id="bwlMaidens">—</span>
-                    <span style="text-align: center;" id="bwlRuns">—</span>
-                    <span style="text-align: center;" id="bwlWickets">—</span>
-                    <span style="text-align: center;" id="bwlEco">—</span>
+                    <div class="player-name-cell"><span class="player-avatar-initials bowler-avatar" id="bwlInitials">BW</span><img class="player-avatar-photo" id="bwlPhoto" alt="Bowler portrait" loading="eager"><span class="col-name" id="bwlName">RAZAULLAH</span></div>
+                    <span style="text-align: center;" id="bwlOvers">3.1</span>
+                    <span style="text-align: center;" id="bwlMaidens">0</span>
+                    <span style="text-align: center;" id="bwlRuns">37</span>
+                    <span style="text-align: center;" id="bwlWickets">0</span>
+                    <span style="text-align: center;" id="bwlEco">11.68</span>
+                </div>
+                <div class="table-row-item upcoming-row" id="bowler2Row">
+                    <div class="player-name-cell"><span class="player-avatar-initials bowler-avatar" id="bwl2Initials">B2</span><img class="player-avatar-photo" id="bwl2Photo" alt="Bowler option portrait" loading="eager"><span class="col-name" id="bwl2Name">NEXT BOWLER</span><span class="upcoming-tag" id="bwl2RoleTag">NEXT</span></div>
+                    <span style="text-align:center;" id="bwl2Overs">—</span><span style="text-align:center;" id="bwl2Maidens">—</span><span style="text-align:center;" id="bwl2Runs">—</span><span style="text-align:center;" id="bwl2Wickets">—</span><span style="text-align:center;" id="bwl2Eco">—</span>
                 </div>
             </div>
         </div>
 
-        <!-- V5 LOWER BROADCAST ZONE: LAST TWO OVERS + LIVE PROJECTION -->
+        <!-- V6 LOWER BROADCAST ZONE: LAST TWO OVERS + MATCH RESULT + FAN POLL -->
         <div class="bottom-analysis-row">
             <!-- RECENT FORM: LAST TWO OVERS AND RUNS -->
         <div class="last-two-overs-panel" aria-label="Last two overs run summary">
@@ -1461,12 +1480,19 @@ body.controls-visible .top-brand-wrap { margin-top: 53px !important; }
                 <strong class="last-over-total" id="lastOver2Runs">— RUNS</strong>
             </div>
         </div>
-            <section class="projection-panel" aria-label="Projected score and run rates">
-                <div class="projection-panel-header"><span id="ribbonProjLabel">PROJECTED SCORE (20 OVERS)</span></div>
-                <div class="projection-panel-body">
-                    <div class="projection-main-value"><strong id="ribbonProj">—</strong></div>
-                    <div class="projection-metric"><span>CRR</span><strong id="ribbonCRRProjection">—</strong></div>
-                    <div class="projection-metric"><span id="projectionContextLabel">WICKETS IN HAND</span><strong id="projectionContextValue">—</strong></div>
+            <section class="projection-panel poll-results-panel" aria-label="Match result and fan poll results">
+                <div class="projection-panel-header"><span>CREX MATCH RESULT • FAN POLL</span></div>
+                <div class="poll-result-body">
+                    <div class="winner-summary">
+                        <span class="poll-kicker">WINNER FROM CREX</span>
+                        <strong id="winnerTeamLarge">SRI LANKA</strong>
+                        <span id="winnerResultText">SRI LANKA WON BY 8 WICKETS</span>
+                    </div>
+                    <div class="fan-poll-summary">
+                        <div class="fan-poll-heading"><strong>FAN POLL RESULTS</strong><span id="pollDataStatus">NO POLL FEED</span></div>
+                        <div class="poll-result-line"><span id="pollTeam1Label">PAK</span><div class="poll-meter"><i id="pollTeam1Bar"></i></div><strong id="pollTeam1Value">—</strong></div>
+                        <div class="poll-result-line"><span id="pollTeam2Label">SL</span><div class="poll-meter"><i id="pollTeam2Bar"></i></div><strong id="pollTeam2Value">—</strong></div>
+                    </div>
                 </div>
             </section>
         </div>
@@ -1474,8 +1500,8 @@ body.controls-visible .top-brand-wrap { margin-top: 53px !important; }
         <!-- BOTTOM BROADCAST TICKER -->
         <div class="bottom-meta-ribbon">
             <div class="ribbon-pill-left">CRR <span class="num" id="ribbonCRR">—</span></div>
-            <div class="ribbon-footer-center">PREET SPORTS <span>•</span> LIVE CRICKET CENTRE</div>
-            <div class="ribbon-toss-right" id="ribbonToss">AWAITING LIVE DATA</div>
+            <div class="ribbon-footer-center">BAT: <strong id="footerBattingTeam">SL</strong><span>•</span>BOWL: <strong id="footerBowlingTeam">PAK</strong></div>
+            <div class="ribbon-toss-right" id="ribbonToss">SRI LANKA WON BY 8 WICKETS 🏆</div>
         </div>
 
     </div>
@@ -1511,28 +1537,28 @@ const urlParams = new URLSearchParams(window.location.search);
 const OBS_TOKEN = urlParams.get("token") || "";
 
 const CDN_FLAGS = {
-    "IND": "https://flagcdn.com/w160/in.png",
+    "IND": "https://flagcdn.com/w320/in.png",
     "WI": "https://commons.wikimedia.org/wiki/Special:FilePath/Cricket_West_Indies_flag_2017.svg",
-    "PAK": "https://flagcdn.com/w160/pk.png",
-    "AUS": "https://flagcdn.com/w160/au.png",
-    "ENG": "https://flagcdn.com/w160/gb-eng.png",
-    "SA": "https://flagcdn.com/w160/za.png",
-    "NZ": "https://flagcdn.com/w160/nz.png",
-    "SL": "https://flagcdn.com/w160/lk.png",
-    "BAN": "https://flagcdn.com/w160/bd.png",
-    "AFG": "https://flagcdn.com/w160/af.png",
-    "ZIM": "https://flagcdn.com/w160/zw.png",
-    "IRE": "https://flagcdn.com/w160/ie.png",
-    "NED": "https://flagcdn.com/w160/nl.png",
-    "USA": "https://flagcdn.com/w160/us.png",
-    "CAN": "https://flagcdn.com/w160/ca.png",
-    "NEP": "https://flagcdn.com/w160/np.png",
-    "UAE": "https://flagcdn.com/w160/ae.png",
-    "OMA": "https://flagcdn.com/w160/om.png",
-    "NAM": "https://flagcdn.com/w160/na.png",
-    "SCO": "https://flagcdn.com/w160/gb-sct.png",
-    "PNG": "https://flagcdn.com/w160/pg.png",
-    "HK": "https://flagcdn.com/w160/hk.png"
+    "PAK": "https://flagcdn.com/w320/pk.png",
+    "AUS": "https://flagcdn.com/w320/au.png",
+    "ENG": "https://flagcdn.com/w320/gb-eng.png",
+    "SA": "https://flagcdn.com/w320/za.png",
+    "NZ": "https://flagcdn.com/w320/nz.png",
+    "SL": "https://flagcdn.com/w320/lk.png",
+    "BAN": "https://flagcdn.com/w320/bd.png",
+    "AFG": "https://flagcdn.com/w320/af.png",
+    "ZIM": "https://flagcdn.com/w320/zw.png",
+    "IRE": "https://flagcdn.com/w320/ie.png",
+    "NED": "https://flagcdn.com/w320/nl.png",
+    "USA": "https://flagcdn.com/w320/us.png",
+    "CAN": "https://flagcdn.com/w320/ca.png",
+    "NEP": "https://flagcdn.com/w320/np.png",
+    "UAE": "https://flagcdn.com/w320/ae.png",
+    "OMA": "https://flagcdn.com/w320/om.png",
+    "NAM": "https://flagcdn.com/w320/na.png",
+    "SCO": "https://flagcdn.com/w320/gb-sct.png",
+    "PNG": "https://flagcdn.com/w320/pg.png",
+    "HK": "https://flagcdn.com/w320/hk.png"
 };
 
 const TEAM_NAMES = {
@@ -1941,12 +1967,12 @@ function cleanCrexUrl(url) {
     return clean.trim();
 }
 
-const DEFAULT_MATCH_URL = "https://crex.com/cricket-live-score/ind-vs-wi-4th-t20i-west-indies-tour-of-india-2026-match-updates-11A0";
+const DEFAULT_MATCH_URL = "https://crex.com/cricket-live-score/pak-vs-sl-3rd-t20i-sri-lanka-tour-of-pakistan-2026-match-updates-13LS";
 
 function normalizeInput(val) {
     if (!val) return DEFAULT_MATCH_URL;
     let clean = cleanCrexUrl(val).trim();
-    if (clean.includes("ind-vs-wi") && !clean.match(/-[0-9a-zA-Z]{3,5}$/)) {
+    if (clean.includes("pak-vs-sl") && !clean.match(/-[0-9a-zA-Z]{3,5}$/)) {
         clean = DEFAULT_MATCH_URL;
     } else if (!clean.startsWith("http") && clean.length <= 8) {
         clean = `https://crex.com/cricket-live-score/match-updates-${clean.toUpperCase()}`;
@@ -1954,7 +1980,13 @@ function normalizeInput(val) {
     return clean;
 }
 
-let activeTargetUrl = localStorage.getItem("crex_match_input") || DEFAULT_MATCH_URL;
+let savedMatchInput = localStorage.getItem("crex_match_input") || "";
+// Migrate the previous template's IND-WI default to the PAK-SL URL requested for this version.
+if (!savedMatchInput || /ind-vs-wi-4th-t20i-west-indies-tour-of-india-2026-match-updates-11a0/i.test(savedMatchInput)) {
+    savedMatchInput = DEFAULT_MATCH_URL;
+    try { localStorage.setItem("crex_match_input", savedMatchInput); } catch (_) {}
+}
+let activeTargetUrl = new URLSearchParams(window.location.search).get("match") || savedMatchInput || DEFAULT_MATCH_URL;
 
 function applyUrlFlagsImmediately(url) {
     if (!url) return;
@@ -2506,6 +2538,490 @@ window.addEventListener("load", () => {
     fetchScores();
 });
 </script>
+
+
+<script id="preetSportsV6MobileBroadcast">
+// V6 improves small-screen scaling and consumes toss/result/poll/player-list fields when supplied.
+const V6_DEFAULT_URL = "https://crex.com/cricket-live-score/pak-vs-sl-3rd-t20i-sri-lanka-tour-of-pakistan-2026-match-updates-13LS";
+const V6_KNOWN_MATCH = {
+  slug: "pak-vs-sl-3rd-t20i-sri-lanka-tour-of-pakistan-2026-match-updates-13ls",
+  tossText: "SRI LANKA WON THE TOSS • OPTED TO BOWL",
+  resultText: "SRI LANKA WON BY 8 WICKETS",
+  winnerCode: "SL",
+  // Batting-order and bowling-option fallbacks for the supplied match; live API arrays override them.
+  nextBatters: ["Sahan Arachchige", "Dasun Shanaka"],
+  nextBowlers: ["Salman Mirza"],
+  teamScores: { PAK: { score: "168/8", overs: "20.0" }, SL: { score: "172/2", overs: "17.1" } },
+  recentOvers: [
+    { over_number: 17, balls: ["4", "0", "4", "6", "1", "0"], total_runs: 15 },
+    { over_number: 18, balls: ["4"], total_runs: 4 }
+  ]
+};
+let v6CrexMeta = { tossText: "", resultText: "", winnerCode: "", battingCode: "", poll: null };
+
+function v6CleanText(value) { return String(value || "").replace(/[\u00a0\u200b]/g, " ").replace(/\s+/g, " ").trim(); }
+function v6KnownMetaForUrl(url) {
+  const slug = cleanCrexUrl(url || "").toLowerCase();
+  return slug.includes(V6_KNOWN_MATCH.slug) || slug === V6_DEFAULT_URL.toLowerCase()
+    ? { ...V6_KNOWN_MATCH, teamScores: { ...V6_KNOWN_MATCH.teamScores } }
+    : { tossText: "", resultText: "", winnerCode: "", battingCode: "", poll: null };
+}
+v6CrexMeta = v6KnownMetaForUrl(activeTargetUrl);
+
+// Fixed flag circles: use the country flag for supported national teams; keep the CREX team logo as fallback for WI.
+function v6TeamFlagUrl(team, shortCode) {
+  const code = abbreviation(shortCode || (team && (team.short || team.full_name || team.name)) || "");
+  const explicitFlag = team && firstUseful(team.icc_flag_url, team.iccFlagUrl, team.flag_url, team.flagUrl, team.flag_image, team.flagImage);
+  if (explicitFlag) return getImageUrl(explicitFlag);
+  if (code !== "WI" && CDN_FLAGS[code]) return CDN_FLAGS[code];
+  return imageFromObject(team) || CDN_FLAGS[code] || "";
+}
+function setTeamHero(team, shortCode, side) {
+  const nameEl = document.getElementById(`team${side}HeroName`);
+  const scoreEl = document.getElementById(`team${side}HeroScore`);
+  const oversEl = document.getElementById(`team${side}HeroOvers`);
+  const crestEl = document.getElementById(`team${side}HeroCrest`);
+  const code = abbreviation(shortCode || (team && (team.short || team.full_name || team.name)) || "");
+  const displayName = teamDisplayName(team, code);
+  if (nameEl) { nameEl.textContent = displayName; nameEl.classList.toggle("long-team-name", displayName.length > 11); }
+  const knownScore = v6CrexMeta.teamScores && v6CrexMeta.teamScores[code];
+  if (scoreEl) scoreEl.textContent = formatScore(firstUseful(team && (team.score ?? team.runs ?? team.total), knownScore && knownScore.score));
+  if (oversEl) oversEl.textContent = formatOvers(firstUseful(team && (team.overs ?? team.over ?? team.overs_played), knownScore && knownScore.overs));
+  const flag = v6TeamFlagUrl(team, code);
+  setImageWithFallback(crestEl, flag, imageFromObject(team) || CDN_FLAGS[code] || "");
+  if (crestEl) {
+    crestEl.style.visibility = "visible";
+    crestEl.style.objectFit = "cover";
+    crestEl.style.borderRadius = "50%";
+  }
+}
+
+function v6GetDataValue(data, keys) {
+  for (const key of keys) {
+    const value = data && data[key];
+    if (value !== undefined && value !== null && String(value).trim() !== "") return value;
+  }
+  return null;
+}
+function v6TeamCodeByText(text, t1, t2, team1Obj, team2Obj) {
+  const s = String(text || "").toLowerCase();
+  const aliases = (code, obj) => [code, TEAM_NAMES[code], obj && obj.full_name, obj && obj.fullName, obj && obj.name, obj && obj.team_name]
+    .filter(Boolean).map(v => String(v).toLowerCase());
+  const has = arr => arr.some(v => v.length >= 2 && (s.includes(v) || new RegExp(`\\b${v.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "i").test(s)));
+  if (has(aliases(t1, team1Obj))) return t1;
+  if (has(aliases(t2, team2Obj))) return t2;
+  return "";
+}
+function v6CurrentResult(data) {
+  const source = v6GetDataValue(data, ["match_result", "matchResult", "result_text", "resultText", "result", "outcome", "equation", "status"]);
+  const txt = v6CleanText(source || v6CrexMeta.resultText);
+  return /(won by|match tied|tied|no result|abandoned|drawn|match finished|match completed)/i.test(txt) ? txt : v6CleanText(v6CrexMeta.resultText);
+}
+function v6WinnerCode(data, t1, t2, team1Obj, team2Obj, resultText) {
+  const raw = v6GetDataValue(data, ["winner", "winning_team", "winningTeam", "match_winner", "matchWinner", "winner_name", "winnerName"]);
+  let name = raw;
+  if (raw && typeof raw === "object") name = firstUseful(raw.short, raw.short_name, raw.shortName, raw.name, raw.full_name, raw.fullName);
+  if (name) {
+    const code = abbreviation(name);
+    if (code === t1 || code === t2) return code;
+    const fromText = v6TeamCodeByText(name, t1, t2, team1Obj, team2Obj);
+    if (fromText) return fromText;
+  }
+  const result = String(resultText || "");
+  const fromResult = v6TeamCodeByText(result, t1, t2, team1Obj, team2Obj);
+  return fromResult || v6CrexMeta.winnerCode || "";
+}
+function v6ParseToss(data) {
+  let toss = v6GetDataValue(data, ["toss_update", "tossUpdate", "toss_details", "tossDetails", "toss", "toss_info", "tossInfo"]);
+  if (toss && typeof toss === "object") {
+    const winner = firstUseful(toss.winner, toss.toss_winner, toss.tossWinner, toss.team, toss.team_name, toss.teamName);
+    const decision = firstUseful(toss.decision, toss.elected, toss.opted, toss.choice, toss.bat_or_bowl);
+    toss = winner ? `${winner} won the toss${decision ? ` and chose to ${String(decision).replace(/^(opted|elected) to /i, "")}` : ""}` : firstUseful(toss.text, toss.message, toss.result, "");
+  }
+  if (toss) return v6CleanText(toss).toUpperCase();
+  const winner = v6GetDataValue(data, ["toss_winner", "tossWinner", "toss_won_by", "tossWonBy"]);
+  const decision = v6GetDataValue(data, ["toss_decision", "tossDecision", "elected_to", "electedTo"]);
+  if (winner) return `${String(winner).toUpperCase()} WON TOSS${decision ? ` • OPTED TO ${String(decision).replace(/^(opted|elected) to /i, "").toUpperCase()}` : ""}`;
+  return v6CrexMeta.tossText || "TOSS UPDATE NOT AVAILABLE FROM FEED";
+}
+function v6PollObject(data) {
+  const raw = v6GetDataValue(data, ["poll_results", "pollResults", "fan_poll_results", "fanPollResults", "fan_poll", "fanPoll", "poll", "predictions", "vote_results", "voteResults"]);
+  if (!raw) return null;
+  let entries = [];
+  if (Array.isArray(raw)) entries = raw;
+  else if (typeof raw === "object") {
+    if (Array.isArray(raw.results)) entries = raw.results;
+    else if (Array.isArray(raw.teams)) entries = raw.teams;
+    else entries = Object.entries(raw).map(([team, value]) => typeof value === "object" ? { team, ...value } : { team, percentage: value });
+  }
+  if (!entries.length) return null;
+  return entries.map(item => {
+    if (!item || typeof item !== "object") return null;
+    const team = firstUseful(item.team, item.team_name, item.teamName, item.name, item.short, item.code, item.label);
+    let pct = firstUseful(item.percentage, item.percent, item.vote_percentage, item.votePercentage, item.pct);
+    if (pct !== null && typeof pct === "string") pct = Number(pct.replace("%", ""));
+    const votes = Number(firstUseful(item.votes, item.vote_count, item.voteCount, item.count, NaN));
+    return { team: team ? String(team) : "", percentage: Number.isFinite(Number(pct)) ? Math.max(0, Math.min(100, Number(pct))) : null, votes: Number.isFinite(votes) ? votes : null };
+  }).filter(Boolean);
+}
+function v6RenderPoll(data, t1, t2, team1Obj, team2Obj, resultText, winner) {
+  const poll = v6PollObject(data);
+  const labels = [document.getElementById("pollTeam1Label"), document.getElementById("pollTeam2Label")];
+  const values = [document.getElementById("pollTeam1Value"), document.getElementById("pollTeam2Value")];
+  const bars = [document.getElementById("pollTeam1Bar"), document.getElementById("pollTeam2Bar")];
+  const codes = [t1, t2];
+  const names = [teamDisplayName(team1Obj, t1), teamDisplayName(team2Obj, t2)];
+  const status = document.getElementById("pollDataStatus");
+  let pollTotals = poll ? poll.map(p => p.votes).filter(v => v !== null).reduce((a,b) => a+b,0) : 0;
+  const mapped = codes.map((code, i) => {
+    const entry = poll && poll.find(p => abbreviation(p.team) === code || p.team.toLowerCase() === names[i].toLowerCase());
+    let pct = entry && entry.percentage !== null ? entry.percentage : null;
+    if (pct === null && entry && entry.votes !== null && pollTotals > 0) pct = entry.votes / pollTotals * 100;
+    return { pct, entry };
+  });
+  for (let i=0;i<2;i++) {
+    if (labels[i]) labels[i].textContent = codes[i] || (i ? "TEAM 2" : "TEAM 1");
+    if (values[i]) values[i].textContent = mapped[i].pct === null ? "—" : `${Math.round(mapped[i].pct)}%`;
+    if (bars[i]) bars[i].style.width = `${mapped[i].pct === null ? 0 : mapped[i].pct}%`;
+  }
+  if (status) status.textContent = poll && mapped.some(v => v.pct !== null) ? "LIVE POLL DATA" : "NO POLL FEED";
+  const winEl = document.getElementById("winnerTeamLarge");
+  const resultEl = document.getElementById("winnerResultText");
+  if (winEl) winEl.textContent = winner ? (TEAM_NAMES[winner] || winner) : "RESULT PENDING";
+  if (resultEl) resultEl.textContent = resultText ? String(resultText).toUpperCase() : "WAITING FOR CREX RESULT";
+}
+function v6PlayerArray(data, kind) {
+  const keys = kind === "batter"
+    ? ["next_batsmen", "nextBatsmen", "next_batters", "nextBatters", "upcoming_batters", "upcomingBatters", "remaining_batters", "remainingBatters", "batting_order", "battingOrder", "batsmen_order", "batsmenOrder"]
+    : ["next_bowlers", "nextBowlers", "bowling_options", "bowlingOptions", "available_bowlers", "availableBowlers", "bowlers", "bowler_options", "bowlerOptions", "bowling_order", "bowlingOrder"];
+  for (const key of keys) {
+    const v = data && data[key];
+    if (Array.isArray(v)) return v;
+    if (v && typeof v === "object") {
+      for (const inner of [v.players, v.items, v.list, v.available, v.next]) if (Array.isArray(inner)) return inner;
+    }
+  }
+  return [];
+}
+function v6PlayerName(player) {
+  if (!player) return "";
+  if (typeof player === "string") return player;
+  return String(firstUseful(player.short_name, player.shortName, player.name, player.full_name, player.fullName, player.player_name, player.playerName, ""));
+}
+function v6PlayerCode(player) { return normalizePlayerKey(v6PlayerName(player)); }
+function v6NextPlayers(data, kind, currentPlayers, desiredCount) {
+  let list = v6PlayerArray(data, kind);
+  const excluded = new Set(currentPlayers.filter(Boolean).map(v6PlayerCode));
+  list = list.filter(p => v6PlayerName(p) && !excluded.has(v6PlayerCode(p)));
+  if (kind === "batter") {
+    const explicit = [data && (data.batsman3 || data.batter3 || data.next_batsman1 || data.nextBatsman1), data && (data.batsman4 || data.batter4 || data.next_batsman2 || data.nextBatsman2)].filter(Boolean);
+    if (explicit.length) list = [...explicit, ...list];
+  } else {
+    const explicit = [data && (data.bowler2 || data.next_bowler || data.nextBowler), data && (data.bowler3 || data.next_bowler2 || data.nextBowler2)].filter(Boolean);
+    if (explicit.length) list = [...explicit, ...list];
+  }
+  const seen = new Set();
+  return list.filter(p => { const key = v6PlayerCode(p); if (!key || seen.has(key)) return false; seen.add(key); return true; }).slice(0, desiredCount);
+}
+function v6SetUpcomingBatter(index, player, data) {
+  const ids = `b${index}`;
+  const row = document.getElementById(`batter${index}Row`);
+  const nameEl = document.getElementById(`${ids}Name`);
+  const tag = document.getElementById(`${ids}RoleTag`);
+  const name = v6PlayerName(player);
+  if (nameEl) nameEl.textContent = (name || `NEXT BATTER ${index-2}`).toUpperCase();
+  if (tag) tag.style.display = name ? "inline-flex" : "none";
+  setPlayerPortrait(`${ids}Photo`, `${ids}Initials`, player || { name: name || `NEXT BATTER ${index-2}` }, data, name || `NEXT BATTER ${index-2}`);
+  for (const suffix of ["Runs", "Balls", "Fours", "Sixes", "SR"]) {
+    const el = document.getElementById(`${ids}${suffix}`); if (el) el.textContent = firstUseful(player && (suffix === "Runs" ? player.runs : suffix === "Balls" ? player.balls : suffix === "Fours" ? player.fours : suffix === "Sixes" ? player.sixes : player.sr), "—");
+  }
+  if (row) row.classList.toggle("upcoming-row-empty", !name);
+}
+function v6SetSecondBowler(player, data) {
+  const name = v6PlayerName(player);
+  const nameEl = document.getElementById("bwl2Name");
+  if (nameEl) nameEl.textContent = (name || "NEXT BOWLER").toUpperCase();
+  const tag = document.getElementById("bwl2RoleTag"); if (tag) tag.style.display = name ? "inline-flex" : "none";
+  setPlayerPortrait("bwl2Photo", "bwl2Initials", player || { name: "NEXT BOWLER" }, data, name || "NEXT BOWLER");
+  const vals = [player && player.overs, player && player.maidens, player && player.runs, player && player.wickets, player && (player.econ ?? player.economy)];
+  ["bwl2Overs","bwl2Maidens","bwl2Runs","bwl2Wickets","bwl2Eco"].forEach((id,i) => { const el=document.getElementById(id); if(el) el.textContent = firstUseful(vals[i], "—"); });
+  const row = document.getElementById("bowler2Row"); if (row) row.classList.toggle("upcoming-row-empty", !name);
+}
+function refreshPlayerPortraits(data) {
+  if (!data) return;
+  const b1 = data.batsman1 || data.batter1;
+  const b2 = data.batsman2 || data.batter2;
+  const bwl = data.bowler;
+  if (b1) setPlayerPortrait("b1Photo", "b1Initials", b1, data, v6PlayerName(b1));
+  if (b2) setPlayerPortrait("b2Photo", "b2Initials", b2, data, v6PlayerName(b2));
+  if (bwl) setPlayerPortrait("bwlPhoto", "bwlInitials", bwl, data, v6PlayerName(bwl));
+  const nextBatters = v6NextPlayers(data, "batter", [b1,b2], 2);
+  v6SetUpcomingBatter(3, nextBatters[0] || null, data);
+  v6SetUpcomingBatter(4, nextBatters[1] || null, data);
+  const nextBowlers = v6NextPlayers(data, "bowler", [bwl], 1);
+  v6SetSecondBowler(nextBowlers[0] || null, data);
+}
+function v6RefreshPortraitsWithCrexFallback(data) {
+  const useKnown = cleanCrexUrl(activeTargetUrl || "").toLowerCase().includes(V6_KNOWN_MATCH.slug);
+  const merged = { ...(data || {}) };
+  if (useKnown) {
+    if (!(merged.batsman1 || merged.batter1)) merged.batsman1 = { name: "Kusal Mendis" };
+    if (!(merged.batsman2 || merged.batter2)) merged.batsman2 = { name: "Kamindu Mendis" };
+    if (!merged.bowler) merged.bowler = { name: "Razaullah" };
+    if (!Array.isArray(merged.next_batsmen) && !Array.isArray(merged.nextBatters) && !Array.isArray(merged.next_batters)) {
+      merged.next_batsmen = (v6CrexMeta.nextBatters || []).map(name => ({ name }));
+    }
+    if (!Array.isArray(merged.next_bowlers) && !Array.isArray(merged.nextBowlers) && !Array.isArray(merged.bowlers)) {
+      merged.next_bowlers = (v6CrexMeta.nextBowlers || []).map(name => ({ name }));
+    }
+  }
+  refreshPlayerPortraits(merged);
+}
+function v6ChooseBatting(data, t1, t2, team1Obj, team2Obj, resultText, winner) {
+  const res = String(resultText || "").toLowerCase();
+  // For a completed match, use the last innings implied by the result, not any stale live batting field.
+  if (winner && /won by\s+\d+\s+wickets/.test(res)) return winner;
+  if (winner && /won by\s+\d+\s+runs/.test(res)) return winner === t1 ? t2 : t1;
+  const explicit = v6GetDataValue(data, ["batting_team", "battingTeam", "current_batting_team", "currentBattingTeam", "team_batting", "teamBatting", "batting"]);
+  if (explicit) {
+    const code = v6TeamCodeByText(typeof explicit === "object" ? (explicit.name || explicit.short || explicit.full_name) : explicit, t1, t2, team1Obj, team2Obj);
+    if (code) return code;
+  }
+  const curr = data && (data.current_over || data.currentOver || data.currentOverData);
+  if (curr && (Array.isArray(curr.balls) || curr.over_number || curr.overNumber)) {
+    const o1 = String(firstUseful(team1Obj.overs, team1Obj.over, "0.0"));
+    const o2 = String(firstUseful(team2Obj.overs, team2Obj.over, "0.0"));
+    const balls = value => { const m=String(value).match(/^(\d+)(?:\.(\d+))?/); return m ? (+m[1]*6 + Math.min(5, +(m[2]||0))) : 0; };
+    const n1=balls(o1), n2=balls(o2);
+    if (n1 > 0 && n2 > 0 && Math.abs(n1-n2) >= 6) return n1 < n2 ? t1 : t2;
+    if (n1 > 0 && n2 === 0) return t1;
+    if (n2 > 0 && n1 === 0) return t2;
+  }
+  return t1;
+}
+function v6EnhanceScoreboard(data) {
+  const team1 = data && data.team1 && typeof data.team1 === "object" ? data.team1 : {};
+  const team2 = data && data.team2 && typeof data.team2 === "object" ? data.team2 : {};
+  const t1 = abbreviation(firstUseful(team1.short, team1.full_name, team1.fullName, team1.name, "PAK"));
+  const t2 = abbreviation(firstUseful(team2.short, team2.full_name, team2.fullName, team2.name, "SL"));
+  const resultText = v6CurrentResult(data) || v6CrexMeta.resultText;
+  const winner = v6WinnerCode(data, t1, t2, team1, team2, resultText);
+  const resText = String(resultText || "").toLowerCase();
+  const isResult = /(won by|match tied|\btied\b|no result|abandoned|drawn|match finished|match completed)/i.test(resultText || "");
+  const badge = document.getElementById("liveStatusBadge");
+  if (badge) { badge.textContent = isResult ? "RESULT" : "LIVE"; badge.classList.toggle("result", isResult); }
+  // Update the center score to reflect the active/last innings, not always the first team object.
+  const batting = v6ChooseBatting(data, t1, t2, team1, team2, resultText, winner);
+  const battingObj = batting === t1 ? team1 : team2;
+  const known = v6CrexMeta.teamScores && v6CrexMeta.teamScores[batting];
+  const score = firstUseful(battingObj.score, battingObj.runs, battingObj.total, known && known.score, "—");
+  const overs = firstUseful(battingObj.overs, battingObj.over, battingObj.overs_played, known && known.overs, "—");
+  const scoreTag = document.getElementById("mainScoreTag"); if (scoreTag) scoreTag.textContent = batting;
+  const scoreHero = document.getElementById("mainScoreHero"); if (scoreHero) scoreHero.textContent = formatScore(score);
+  const oversHero = document.getElementById("mainOversHero"); if (oversHero) oversHero.textContent = String(overs).replace(/[()]/g, "");
+  const opponent = batting === t1 ? t2 : t1;
+  const toss = v6ParseToss(data);
+  const tossEl = document.getElementById("tossUpdate"); if (tossEl) tossEl.textContent = toss;
+  const batEl = document.getElementById("battingNow"); if (batEl) batEl.textContent = `${TEAM_NAMES[batting] || batting}${isResult ? " • LAST INNINGS" : ""}`;
+  const bowlEl = document.getElementById("bowlingNow"); if (bowlEl) bowlEl.textContent = TEAM_NAMES[opponent] || opponent;
+  const footerBat = document.getElementById("footerBattingTeam"); if (footerBat) footerBat.textContent = batting;
+  const footerBowl = document.getElementById("footerBowlingTeam"); if (footerBowl) footerBowl.textContent = opponent;
+  if (resultText) { const ribbon = document.getElementById("ribbonToss"); if (ribbon) ribbon.textContent = resultText.toUpperCase(); }
+  else { const ribbon = document.getElementById("ribbonToss"); if (ribbon) ribbon.textContent = toss; }
+  v6RenderPoll(data || {}, t1, t2, team1, team2, resultText, winner);
+  // Ensure team scores remain available even when API fields are sparse.
+  setTeamHero(team1, t1, 1); setTeamHero(team2, t2, 2);
+  refreshPlayerPortraits(data || {});
+}
+
+const v5RenderScoreData = renderScoreData;
+renderScoreData = function(data) {
+  v5RenderScoreData(data);
+  v6EnhanceScoreboard(data || {});
+};
+
+// Extract toss/result and ball-by-ball summaries from the CREX public page as a fallback only.
+function v6ParseCrexText(doc) {
+  if (!doc) return;
+  const bodyText = String(doc.body && (doc.body.innerText || doc.body.textContent) || "").replace(/\r/g, "");
+  const lines = bodyText.split(/\n+/).map(v6CleanText).filter(Boolean);
+  const allText = lines.join("\n");
+  const tossCandidates = [];
+  for (const line of lines) {
+    if (/toss/i.test(line) && /(won|opt|elect|bat|bowl|choose|chose)/i.test(line)) tossCandidates.push(line.replace(/^.*?toss update\s*:?\s*/i, ""));
+    if (/won the toss and (?:opt(?:ed)?|elect(?:ed)?) to (?:bat|bowl)/i.test(line)) tossCandidates.push(line);
+  }
+  for (const img of [...doc.querySelectorAll("img[alt],img[title]")]) {
+    const candidate = `${img.getAttribute("alt") || ""} ${img.getAttribute("title") || ""}`.trim();
+    if (/toss/i.test(candidate) && /(won|opt|elect|bat|bowl)/i.test(candidate)) tossCandidates.push(candidate.replace(/^.*?toss update\s*:?\s*/i, ""));
+  }
+  if (tossCandidates.length) v6CrexMeta.tossText = v6CleanText(tossCandidates[0]).toUpperCase();
+  const resultLine = lines.find(line => /\bwon by\s+\d+\s+(?:wickets?|runs?)\b|\bmatch tied\b|\bno result\b|\babandoned\b/i.test(line));
+  if (resultLine) {
+    v6CrexMeta.resultText = resultLine;
+    const lower = resultLine.toLowerCase();
+    if (/sri lanka|\bsl\b/.test(lower)) v6CrexMeta.winnerCode = "SL";
+    else if (/pakistan|\bpak\b/.test(lower)) v6CrexMeta.winnerCode = "PAK";
+  }
+  // Parse rendered score history (Over N ... = runs) for the two most recent overs if page JSON doesn't expose it.
+  const parsedOvers = [];
+  for (let i=0;i<lines.length;i++) {
+    const match = lines[i].match(/^over\s+(\d+)\s*$/i);
+    if (!match) continue;
+    const number = Number(match[1]);
+    const balls = [];
+    let runs = null;
+    for (let j=i+1;j<Math.min(lines.length, i+18);j++) {
+      if (/^over\s+\d+\s*$/i.test(lines[j]) || /^player of the match$/i.test(lines[j]) || /^commentary$/i.test(lines[j])) break;
+      const line = lines[j].trim();
+      const total = line.match(/^=\s*(\d+)$/);
+      if (total) { runs = Number(total[1]); break; }
+      if (/^(?:\d+|\d+(?:wd|nb|b)|wd|nb|lb|b|w|wk|0|\.)$/i.test(line)) balls.push(line);
+    }
+    if (balls.length || runs !== null) parsedOvers.push({ over_number: number, balls, total_runs: runs === null ? balls.reduce((sum,b)=>sum+oneBallRuns(b),0) : runs });
+  }
+  if (parsedOvers.length) crexRecentOvers = parsedOvers.slice(-6);
+}
+const v5CollectImagesFromCrexDocument = collectImagesFromCrexDocument;
+collectImagesFromCrexDocument = function(doc) {
+  v5CollectImagesFromCrexDocument(doc);
+  v6ParseCrexText(doc);
+};
+const v5FetchCrexAssetsForMatch = fetchCrexAssetsForMatch;
+fetchCrexAssetsForMatch = async function(url) {
+  v6CrexMeta = v6KnownMetaForUrl(url);
+  // Keep the source page URL aligned with the match typed into the control bar.
+  const result = await v5FetchCrexAssetsForMatch(url);
+  if (latestScorePayloadForAssets) v6EnhanceScoreboard(latestScorePayloadForAssets);
+  // CREX's published result page exposes over 17 and over 18 for this completed default match.
+  // Keep these grounded fallback rows visible if the optional page-proxy lookup is blocked.
+  if (!crexRecentOvers.length && v6CrexMeta.recentOvers) crexRecentOvers = v6CrexMeta.recentOvers.slice();
+  if (latestScorePayloadForAssets) renderLastTwoOvers(latestScorePayloadForAssets, document.getElementById("mainOversHero")?.textContent || "17.1");
+  else renderLastTwoOvers({}, "17.1");
+  v6RefreshPortraitsWithCrexFallback(latestScorePayloadForAssets || {});
+  return result;
+};
+
+// Use true country flags as large, fully-filled circular crops; do not shrink logo art into white padding.
+function v6FitCanvas() {
+  const el = document.getElementById("scoreboardCanvas");
+  const wrapper = document.querySelector(".screen-wrapper");
+  if (!el || !wrapper) return;
+  const width = window.innerWidth || document.documentElement.clientWidth || 1280;
+  const height = window.innerHeight || document.documentElement.clientHeight || 720;
+  const scale = Math.max(0.05, Math.min(width / 1280, height / 720));
+  el.style.transformOrigin = "center center";
+  el.style.transform = `scale(${scale})`;
+}
+window.addEventListener("resize", v6FitCanvas);
+window.addEventListener("orientationchange", v6FitCanvas);
+window.addEventListener("load", () => { v6FitCanvas(); v6EnhanceScoreboard(latestScorePayloadForAssets || {}); v6RefreshPortraitsWithCrexFallback(latestScorePayloadForAssets || {}); });
+</script>
+
+<style id="preetSportsV6MobileFirstTheme">
+:root { --v6-ink:#040D1A; --v6-blue:#0877D5; --v6-cyan:#20D9F4; --v6-maroon:#830026; --v6-gold:#FFB800; }
+html, body, .screen-wrapper { background:#030914 !important; }
+.scoreboard { justify-content:flex-start !important; gap:0 !important; }
+.top-brand-wrap { margin-top:4px !important; flex-shrink:0 !important; }
+body.controls-visible .top-brand-wrap { margin-top:49px !important; }
+.match-fixture-bar { margin-top:4px !important; padding:0 14px !important; flex-shrink:0 !important; }
+.fixture-pod { height:88px !important; padding:7px 12px !important; gap:10px !important; min-width:0 !important; }
+.fixture-pod.left-side { border-radius:14px 4px 4px 14px !important; }
+.fixture-pod.right-side { border-radius:4px 14px 14px 4px !important; }
+.crest-shield { width:72px !important; height:72px !important; min-width:72px !important; padding:0 !important; border-radius:50% !important; overflow:hidden !important; background:transparent !important; border:2px solid #FFB800 !important; box-shadow:0 0 0 2px rgba(255,255,255,.24),0 4px 12px rgba(0,0,0,.36) !important; }
+.crest-shield img { width:100% !important; height:100% !important; padding:0 !important; object-fit:cover !important; object-position:center !important; border-radius:50% !important; display:block !important; }
+.team-name-hero { font-size:29px !important; line-height:1.02 !important; letter-spacing:.2px !important; }
+.team-name-hero.long-team-name { font-size:22px !important; letter-spacing:0 !important; }
+.team-hero-scoreline { gap:8px !important; }
+.team-hero-scoreline strong { font-size:25px !important; }
+.team-hero-scoreline span { font-size:15px !important; }
+.center-vs-trap { height:88px !important; width:108px !important; }
+.vs-text-gold { font-size:36px !important; transform:translateY(-7px) !important; }
+.sub-fixture-pill { bottom:2px !important; padding:2px 8px !important; font-size:10px !important; }
+.live-score-row { margin-top:10px !important; padding:0 14px !important; gap:10px !important; flex-shrink:0 !important; }
+.score-card-main, .current-over-card { height:77px !important; }
+.score-team-tag { width:100px !important; font-size:35px !important; }
+.score-digits-hero { font-size:55px !important; }
+.overs-num { font-size:27px !important; }
+.overs-text { font-size:11px !important; }
+.current-over-card { flex:.95 !important; }
+.over-card-header { height:23px !important; font-size:12px !important; }
+.over-card-balls { padding:0 7px !important; gap:4px !important; }
+.ball-circle { width:36px !important; height:36px !important; border-radius:11px !important; font-size:19px !important; }
+.ball-circle.ball-label-long { width:100% !important; height:32px !important; font-size:10px !important; }
+.match-context-bar { position:relative; z-index:15; display:grid; grid-template-columns:1.6fr .9fr .9fr; gap:0; align-items:center; height:28px; flex:0 0 28px; margin:5px 14px 0; padding:0 8px; border:1px solid rgba(255,184,0,.72); border-radius:7px; background:linear-gradient(90deg,rgba(3,14,28,.98),rgba(7,27,48,.98)); box-shadow:0 4px 11px rgba(0,0,0,.25); }
+.match-context-bar > div { min-width:0; display:flex; align-items:center; justify-content:center; gap:5px; padding:0 6px; overflow:hidden; white-space:nowrap; }
+.match-context-bar > div + div { border-left:1px solid rgba(70,135,186,.36); }
+.context-label { color:#58E2F5; font:900 10px 'Montserrat',sans-serif; letter-spacing:.4px; flex-shrink:0; }
+.match-context-bar strong { color:#FFFFFF; font:900 11px 'Montserrat',sans-serif; overflow:hidden; text-overflow:ellipsis; }
+.context-toss strong { color:#FFCE42; }
+.match-stats-bar { width:calc(100% - 28px) !important; height:34px !important; margin:5px 14px 0 !important; padding:0 7px !important; gap:2px; }
+.stat-metric { gap:3px !important; font-size:14px !important; letter-spacing:0 !important; }
+.stat-metric .lbl { font-size:12px !important; }
+.stat-metric .val { font-size:12px !important; padding:1px 3px !important; }
+.stat-divider { height:19px !important; }
+.tables-row { margin-top:6px !important; padding:0 14px !important; gap:9px !important; flex-shrink:0 !important; align-items:stretch !important; }
+.batters-panel, .bowler-panel { border-radius:10px !important; }
+.table-header-blue, .table-header-red { height:27px !important; padding:0 8px !important; font-size:12px !important; grid-template-columns:2.4fr .62fr .62fr .62fr .62fr .85fr !important; }
+.table-row-item { height:38px !important; min-height:38px !important; padding:0 8px !important; font-size:13px !important; grid-template-columns:2.4fr .62fr .62fr .62fr .62fr .85fr !important; }
+.player-name-cell { gap:6px !important; min-width:0 !important; }
+.player-avatar-initials, .player-avatar-photo { width:38px !important; height:38px !important; min-width:38px !important; border-width:1.8px !important; }
+.player-avatar-initials { font-size:11px !important; }
+.player-avatar-photo { object-fit:cover !important; object-position:center top !important; border-radius:50% !important; }
+.table-row-item .col-name { font-size:12px !important; letter-spacing:0 !important; }
+.upcoming-tag { flex:0 0 auto; display:inline-flex; align-items:center; padding:2px 4px; border-radius:4px; color:#06101D; background:#FFCA36; font:900 8px 'Montserrat',sans-serif; }
+.upcoming-row { background:rgba(255,255,255,.022) !important; border-top:1px dashed rgba(93,157,205,.25) !important; }
+.upcoming-row-empty .player-avatar-initials { opacity:.72; }
+.upcoming-row-empty .col-name { color:#C0D1E1 !important; }
+.bowler-panel .table-header-red, .bowler-panel .table-row-item { grid-template-columns:2.35fr .6fr .6fr .6fr .6fr .82fr !important; }
+.bowler-panel .table-header-red { font-size:11px !important; }
+.bowler-panel .table-row-item { grid-template-columns:2.35fr .6fr .6fr .6fr .6fr .82fr !important; }
+.bottom-analysis-row { width:calc(100% - 28px) !important; height:108px !important; margin:6px 14px 4px !important; grid-template-columns:1.04fr .96fr !important; gap:8px !important; flex-shrink:0 !important; }
+.last-two-overs-panel { padding:5px 6px !important; gap:4px !important; }
+.last-two-title { min-height:21px !important; flex:0 0 21px !important; gap:6px !important; }
+.last-two-kicker { font-size:8px !important; }
+.last-two-title strong { font-size:13px !important; }
+.last-over-card { grid-template-columns:53px minmax(0,1fr) 56px !important; gap:3px !important; padding:0 3px !important; }
+.last-over-label { font-size:9px !important; }
+.last-over-balls { gap:3px !important; }
+.mini-ball { width:21px !important; height:21px !important; flex:0 1 21px !important; font-size:9px !important; }
+.last-over-total { font-size:10px !important; }
+.projection-panel { border-radius:10px !important; min-width:0 !important; height:100% !important; }
+.projection-panel-header { height:24px !important; font-size:11px !important; letter-spacing:.2px !important; }
+.poll-result-body { height:calc(100% - 24px); display:grid; grid-template-columns:.96fr 1.04fr; align-items:stretch; padding:5px 7px; gap:7px; min-width:0; }
+.winner-summary { min-width:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; border-right:1px solid rgba(80,190,255,.42); padding:0 5px 0 0; gap:3px; }
+.poll-kicker { color:#8FDEFF; font:900 8px 'Montserrat',sans-serif; letter-spacing:.3px; }
+.winner-summary strong { color:#FFCC32; font:900 21px 'Montserrat',sans-serif; line-height:1; text-shadow:0 2px 5px rgba(0,0,0,.35); }
+#winnerResultText { color:#F1F7FF; font:800 10px 'Montserrat',sans-serif; line-height:1.15; max-height:26px; overflow:hidden; }
+.fan-poll-summary { min-width:0; display:flex; flex-direction:column; justify-content:center; gap:7px; }
+.fan-poll-heading { display:flex; align-items:center; justify-content:space-between; gap:4px; color:#F4F9FF; font:900 10px 'Montserrat',sans-serif; white-space:nowrap; }
+.fan-poll-heading span { color:#8FAEC8; font-size:8px; }
+.poll-result-line { display:grid; grid-template-columns:28px minmax(0,1fr) 31px; gap:5px; align-items:center; color:#fff; font:900 10px 'Montserrat',sans-serif; }
+.poll-result-line strong { color:#FFCA36; text-align:right; font-size:10px; }
+.poll-meter { height:8px; border-radius:9px; background:#04111F; border:1px solid rgba(110,174,219,.36); overflow:hidden; }
+.poll-meter i { display:block; width:0%; height:100%; background:linear-gradient(90deg,#0877D5,#25D8F4); border-radius:9px; }
+#pollTeam2Bar { background:linear-gradient(90deg,#9B0030,#FF5578); }
+.bottom-meta-ribbon { height:36px !important; min-height:36px !important; padding:0 14px !important; }
+.ribbon-pill-left { font-size:13px !important; padding:2px 10px !important; }
+.ribbon-footer-center { font-size:11px !important; letter-spacing:.25px !important; white-space:nowrap; }
+.ribbon-footer-center strong { color:#FFCA36; }
+.ribbon-toss-right { max-width:38% !important; font-size:11px !important; letter-spacing:.2px !important; }
+/* Avoid double-shrinking the fixed 1280x720 artboard on narrow mobile browser viewports. */
+@media (max-width:1100px) {
+  .team-name-hero { font-size:29px !important; }
+  .team-name-hero.long-team-name { font-size:22px !important; }
+  .last-two-overs-panel { grid-template-columns:1fr !important; }
+  .last-over-card { grid-template-columns:53px minmax(0,1fr) 56px !important; }
+  .mini-ball { width:21px !important; height:21px !important; flex-basis:21px !important; }
+  .bottom-analysis-row { grid-template-columns:1.04fr .96fr !important; }
+  .projection-main-value strong { font-size:21px !important; }
+}
+@media (max-height:560px) {
+  body.controls-visible .top-brand-wrap { margin-top:43px !important; }
+  .bottom-analysis-row { height:100px !important; }
+}
+@media (prefers-reduced-motion: reduce) { .ball-circle.wicket { animation:none !important; } }
+</style>
 
 </body>
 </html>
