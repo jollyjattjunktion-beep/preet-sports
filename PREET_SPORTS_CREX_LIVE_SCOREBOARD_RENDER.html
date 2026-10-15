@@ -2705,12 +2705,25 @@ function v6GetDataValue(data, keys) {
   return null;
 }
 function v6TeamCodeByText(text, t1, t2, team1Obj, team2Obj) {
-  const s = String(text || "").toLowerCase();
-  const aliases = (code, obj) => [code, TEAM_NAMES[code], obj && obj.full_name, obj && obj.fullName, obj && obj.name, obj && obj.team_name]
-    .filter(Boolean).map(v => String(v).toLowerCase());
-  const has = arr => arr.some(v => v.length >= 2 && (s.includes(v) || new RegExp(`\\b${v.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "i").test(s)));
-  if (has(aliases(t1, team1Obj))) return t1;
-  if (has(aliases(t2, team2Obj))) return t2;
+  // Match full team names first and abbreviations only as standalone tokens.
+  // This prevents IND from incorrectly matching the word INDIES in "WEST INDIES".
+  const s = String(text || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/\s+/g, " ").trim();
+  if (!s) return "";
+  const teamAliases = (code, obj) => {
+    const full = [TEAM_NAMES[code], obj && obj.full_name, obj && obj.fullName, obj && obj.team_name, obj && obj.teamName, obj && obj.name]
+      .filter(Boolean).map(v => String(v).toLowerCase().replace(/\s+/g, " ").trim());
+    const uniqueFull = [...new Set(full)].sort((a, b) => b.length - a.length);
+    const matchesPhrase = alias => {
+      const escaped = alias.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      return new RegExp(`(^|[^a-z0-9])${escaped}($|[^a-z0-9])`, "i").test(s);
+    };
+    if (uniqueFull.some(matchesPhrase)) return true;
+    const short = String(code || "").toLowerCase().trim();
+    if (short && new RegExp('(^|[^a-z0-9])' + short.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + '($|[^a-z0-9])', "i").test(s)) return true;
+    return false;
+  };
+  if (teamAliases(t1, team1Obj)) return t1;
+  if (teamAliases(t2, team2Obj)) return t2;
   return "";
 }
 function v6CurrentResult(data) {
@@ -2719,18 +2732,27 @@ function v6CurrentResult(data) {
   return /(won by|match tied|tied|no result|abandoned|drawn|match finished|match completed)/i.test(txt) ? txt : v6CleanText(v6CrexMeta.resultText);
 }
 function v6WinnerCode(data, t1, t2, team1Obj, team2Obj, resultText) {
+  // The result line is the strongest signal. Parse the team named before "won by"
+  // before consulting optional API winner fields, which can be absent or inconsistent.
+  const result = String(resultText || "").trim();
+  const winnerPrefix = result.match(/^.*?([a-z][a-z .&'-]{1,45}?)\s+won by\b/i);
+  if (winnerPrefix && winnerPrefix[1]) {
+    const fromPrefix = v6TeamCodeByText(winnerPrefix[1], t1, t2, team1Obj, team2Obj);
+    if (fromPrefix) return fromPrefix;
+  }
   const raw = v6GetDataValue(data, ["winner", "winning_team", "winningTeam", "match_winner", "matchWinner", "winner_name", "winnerName"]);
   let name = raw;
   if (raw && typeof raw === "object") name = firstUseful(raw.short, raw.short_name, raw.shortName, raw.name, raw.full_name, raw.fullName);
   if (name) {
-    const code = abbreviation(name);
-    if (code === t1 || code === t2) return code;
-    const fromText = v6TeamCodeByText(name, t1, t2, team1Obj, team2Obj);
-    if (fromText) return fromText;
+    const normalized = abbreviation(name);
+    if (normalized === t1 || normalized === t2) return normalized;
+    const fromRaw = v6TeamCodeByText(name, t1, t2, team1Obj, team2Obj);
+    if (fromRaw) return fromRaw;
   }
-  const result = String(resultText || "");
   const fromResult = v6TeamCodeByText(result, t1, t2, team1Obj, team2Obj);
-  return fromResult || v6CrexMeta.winnerCode || "";
+  if (fromResult) return fromResult;
+  const fallback = String(v6CrexMeta.winnerCode || "").toUpperCase();
+  return fallback === t1 || fallback === t2 ? fallback : "";
 }
 function v6ParseToss(data) {
   let toss = v6GetDataValue(data, ["toss_update", "tossUpdate", "toss_details", "tossDetails", "toss", "toss_info", "tossInfo"]);
@@ -2743,7 +2765,7 @@ function v6ParseToss(data) {
   const winner = v6GetDataValue(data, ["toss_winner", "tossWinner", "toss_won_by", "tossWonBy"]);
   const decision = v6GetDataValue(data, ["toss_decision", "tossDecision", "elected_to", "electedTo"]);
   if (winner) return `${String(winner).toUpperCase()} WON TOSS${decision ? ` • OPTED TO ${String(decision).replace(/^(opted|elected) to /i, "").toUpperCase()}` : ""}`;
-  return v6CrexMeta.tossText || "TOSS UPDATE NOT AVAILABLE FROM FEED";
+  return v6CrexMeta.tossText || "NOT AVAILABLE FROM FEED";
 }
 function v6PollObject(data) {
   const raw = v6GetDataValue(data, ["poll_results", "pollResults", "fan_poll_results", "fanPollResults", "fan_poll", "fanPoll", "poll", "predictions", "vote_results", "voteResults"]);
@@ -2914,6 +2936,18 @@ function v6EnhanceScoreboard(data) {
   // Update the center score to reflect the active/last innings, not always the first team object.
   const batting = v6ChooseBatting(data, t1, t2, team1, team2, resultText, winner);
   const battingObj = batting === t1 ? team1 : team2;
+  // Keep the score panel, batting/bowling labels and winner panel on the same innings.
+  // In a "won by N runs" result, the losing side is the team that batted last.
+  if (isResult && winner && /won by\s+\d+\s+runs/i.test(resultText)) {
+    const expectedLastBatting = winner === t1 ? t2 : t1;
+    if (expectedLastBatting !== batting) {
+      // Re-evaluate from the explicit result rather than a stale API batting-team field.
+      const expectedObj = expectedLastBatting === t1 ? team1 : team2;
+      document.getElementById("mainScoreTag").textContent = expectedLastBatting;
+      document.getElementById("mainScoreHero").textContent = formatScore(firstUseful(expectedObj.score, expectedObj.runs, expectedObj.total, v6CrexMeta.teamScores?.[expectedLastBatting]?.score, "—"));
+      document.getElementById("mainOversHero").textContent = String(firstUseful(expectedObj.overs, expectedObj.over, expectedObj.overs_played, v6CrexMeta.teamScores?.[expectedLastBatting]?.overs, "—")).replace(/[()]/g, "");
+    }
+  }
   const known = v6CrexMeta.teamScores && v6CrexMeta.teamScores[batting];
   const score = firstUseful(battingObj.score, battingObj.runs, battingObj.total, known && known.score, "—");
   const overs = firstUseful(battingObj.overs, battingObj.over, battingObj.overs_played, known && known.overs, "—");
@@ -3122,6 +3156,34 @@ body.controls-visible .top-brand-wrap { margin-top:49px !important; }
   .bottom-analysis-row { height:100px !important; }
 }
 @media (prefers-reduced-motion: reduce) { .ball-circle.wicket { animation:none !important; } }
+</style>
+
+
+<style id="preetSportsV8ReadabilityFix">
+/* V8: stronger portrait legibility and larger table text at native 1280x720. */
+.player-avatar-initials, .player-avatar-photo {
+  width: 42px !important;
+  height: 42px !important;
+  min-width: 42px !important;
+  flex: 0 0 42px !important;
+  border-width: 2px !important;
+}
+.table-row-item {
+  height: 42px !important;
+  min-height: 42px !important;
+  font-size: 14px !important;
+}
+.table-row-item .col-name { font-size: 13px !important; line-height: 1.05 !important; }
+.table-header-blue, .table-header-red { font-size: 12px !important; }
+.player-name-cell { gap: 7px !important; }
+@media (max-width: 900px) {
+  /* The 1280x720 artboard remains fixed and scales as one unit for browser sources. */
+  .player-avatar-initials, .player-avatar-photo {
+    width: 42px !important; height: 42px !important; min-width: 42px !important; flex-basis:42px !important;
+  }
+  .table-row-item { height: 42px !important; min-height:42px !important; }
+  .table-row-item .col-name { font-size: 13px !important; }
+}
 </style>
 
 </body>
