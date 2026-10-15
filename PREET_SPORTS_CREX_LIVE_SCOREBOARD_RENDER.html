@@ -1294,6 +1294,107 @@ body.controls-visible .top-brand-wrap { margin-top: 53px !important; }
 @media (prefers-reduced-motion: reduce) { .player-avatar-photo { transition:none !important; } }
 </style>
 
+
+<style id="preetSportsV7NativeHD">
+/* V7 HD: these styles are designed for a native 1280x720 Browser Source. */
+:root { --v7-navy:#040D1A; --v7-blue:#0877D5; --v7-cyan:#27DDF6; --v7-maroon:#850028; --v7-gold:#FFB800; }
+.scoreboard {
+  width:1280px !important; height:720px !important; min-width:1280px !important; min-height:720px !important;
+  overflow:hidden !important; background:#040D1A !important;
+}
+/* Stronger panels and type remain crisp when the source itself is 1280x720. */
+.brand-capsule { min-height:44px !important; padding:5px 32px !important; }
+.brand-capsule .brand-white, .brand-capsule .brand-gold { font-size:29px !important; letter-spacing:1.6px !important; }
+.live-badge { font-size:21px !important; padding:3px 24px !important; }
+ .match-fixture-bar { margin-top:3px !important; padding-left:16px !important; padding-right:16px !important; }
+.fixture-pod { height:88px !important; gap:12px !important; padding-left:14px !important; padding-right:14px !important; }
+.crest-shield { width:78px !important; height:78px !important; min-width:78px !important; border:2px solid var(--v7-gold) !important; padding:0 !important; background:#061528 !important; border-radius:50% !important; overflow:hidden !important; }
+.crest-shield img { width:100% !important; height:100% !important; display:block !important; object-fit:cover !important; object-position:center !important; border-radius:50% !important; padding:0 !important; }
+.team-hero-copy { gap:5px !important; }
+.team-name-hero { font-size:34px !important; line-height:1.04 !important; letter-spacing:.2px !important; white-space:nowrap !important; }
+.team-name-hero.long-team-name { font-size:27px !important; letter-spacing:0 !important; }
+.team-hero-scoreline { gap:10px !important; }
+.team-hero-scoreline strong { font-size:30px !important; letter-spacing:-.3px !important; }
+.team-hero-scoreline span { font-size:18px !important; }
+.center-vs-trap { height:93px !important; width:112px !important; }
+.vs-text-gold { font-size:40px !important; }
+.sub-fixture-pill { font-size:11px !important; padding:3px 10px !important; }
+.live-score-row { margin-top:8px !important; padding-left:14px !important; padding-right:14px !important; gap:10px !important; }
+.score-card-main, .current-over-card { height:80px !important; }
+.score-team-tag { width:108px !important; min-width:108px !important; font-size:28px !important; white-space:nowrap !important; overflow:hidden !important; letter-spacing:-.5px !important; }
+.score-digits-hero { font-size:69px !important; font-weight:900 !important; letter-spacing:-1.2px !important; line-height:1 !important; }
+.overs-num { font-size:36px !important; }
+.overs-text { font-size:13px !important; }
+.over-card-header { height:25px !important; font-size:14px !important; letter-spacing:1.4px !important; }
+.over-card-balls { padding:0 8px !important; gap:5px !important; }
+.ball-circle { width:43px !important; height:43px !important; min-width:0 !important; font-size:22px !important; border-radius:12px !important; }
+.ball-circle.ball-label-long { width:100% !important; height:34px !important; padding:0 2px !important; font-size:11px !important; }
+.match-context-bar { height:31px !important; flex-basis:31px !important; margin-top:4px !important; }
+.context-label { font-size:11px !important; letter-spacing:.3px !important; }
+.match-context-bar strong { font-size:12px !important; }
+.match-stats-bar { height:36px !important; margin-top:4px !important; width:calc(100% - 28px) !important; padding:0 9px !important; }
+.stat-metric { font-size:15px !important; gap:4px !important; }
+.stat-metric .lbl { font-size:13px !important; }
+.stat-metric .val { font-size:13px !important; padding:1px 4px !important; }
+ .tables-row { margin-top:4px !important; padding:0 14px !important; gap:9px !important; align-items:stretch !important; }
+.table-header-blue, .table-header-red { height:29px !important; padding:0 9px !important; font-size:14px !important; letter-spacing:.45px !important; }
+.table-row-item { height:52px !important; min-height:52px !important; padding:0 9px !important; font-size:15px !important; grid-template-columns:2.4fr .62fr .62fr .62fr .62fr .85fr !important; }
+.player-name-cell { gap:8px !important; min-width:0 !important; }
+.player-avatar-initials, .player-avatar-photo { width:50px !important; height:50px !important; min-width:50px !important; flex:0 0 50px !important; border-width:2px !important; }
+.player-avatar-initials { font-size:13px !important; }
+.player-avatar-photo { display:none; object-fit:cover !important; object-position:center top !important; border-radius:50% !important; image-rendering:auto; }
+.player-avatar-photo[src] { display:block !important; }
+.table-row-item .col-name { font-size:16px !important; font-weight:900 !important; letter-spacing:0 !important; }
+.upcoming-tag { font-size:9px !important; padding:2px 4px !important; }
+.bowler-panel .table-header-red, .bowler-panel .table-row-item { grid-template-columns:2.35fr .6fr .6fr .6fr .6fr .82fr !important; }
+.bowler-panel .table-header-red { font-size:13px !important; }
+.bowler-panel .table-row-item { font-size:15px !important; }
+ .bottom-analysis-row { height:98px !important; width:calc(100% - 28px) !important; margin:4px 14px 4px !important; grid-template-columns:1.04fr .96fr !important; gap:8px !important; }
+.last-two-overs-panel { padding:5px 7px !important; gap:4px !important; }
+.last-two-title { min-height:23px !important; flex:0 0 23px !important; gap:7px !important; }
+.last-two-kicker { font-size:10px !important; }
+.last-two-title strong { font-size:15px !important; }
+.last-over-card { grid-template-columns:58px minmax(0,1fr) 60px !important; gap:4px !important; padding:0 4px !important; }
+.last-over-label { font-size:10px !important; }
+.last-over-balls { gap:4px !important; }
+.mini-ball { width:27px !important; height:27px !important; flex:0 1 27px !important; font-size:11px !important; }
+.last-over-total { font-size:11px !important; }
+.projection-panel-header { height:25px !important; font-size:12px !important; }
+.poll-result-body { height:calc(100% - 25px) !important; padding:5px 7px !important; gap:6px !important; }
+.poll-kicker { font-size:9px !important; }
+.winner-summary strong { font-size:23px !important; }
+#winnerResultText { font-size:10px !important; max-height:27px !important; }
+.fan-poll-heading { font-size:11px !important; }
+.fan-poll-heading span { font-size:9px !important; }
+.poll-result-line { grid-template-columns:30px minmax(0,1fr) 34px !important; font-size:11px !important; }
+.poll-result-line strong { font-size:11px !important; }
+.poll-meter { height:9px !important; }
+.bottom-meta-ribbon { height:36px !important; min-height:36px !important; padding:0 14px !important; }
+.ribbon-pill-left { font-size:14px !important; padding:2px 10px !important; }
+.ribbon-footer-center { font-size:12px !important; letter-spacing:.25px !important; }
+.ribbon-toss-right { max-width:38% !important; font-size:12px !important; letter-spacing:.1px !important; }
+/* Critical fix: do not let the 404px OBS browser-source viewport trigger mobile CSS on the fixed 1280x720 artboard. */
+@media (max-width:1100px) {
+  .team-name-hero { font-size:34px !important; }
+  .team-name-hero.long-team-name { font-size:27px !important; }
+  .last-two-overs-panel { grid-template-columns:initial !important; }
+  .last-over-card { grid-template-columns:58px minmax(0,1fr) 60px !important; }
+  .mini-ball { width:27px !important; height:27px !important; flex-basis:27px !important; font-size:11px !important; }
+  .bottom-analysis-row { grid-template-columns:1.04fr .96fr !important; width:calc(100% - 28px) !important; margin-left:14px !important; margin-right:14px !important; }
+  .projection-main-value strong { font-size:48px !important; }
+  .projection-metric strong { font-size:22px !important; }
+  .projection-panel-header { font-size:12px !important; }
+}
+@media (max-height:560px) {
+  body.controls-visible .top-brand-wrap { margin-top:49px !important; }
+  .bottom-analysis-row { height:108px !important; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .ball-circle.wicket { animation:none !important; }
+  .player-avatar-photo { transition:none !important; }
+}
+</style>
+
 </head>
 
 <body>
