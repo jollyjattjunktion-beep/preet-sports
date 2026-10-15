@@ -608,6 +608,336 @@ html, body {
     text-transform: uppercase;
 }
 </style>
+
+
+<!-- PREET SPORTS V2 VISUAL UPGRADE: TV-BROADCAST FINISH -->
+<style id="preetSportsV2Theme">
+:root {
+  --ps-navy: #040D1A;
+  --ps-navy-2: #071A30;
+  --ps-blue: #0877D5;
+  --ps-cyan: #21D7F4;
+  --ps-maroon: #8B0029;
+  --ps-gold: #FFB800;
+  --ps-orange: #FF7A00;
+  --ps-white: #F7FAFF;
+}
+
+html, body, .screen-wrapper {
+  background: var(--ps-navy) !important;
+}
+
+.scoreboard {
+  background:
+    radial-gradient(ellipse at 50% 54%, rgba(12, 47, 74, .34), transparent 58%),
+    var(--ps-navy) !important;
+  border: 1px solid rgba(255, 184, 0, .42);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, .7), 0 16px 42px rgba(0, 0, 0, .58);
+  isolation: isolate;
+}
+
+/* The stadium now fills the canvas, so the lower half feels intentional rather than empty. */
+.stadium-background {
+  width: 100% !important;
+  height: 100% !important;
+  left: 0 !important;
+  top: 0 !important;
+  opacity: 1 !important;
+  z-index: 0 !important;
+  background:
+    linear-gradient(180deg,
+      rgba(4, 13, 26, .30) 0%,
+      rgba(4, 13, 26, .10) 24%,
+      rgba(4, 13, 26, .20) 43%,
+      rgba(4, 13, 26, .56) 66%,
+      rgba(4, 13, 26, .91) 100%),
+    linear-gradient(90deg, rgba(4, 13, 26, .32) 0%, rgba(4, 13, 26, .02) 48%, rgba(4, 13, 26, .32) 100%),
+    url("https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=1800&q=90") center 47% / cover no-repeat !important;
+  filter: saturate(1.12) brightness(1.12);
+  transform: scale(1.015);
+}
+
+.top-brand-wrap {
+  margin-top: 9px !important;
+  gap: 0;
+}
+.brand-capsule {
+  min-height: 42px;
+  padding: 4px 30px !important;
+  border: 1.5px solid rgba(83, 175, 255, .82) !important;
+  border-radius: 10px !important;
+  background: linear-gradient(180deg, rgba(11, 37, 68, .98), rgba(2, 10, 22, .98)) !important;
+  box-shadow: 0 5px 18px rgba(0,0,0,.48), inset 0 1px 0 rgba(255,255,255,.13) !important;
+}
+.brand-capsule .brand-white,
+.brand-capsule .brand-gold {
+  font-size: 27px !important;
+  letter-spacing: 1.7px !important;
+  line-height: 1 !important;
+}
+.live-badge {
+  margin-top: 5px !important;
+  padding: 2px 23px !important;
+  border-radius: 7px !important;
+  font-size: 20px !important;
+  letter-spacing: 2.5px !important;
+  box-shadow: 0 3px 12px rgba(216, 0, 25, .33), inset 0 1px 0 rgba(255,255,255,.25) !important;
+}
+
+.match-fixture-bar {
+  margin-top: 5px !important;
+  padding: 0 18px !important;
+}
+.fixture-pod {
+  height: 88px !important;
+  box-shadow: 0 7px 22px rgba(0,0,0,.38) !important;
+}
+.fixture-pod.left-side {
+  background: linear-gradient(100deg, rgba(3, 29, 63, .97), rgba(0, 79, 177, .94) 52%, rgba(2, 48, 102, .96)) !important;
+  border: 2px solid var(--ps-cyan) !important;
+  border-right-width: 1px !important;
+}
+.fixture-pod.right-side {
+  background: linear-gradient(260deg, rgba(57, 0, 19, .97), rgba(133, 0, 40, .96) 52%, rgba(73, 0, 25, .97)) !important;
+  border: 2px solid #FF4774 !important;
+  border-left-width: 1px !important;
+}
+.crest-shield {
+  width: 68px !important;
+  height: 68px !important;
+  filter: drop-shadow(0 3px 7px rgba(0,0,0,.42)) !important;
+}
+.team-name-hero {
+  font-size: 55px !important;
+  letter-spacing: 1px !important;
+  text-shadow: 0 2px 5px rgba(0,0,0,.48) !important;
+}
+.center-vs-trap {
+  width: 132px !important;
+  height: 91px !important;
+  background: linear-gradient(180deg, rgba(39, 30, 8, .98), rgba(8, 11, 17, .99)) !important;
+  border-top-color: var(--ps-gold) !important;
+  border-bottom-color: var(--ps-gold) !important;
+}
+.vs-text-gold {
+  font-size: 41px !important;
+  text-shadow: 0 0 12px rgba(255,184,0,.42), 0 2px 4px #000 !important;
+}
+.sub-fixture-pill {
+  bottom: -17px !important;
+  padding: 3px 18px !important;
+  border-color: var(--ps-gold) !important;
+  background: rgba(4,13,26,.98) !important;
+  font-size: 13px !important;
+}
+
+.live-score-row {
+  gap: 12px !important;
+  padding: 0 18px !important;
+  margin-top: 15px !important;
+}
+.score-card-main {
+  height: 88px !important;
+  background: linear-gradient(110deg, rgba(4, 28, 57, .97), rgba(5, 24, 47, .96)) !important;
+  border: 1.8px solid var(--ps-cyan) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 6px 18px rgba(0,0,0,.32), inset 0 0 0 1px rgba(255,255,255,.035) !important;
+}
+.score-team-tag {
+  width: 136px !important;
+  font-size: 43px !important;
+  background: linear-gradient(180deg, #FFFFFF, #E4EEF8) !important;
+  color: #06254B !important;
+}
+.score-digits-hero {
+  font-size: 66px !important;
+  letter-spacing: 0 !important;
+  text-shadow: 0 2px 5px rgba(0,0,0,.5) !important;
+}
+.overs-num {
+  font-size: 34px !important;
+}
+.overs-text {
+  font-size: 13px !important;
+  color: #B7CCE3 !important;
+}
+.current-over-card {
+  height: 88px !important;
+  border-width: 1.8px !important;
+  border-radius: 12px !important;
+  background: rgba(3, 17, 33, .96) !important;
+  box-shadow: 0 6px 18px rgba(0,0,0,.32) !important;
+}
+.over-card-header {
+  height: 25px !important;
+  color: #111722 !important;
+  background: linear-gradient(90deg, #FFD15A, #FFB800 48%, #F39A00) !important;
+  font-size: 14px !important;
+  letter-spacing: 1.7px !important;
+}
+.over-card-balls {
+  background: rgba(2, 14, 28, .92) !important;
+}
+.ball-circle {
+  width: 42px !important;
+  height: 42px !important;
+  border: 1.5px solid #2869A7 !important;
+  background: linear-gradient(180deg, #10365C, #082341) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.ball-circle.four {
+  background: linear-gradient(180deg, #FFD34F, #FFB800) !important;
+  border-color: #FFE18B !important;
+  color: #06101D !important;
+}
+.ball-circle.six {
+  background: linear-gradient(180deg, #FF9C35, #FF6B00) !important;
+  border-color: #FFC078 !important;
+  color: #FFFFFF !important;
+}
+.ball-circle.wicket {
+  background: linear-gradient(180deg, #FF415D, #B90028) !important;
+  border-color: #FF9CAB !important;
+  color: #FFFFFF !important;
+  animation: wicketPulse 1.35s ease-in-out infinite;
+}
+.ball-circle.extra {
+  background: linear-gradient(180deg, #19C7E8, #007EA7) !important;
+  border-color: #8BEEFF !important;
+}
+.ball-circle.dot {
+  color: #91A7BF !important;
+}
+.ball-circle.latest {
+  transform: translateY(-2px) scale(1.045);
+  box-shadow: 0 0 0 2px rgba(255,255,255,.82), 0 0 13px rgba(255,184,0,.45), inset 0 1px 0 rgba(255,255,255,.17);
+}
+@keyframes wicketPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 50, 81, .18); }
+  50% { box-shadow: 0 0 0 5px rgba(255, 50, 81, .22); }
+}
+
+.match-stats-bar {
+  width: calc(100% - 36px) !important;
+  margin: 8px 18px 0 !important;
+  height: 39px !important;
+  padding: 0 12px !important;
+  background: linear-gradient(90deg, rgba(3, 13, 27, .94), rgba(7, 28, 51, .94), rgba(3, 13, 27, .94)) !important;
+  border: 1px solid rgba(255,184,0,.82) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 14px rgba(0,0,0,.27) !important;
+  backdrop-filter: blur(8px);
+}
+.stat-metric {
+  font-size: 19px !important;
+  letter-spacing: .45px !important;
+}
+.stat-metric .lbl {
+  color: #65E7F8 !important;
+}
+.stat-metric .val {
+  color: #FFD05A !important;
+}
+.stat-metric.last-wkt-metric .val {
+  color: #FF708A !important;
+}
+.stat-divider {
+  background: rgba(83, 139, 190, .38) !important;
+}
+
+.tables-row {
+  gap: 12px !important;
+  padding: 0 18px !important;
+  margin-top: 9px !important;
+}
+.batters-panel,
+.bowler-panel {
+  border-radius: 11px !important;
+  box-shadow: 0 6px 18px rgba(0,0,0,.34) !important;
+  backdrop-filter: blur(8px);
+}
+.batters-panel {
+  background: linear-gradient(180deg, rgba(5, 30, 55, .94), rgba(2, 14, 27, .95)) !important;
+  border: 1.7px solid #078DFA !important;
+}
+.bowler-panel {
+  background: linear-gradient(180deg, rgba(54, 4, 19, .94), rgba(22, 2, 10, .95)) !important;
+  border: 1.7px solid #F11D49 !important;
+}
+.table-header-blue,
+.table-header-red {
+  height: 29px !important;
+  font-size: 13px !important;
+  letter-spacing: .85px !important;
+}
+.table-header-blue {
+  background: linear-gradient(90deg, #0876D4, #07509A) !important;
+}
+.table-header-red {
+  background: linear-gradient(90deg, #D20A35, #8F0024) !important;
+}
+.table-row-item {
+  height: 34px !important;
+  font-size: 15px !important;
+  background: rgba(255,255,255,.012);
+}
+.table-row-item .striker-highlight {
+  color: #FFD05A !important;
+}
+
+/* Broadcast ticker stays anchored, while the stadium remains visible behind the lower third. */
+.bottom-meta-ribbon {
+  height: 43px !important;
+  min-height: 43px;
+  background: linear-gradient(90deg, rgba(2,7,15,.98), rgba(4,17,31,.98), rgba(2,7,15,.98)) !important;
+  border-top: 1.5px solid rgba(255,184,0,.7) !important;
+  padding: 0 18px !important;
+  box-shadow: 0 -5px 20px rgba(0,0,0,.22);
+}
+.ribbon-pill-left {
+  background: linear-gradient(180deg, #0D3157, #061A30) !important;
+  border-color: #19BDF0 !important;
+  padding: 3px 14px !important;
+  font-size: 16px !important;
+}
+.ribbon-pill-left .num {
+  color: #FFD05A !important;
+}
+.ribbon-proj-center {
+  color: #45E4F6 !important;
+  font-size: 18px !important;
+  letter-spacing: 1px !important;
+}
+.ribbon-proj-center .proj-score {
+  font-size: 20px !important;
+}
+.ribbon-toss-right {
+  max-width: 350px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 15px !important;
+}
+
+.url-control-bar {
+  background: rgba(4, 13, 26, .97) !important;
+  border-color: var(--ps-gold) !important;
+  box-shadow: 0 7px 22px rgba(0,0,0,.55) !important;
+}
+.url-control-bar input {
+  border-color: #16CFEA !important;
+}
+.url-control-bar button {
+  background: linear-gradient(180deg, #FFD15A, #F0A000) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ball-circle { transition: none !important; }
+  .ball-circle.wicket { animation: none !important; }
+}
+</style>
+
 </head>
 
 <body>
@@ -624,7 +954,7 @@ html, body {
     </div>
 
     <!-- 1280x720 PRO SCOREBOARD -->
-    <div class="scoreboard" id="scoreboardCanvas">
+    <div class="scoreboard" id="scoreboardCanvas" role="region" aria-label="Preet Sports live cricket scoreboard">
         
         <div class="stadium-background"></div>
 
@@ -898,6 +1228,9 @@ function renderCurrentOverBalls(balls) {
         const b = ballArray[i];
         const div = document.createElement("div");
         div.className = "ball-circle";
+        if (b !== undefined && b !== null && i === ballArray.length - 1) {
+            div.classList.add("latest");
+        }
 
         if (b !== undefined && b !== null) {
             const txt = String(typeof b === "object" ? (b.text ?? b.value ?? "") : b).trim();
