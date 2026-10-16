@@ -3482,14 +3482,35 @@ html, body { width:100%; height:100%; }
   }
   function captureCrexCentreText(doc) {
     if (!doc) return;
-    const body = tidy(doc.body && (doc.body.innerText || doc.body.textContent) || '');
-    if (!body) return;
-    // CREX pre-match center countdown, e.g. "01h : 13m". Avoid browser/system clock strings.
-    const countdown = validCountdown(body);
-    if (countdown) { crexCentreTextFromPage = countdown; updateCentre(lastPayload); return; }
-    const lines = String(doc.body.innerText || doc.body.textContent || '').split(/\n+/).map(tidy).filter(Boolean);
-    const state = lines.find(line => /^(INNINGS BREAK|RAIN DELAY|BAD LIGHT|STUMPS|LUNCH|TEA|BOWLING|OVER|MATCH DELAYED|MATCH ABANDONED)$/i.test(line));
-    if (state) { crexCentreTextFromPage = state.toUpperCase(); updateCentre(lastPayload); }
+
+    // FIRST CHOICE: the exact CREX live event box provided by the user:
+    // <div class="result-box"><span class="font3">Maiden Over</span></div>
+    // Read its visible text rather than the match countdown/time elsewhere on the page.
+    try {
+      const resultNodes = doc.querySelectorAll('.result-box .font3, .result-box span');
+      for (const node of resultNodes) {
+        const text = tidy(node && (node.innerText || node.textContent));
+        if (!text || text.length > 60) continue;
+        if (/^(?:--|n\/a|na|null|undefined)$/i.test(text)) continue;
+        if (validCountdown(text) || /^\d{1,2}:\d{2}(?::\d{2})?$/.test(text)) continue;
+        crexCentreTextFromPage = text.toUpperCase();
+        updateCentre(lastPayload);
+        return;
+      }
+    } catch (_) {}
+
+    // Fallback for CREX pages where the result-box is absent: accept meaningful
+    // match-state text only. Deliberately do NOT use the page countdown/time.
+    const lines = String((doc.body && (doc.body.innerText || doc.body.textContent)) || '')
+      .split(/\n+/).map(tidy).filter(Boolean);
+    const state = lines.find(line =>
+      /^(?:MAIDEN OVER|DOT BALL|WICKET|WIDE|NO BALL|FREE HIT|FOUR|SIX|OVER|BOWLING|INNINGS BREAK|RAIN DELAY|BAD LIGHT|STUMPS|LUNCH|TEA|MATCH DELAYED|MATCH ABANDONED|PLAY RESUMES)$/i.test(line)
+      || /^(?:\d+\s+RUNS?|SIXER|FOUR RUNS|WICKET FALLEN)$/i.test(line)
+    );
+    if (state) {
+      crexCentreTextFromPage = state.toUpperCase();
+      updateCentre(lastPayload);
+    }
   }
 
   // Wrap CREX document enrichment so centre-state text can be read from the same public page
@@ -3700,6 +3721,7 @@ html, body { width:100%; height:100%; }
     const overMatch = overs.match(/^(\d+)(?:\.(\d+))?/);
     const started = runs > 0 || !!(overMatch && (Number(overMatch[1]) > 0 || Number(overMatch[2] || 0) > 0));
     const explicit = fieldCentreText(data);
+    const crexResultBoxText = tidy(crexCentreTextFromPage || '');
     let label = 'OVER';
     if (/(won by|lost by|match over|match finished|match completed|no result|abandoned|match tied|\btied\b|\bdrawn\b)/i.test(status)) {
       label = 'RESULT';
@@ -3709,15 +3731,19 @@ html, body { width:100%; height:100%; }
       label = 'RAIN DELAY';
     } else if (/stumps/.test(statusLow)) {
       label = 'STUMPS';
+    } else if (crexResultBoxText && !validCountdown(crexResultBoxText)) {
+      // The CREX .result-box .font3 event (e.g. "Maiden Over") wins over
+      // generic status fields so the centre box mirrors CREX's own live text.
+      label = crexResultBoxText;
     } else if (explicit && !/^(OVER|LIVE MATCH)$/i.test(explicit)) {
-      // Show the same meaningful live text CREX provides instead of a time/countdown.
+      // Show meaningful status text from the score payload, never a clock.
       label = explicit;
     } else if (started) {
       label = explicit && /^(OVER|BOWLING)$/i.test(explicit) ? explicit : 'OVER';
     } else {
       const pageText = tidy(crexCentreTextFromPage || '');
-      const pageIsTime = validCountdown(pageText);
-      if (pageText && !pageIsTime && pageText.length <= 42) label = pageText.toUpperCase();
+      const pageIsTime = validCountdown(pageText) || /^\d{1,2}:\d{2}(?::\d{2})?$/.test(pageText);
+      if (pageText && !pageIsTime && pageText.length <= 60) label = pageText.toUpperCase();
       else if (/scheduled|upcoming|starts soon|not started|match starts/.test(statusLow)) label = 'UP NEXT';
       else label = 'OVER';
     }
