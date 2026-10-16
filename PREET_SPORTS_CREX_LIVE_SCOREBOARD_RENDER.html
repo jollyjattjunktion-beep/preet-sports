@@ -1464,17 +1464,21 @@ body.controls-visible .top-brand-wrap { margin-top: 53px !important; }
                 </div>
             </div>
 
-            <!-- CURRENT OVER CARD -->
-            <div class="current-over-card">
-                <div class="over-card-header">CURRENT OVER</div>
-                <div class="over-card-balls" id="currentOverBallsContainer">
-                    <div class="ball-circle dot empty-ball">–</div>
-                    <div class="ball-circle dot empty-ball">–</div>
-                    <div class="ball-circle dot empty-ball">–</div>
-                    <div class="ball-circle dot empty-ball">–</div>
-                    <div class="ball-circle dot empty-ball">–</div>
-                    <div class="ball-circle dot empty-ball">–</div>
-                </div>
+            <!-- COMBINED LAST OVER + CURRENT OVER CARD -->
+            <div class="current-over-card over-pair-card" aria-label="Last over and current over">
+                <section class="over-pair-half last-over-top">
+                    <div class="over-card-header">LAST OVER <span id="topLastOverLabel">—</span></div>
+                    <div class="over-card-balls" id="topLastOverBalls">
+                        <div class="ball-circle dot empty-ball">–</div><div class="ball-circle dot empty-ball">–</div><div class="ball-circle dot empty-ball">–</div><div class="ball-circle dot empty-ball">–</div><div class="ball-circle dot empty-ball">–</div><div class="ball-circle dot empty-ball">–</div>
+                    </div>
+                    <div class="over-pair-total" id="topLastOverRuns">— RUNS</div>
+                </section>
+                <section class="over-pair-half current-over-top">
+                    <div class="over-card-header">CURRENT OVER <span id="topCurrentOverLabel">—</span></div>
+                    <div class="over-card-balls" id="currentOverBallsContainer">
+                        <div class="ball-circle dot empty-ball">–</div><div class="ball-circle dot empty-ball">–</div><div class="ball-circle dot empty-ball">–</div><div class="ball-circle dot empty-ball">–</div><div class="ball-circle dot empty-ball">–</div><div class="ball-circle dot empty-ball">–</div>
+                    </div>
+                </section>
             </div>
         </div>
 
@@ -1603,22 +1607,14 @@ body.controls-visible .top-brand-wrap { margin-top: 53px !important; }
             </div>
         </div>
 
-        <!-- V6 LOWER BROADCAST ZONE: LAST TWO OVERS + MATCH RESULT + FAN POLL -->
-        <div class="bottom-analysis-row">
-            <!-- RECENT FORM: LAST TWO OVERS AND RUNS -->
-        <div class="last-two-overs-panel" aria-label="Last two overs run summary">
-            <div class="last-two-title"><span class="last-two-kicker">RECENT FORM</span><strong>LAST 2 OVERS</strong></div>
-            <div class="last-over-card" id="lastOverCard1">
-                <span class="last-over-label" id="lastOver1Label">OVER —</span>
-                <div class="last-over-balls" id="lastOver1Balls"><span class="mini-ball muted">—</span><span class="mini-ball muted">—</span><span class="mini-ball muted">—</span><span class="mini-ball muted">—</span><span class="mini-ball muted">—</span><span class="mini-ball muted">—</span></div>
-                <strong class="last-over-total" id="lastOver1Runs">— RUNS</strong>
-            </div>
-            <div class="last-over-card current-last-over" id="lastOverCard2">
-                <span class="last-over-label" id="lastOver2Label">CURRENT OVER</span>
-                <div class="last-over-balls" id="lastOver2Balls"><span class="mini-ball muted">—</span><span class="mini-ball muted">—</span><span class="mini-ball muted">—</span><span class="mini-ball muted">—</span><span class="mini-ball muted">—</span><span class="mini-ball muted">—</span></div>
-                <strong class="last-over-total" id="lastOver2Runs">— RUNS</strong>
-            </div>
+        <!-- Hidden data targets retained for the existing over-history renderer; visible display is in the main score row. -->
+        <div id="overHistoryDataTargets" hidden>
+          <span id="lastOver1Label">OVER —</span><div id="lastOver1Balls"></div><strong id="lastOver1Runs">— RUNS</strong>
+          <span id="lastOver2Label">CURRENT OVER</span><div id="lastOver2Balls"></div><strong id="lastOver2Runs">— RUNS</strong>
         </div>
+        <!-- V15 LOWER ZONE: MATCH RESULT + FAN POLL -->
+        <div class="bottom-analysis-row">
+            <!-- LAST OVER + CURRENT OVER ARE NOW SHOWN IN THE MAIN SCORE ROW; LOWER DUPLICATE REMOVED -->
             <section class="projection-panel poll-results-panel" aria-label="Match result and fan poll results">
                 <div class="projection-panel-header"><span>CREX MATCH RESULT • FAN POLL</span></div>
                 <div class="poll-result-body">
@@ -3785,6 +3781,135 @@ html, body { width:100%; height:100%; }
       try { updateCentre(payload); const b = chooseCurrentBalls(payload); if (b.length) enhancedRenderBalls(b); } catch (_) {}
     }
   }, 1200);
+})();
+</script>
+
+
+<style id="preetSportsV15OverRowAndScorecard">
+/* V15: replace the old single current-over panel with two compact top-row panels. */
+.live-score-row { gap:10px !important; margin-top:10px !important; align-items:stretch; }
+.score-card-main { flex:1.05 !important; min-width:0; }
+.over-pair-card {
+  flex:0.95 !important; min-width:0; height:92px !important; padding:5px 8px !important;
+  display:grid !important; grid-template-columns:1fr 1fr; gap:8px; align-items:stretch;
+  background:linear-gradient(180deg,#03172b,#020814) !important;
+  border:1.5px solid #ffbf00 !important; border-radius:10px !important; overflow:hidden;
+}
+.over-pair-half { min-width:0; display:flex; flex-direction:column; justify-content:center; gap:3px; }
+.over-pair-half + .over-pair-half { border-left:1px solid rgba(255,184,0,.42); padding-left:8px; }
+.over-pair-card .over-card-header { height:auto !important; min-height:18px; padding:0 !important; background:transparent !important; border:0 !important; font-size:12px !important; line-height:1.1; text-align:center; white-space:nowrap; }
+.over-pair-card .over-card-balls { display:flex !important; justify-content:center; align-items:center; gap:3px !important; min-height:30px; }
+.over-pair-card .ball-circle { width:24px !important; height:24px !important; min-width:24px !important; font-size:12px !important; margin:0 !important; }
+.over-pair-total { font-size:10px; line-height:1; font-weight:900; color:#ffca28; text-align:center; }
+#topLastOverLabel,#topCurrentOverLabel { color:#ffca28; font-size:10px; }
+#lastOverCard1,#lastOverCard2,.last-two-overs-panel { display:none !important; }
+.bottom-analysis-row { margin-top:5px !important; }
+@media (max-width:700px) {
+  .live-score-row { gap:6px !important; padding:0 8px !important; }
+  .score-card-main { flex:1 !important; padding-right:8px !important; }
+  .over-pair-card { flex:1.1 !important; padding:4px !important; gap:4px; }
+  .over-pair-card .over-card-header { font-size:9px !important; }
+  .over-pair-card .ball-circle { width:18px !important; height:18px !important; min-width:18px !important; font-size:9px !important; }
+}
+</style>
+<script id="preetSportsV15ScorecardNextBatters">
+(function(){
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const clean = v => String(v || '').replace(/\s+/g,' ').trim();
+  let scorecardLookupUrl = '';
+  let scorecardLookupStarted = false;
+
+  function makeScorecardUrl(matchUrl){
+    try {
+      const u = new URL(matchUrl);
+      u.pathname = u.pathname.replace(/\/+$/,'').replace(/\/match-scorecard(?:\/.*)?$/i,'');
+      if (!/\/match-updates-[^/]+$/i.test(u.pathname)) {
+        u.pathname = u.pathname.replace(/\/[^/]+$/, '');
+      }
+      return u.origin + u.pathname + '/match-scorecard';
+    } catch(e) { return ''; }
+  }
+
+  function setUpcomingBatters(names){
+    const unique = [...new Set(names.map(clean).filter(n => n && n.length < 60))];
+    if ($('b3Name') && unique[0]) $('b3Name').textContent = unique[0].toUpperCase();
+    if ($('b4Name') && unique[1]) $('b4Name').textContent = unique[1].toUpperCase();
+    if ($('b3RoleTag') && unique[0]) $('b3RoleTag').textContent = 'NEXT BATTER';
+    if ($('b4RoleTag') && unique[1]) $('b4RoleTag').textContent = 'NEXT BATTER';
+  }
+
+  function parseScorecard(html){
+    const doc = new DOMParser().parseFromString(html,'text/html');
+    // CREX scorecard's "yet-to-bat" section is the preferred source.
+    let nodes = [...doc.querySelectorAll('.yet-to-bat .player-data .name, .yet-to-bat .name')];
+    let names = nodes.map(n=>clean(n.textContent));
+    // Compatibility with CREX markup variants that label upcoming players differently.
+    if (!names.length) names = [...doc.querySelectorAll('[class*="yet-to-bat"] .name, [class*="yetToBat"] .name')].map(n=>clean(n.textContent));
+    if (names.length) setUpcomingBatters(names);
+    // Read over history from scorecard page when its data is server-rendered.
+    try {
+      const resultNodes = [...doc.querySelectorAll('.result-box .font3, .result-box span')].map(n=>clean(n.textContent)).filter(Boolean);
+      if (resultNodes.length && $('centrePrimaryText')) $('centrePrimaryText').textContent = resultNodes[0].toUpperCase();
+    } catch(e){}
+  }
+
+  async function fetchScorecard(matchUrl){
+    const url = makeScorecardUrl(matchUrl);
+    if (!url || url === scorecardLookupUrl) return;
+    scorecardLookupUrl = url;
+    try {
+      let response = await fetch(`${API_BASE}/api/crex-assets?url=${encodeURIComponent(url)}`, {cache:'no-store'});
+      if (response.ok) {
+        const ct = response.headers.get('content-type') || '';
+        if (ct.includes('json')) {
+          const payload = await response.json();
+          if (payload.html) { parseScorecard(payload.html); return; }
+          const raw = JSON.stringify(payload);
+          const names = [...raw.matchAll(/"name"\s*:\s*"([^"]{2,60})"/g)].map(m=>m[1]);
+          if (names.length) setUpcomingBatters(names);
+        } else {
+          const body = await response.text();
+          if (body.includes('yet-to-bat') || body.includes('player-data')) { parseScorecard(body); return; }
+        }
+      }
+    } catch(e){}
+    // Browser-side fallback; this is only a public CREX scorecard read.
+    try {
+      const response = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`, {cache:'no-store'});
+      if (response.ok) parseScorecard(await response.text());
+    } catch(e){}
+  }
+
+  // Mirror the existing over renderer into the new top-row last-over display.
+  function mirrorLastOver(){
+    const srcBalls = $('lastOver1Balls');
+    if (srcBalls && $('topLastOverBalls')) $('topLastOverBalls').innerHTML = srcBalls.innerHTML;
+    if ($('lastOver1Label') && $('topLastOverLabel')) $('topLastOverLabel').textContent = clean($('lastOver1Label').textContent).replace(/^OVER/i,'').trim();
+    if ($('lastOver1Runs') && $('topLastOverRuns')) $('topLastOverRuns').textContent = clean($('lastOver1Runs').textContent);
+    if ($('mainOversHero') && $('topCurrentOverLabel')) {
+      const over = clean($('mainOversHero').textContent);
+      $('topCurrentOverLabel').textContent = over ? `(${over})` : '';
+    }
+  }
+  const oldRender = window.renderLastTwoOvers;
+  if (typeof oldRender === 'function') {
+    window.renderLastTwoOvers = function(){
+      const result = oldRender.apply(this, arguments);
+      setTimeout(mirrorLastOver,0);
+      return result;
+    };
+  }
+  setInterval(mirrorLastOver,1500);
+
+  function syncScorecard(){
+    const input = $('crexUrlInput') || $('crexMatchUrl') || $('matchUrlInput') || document.querySelector('#urlControlBar input');
+    const matchUrl = (input && input.value) || localStorage.getItem('crex_match_input') || '';
+    if (matchUrl && /crex\.com\/cricket-live-score\//i.test(matchUrl)) fetchScorecard(matchUrl);
+  }
+  window.addEventListener('load',()=>setTimeout(syncScorecard,1200));
+  const loadBtn = $('loadMatchUrlBtn');
+  if (loadBtn) loadBtn.addEventListener('click',()=>setTimeout(syncScorecard,1500));
 })();
 </script>
 
