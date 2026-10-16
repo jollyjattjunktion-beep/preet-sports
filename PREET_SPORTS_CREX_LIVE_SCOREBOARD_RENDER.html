@@ -7,7 +7,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="referrer" content="no-referrer">
-<title>PREET SPORTS | V11 OBS Event Centre Scoreboard</title>
+<title>PREET SPORTS | V16 OBS Last Over Circle</title>
 
 <!-- ULTRA-HD BROADCAST TYPOGRAPHY -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1612,7 +1612,7 @@ body.controls-visible .top-brand-wrap { margin-top: 53px !important; }
           <span id="lastOver1Label">OVER —</span><div id="lastOver1Balls"></div><strong id="lastOver1Runs">— RUNS</strong>
           <span id="lastOver2Label">CURRENT OVER</span><div id="lastOver2Balls"></div><strong id="lastOver2Runs">— RUNS</strong>
         </div>
-        <!-- V15 LOWER ZONE: MATCH RESULT + FAN POLL -->
+        <!-- V16 LOWER ZONE: MATCH RESULT + FAN POLL; EXTRA EVENT CENTRE HIDDEN -->
         <div class="bottom-analysis-row">
             <!-- LAST OVER + CURRENT OVER ARE NOW SHOWN IN THE MAIN SCORE ROW; LOWER DUPLICATE REMOVED -->
             <section class="projection-panel poll-results-panel" aria-label="Match result and fan poll results">
@@ -3811,6 +3811,37 @@ html, body { width:100%; height:100%; }
   .over-pair-card .over-card-header { font-size:9px !important; }
   .over-pair-card .ball-circle { width:18px !important; height:18px !important; min-width:18px !important; font-size:9px !important; }
 }
+
+
+/* V16 FIX: remove the extra second-row LIVE MATCH CENTRE stats box */
+#eventCentreBox { display:none !important; }
+
+/* V16: classic circular last-over total, matching the scoreboard's gold/navy palette */
+.over-pair-card .last-over-top {
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) 34px !important;
+  grid-template-rows:18px minmax(0,1fr) !important;
+  align-items:center !important; column-gap:6px !important; row-gap:2px !important; min-width:0 !important;
+}
+.over-pair-card .last-over-top .over-card-header { grid-column:1 / -1 !important; grid-row:1 !important; min-width:0 !important; }
+.over-pair-card .last-over-top .over-card-balls {
+  grid-column:1 !important; grid-row:2 !important; min-width:0 !important;
+  justify-content:flex-start !important; overflow:hidden !important;
+}
+.over-pair-card .last-over-top .over-pair-total {
+  grid-column:2 !important; grid-row:2 !important; justify-self:center !important; align-self:center !important;
+  display:flex !important; align-items:center !important; justify-content:center !important;
+  width:32px !important; height:32px !important; min-width:32px !important; border-radius:50% !important;
+  border:2px solid #FFE18B !important;
+  background:radial-gradient(circle at 32% 25%, #FFE27C 0%, #FFB800 58%, #D98B00 100%) !important;
+  color:#07111E !important; box-shadow:0 2px 7px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.55) !important;
+  font:900 10px/1 'Montserrat',sans-serif !important; text-align:center !important;
+  white-space:normal !important; padding:2px !important; overflow:hidden !important;
+}
+@media (max-width:700px) {
+  .over-pair-card .last-over-top { grid-template-columns:minmax(0,1fr) 27px !important; }
+  .over-pair-card .last-over-top .over-pair-total { width:26px !important; height:26px !important; min-width:26px !important; font-size:8px !important; border-width:1.5px !important; }
+}
 </style>
 <script id="preetSportsV15ScorecardNextBatters">
 (function(){
@@ -3884,9 +3915,42 @@ html, body { width:100%; height:100%; }
   // Mirror the existing over renderer into the new top-row last-over display.
   function mirrorLastOver(){
     const srcBalls = $('lastOver1Balls');
-    if (srcBalls && $('topLastOverBalls')) $('topLastOverBalls').innerHTML = srcBalls.innerHTML;
-    if ($('lastOver1Label') && $('topLastOverLabel')) $('topLastOverLabel').textContent = clean($('lastOver1Label').textContent).replace(/^OVER/i,'').trim();
-    if ($('lastOver1Runs') && $('topLastOverRuns')) $('topLastOverRuns').textContent = clean($('lastOver1Runs').textContent);
+    const dstBalls = $('topLastOverBalls');
+    if (srcBalls && dstBalls) dstBalls.innerHTML = srcBalls.innerHTML;
+
+    if ($('lastOver1Label') && $('topLastOverLabel')) {
+      $('topLastOverLabel').textContent = clean($('lastOver1Label').textContent).replace(/^OVER/i,'').trim();
+    }
+
+    const sourceRuns = $('lastOver1Runs');
+    const targetRuns = $('topLastOverRuns');
+    if (targetRuns) {
+      let text = sourceRuns ? clean(sourceRuns.textContent) : '';
+      let match = text.match(/\\d+/);
+      if ((!match || /^[-—]/.test(text)) && dstBalls) {
+        const labels = Array.from(dstBalls.querySelectorAll('.mini-ball'))
+          .map(el => clean(el.textContent).toUpperCase())
+          .filter(v => v && !/^[—-]$/.test(v));
+        if (labels.length) {
+          const sum = labels.reduce((total, label) => {
+            if (/^(W|WK|OUT)$/.test(label)) return total;
+            const m = label.match(/\\d+/);
+            return total + (m ? Number(m[0]) : 0);
+          }, 0);
+          text = `${sum} RUN${sum === 1 ? '' : 'S'}`;
+          match = [String(sum)];
+        }
+      }
+      if (match && !/^[-—]/.test(text)) {
+        const runs = Number(match[0]);
+        targetRuns.textContent = `${runs} ${runs === 1 ? 'RUN' : 'RUNS'}`;
+        targetRuns.title = `Last over total: ${runs} runs`;
+      } else {
+        targetRuns.textContent = '—';
+        targetRuns.title = 'Last over runs unavailable in the current feed';
+      }
+    }
+
     if ($('mainOversHero') && $('topCurrentOverLabel')) {
       const over = clean($('mainOversHero').textContent);
       $('topCurrentOverLabel').textContent = over ? `(${over})` : '';
