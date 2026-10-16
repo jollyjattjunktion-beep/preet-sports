@@ -3337,5 +3337,34 @@ function setPlayerPortrait(photoId, initialsId, player, data, name) {
 })();
 </script>
 
+<style id="preetSportsVsAnimation">
+/* Additive-only VS animation: preserves the existing layout, sizing, and colours. */
+@keyframes preetVsTextGlow {
+  0%, 100% {
+    color: #FFD700;
+    text-shadow: 0 0 8px rgba(255,190,24,.48), 0 2px 4px #000;
+    filter: brightness(1);
+  }
+  50% {
+    color: #FFF3B0;
+    text-shadow: 0 0 14px rgba(255,190,24,.95), 0 0 25px rgba(255,184,0,.55), 0 2px 4px #000;
+    filter: brightness(1.08);
+  }
+}
+@keyframes preetVsPanelGlow {
+  0%, 100% { filter: drop-shadow(0 0 0 rgba(255,190,24,0)); }
+  50% { filter: drop-shadow(0 0 8px rgba(255,190,24,.38)); }
+}
+.vs-text-gold {
+  animation: preetVsTextGlow 1.8s ease-in-out infinite;
+}
+.center-vs-trap {
+  animation: preetVsPanelGlow 1.8s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .vs-text-gold, .center-vs-trap { animation: none !important; }
+}
+</style>
+
 </body>
 </html>
