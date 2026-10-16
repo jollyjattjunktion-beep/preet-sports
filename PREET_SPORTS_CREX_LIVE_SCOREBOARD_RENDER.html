@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>
+(function(){try{var p=new URLSearchParams(window.location.search);if(p.get("hide")==="1"||p.get("obs")==="1")document.documentElement.classList.add("ps-obs-mode");}catch(e){}})();
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="referrer" content="no-referrer">
-<title>PREET SPORTS | V6 Mobile Broadcast Scoreboard</title>
+<title>PREET SPORTS | V11 OBS Event Centre Scoreboard</title>
 
 <!-- ULTRA-HD BROADCAST TYPOGRAPHY -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1395,6 +1398,9 @@ body.controls-visible .top-brand-wrap { margin-top: 53px !important; }
 }
 </style>
 
+
+
+
 </head>
 
 <body>
@@ -1433,8 +1439,8 @@ body.controls-visible .top-brand-wrap { margin-top: 53px !important; }
                     <div class="team-hero-scoreline"><strong id="team1HeroScore">168/8</strong><span id="team1HeroOvers">20.0 OV</span></div>
                 </div>
             </div>
-            <div class="center-vs-trap">
-                <span class="vs-text-gold">Vs</span>
+            <div class="center-vs-trap" aria-label="Current CREX match state">
+                <span class="vs-text-gold" id="centrePrimaryText">OVER</span>
                 <div class="sub-fixture-pill" id="matchSubTitle">LIVE MATCH</div>
             </div>
             <div class="fixture-pod right-side">
@@ -1502,66 +1508,98 @@ body.controls-visible .top-brand-wrap { margin-top: 53px !important; }
             </div>
         </div>
 
-        <!-- TABLE ROW: BATTERS & BOWLER -->
-        <div class="tables-row">
-            <!-- BATTERS PANEL -->
-            <div class="batters-panel">
-                <div class="table-header-blue">
-                    <span>BATTERS • NEXT UP</span>
-                    <span style="text-align: center;">R</span>
-                    <span style="text-align: center;">B</span>
-                    <span style="text-align: center;">4s</span>
-                    <span style="text-align: center;">6s</span>
-                    <span style="text-align: center;">SR</span>
-                </div>
-                <div class="table-row-item" id="batter1Row">
-                    <div class="player-name-cell"><span class="player-avatar-initials" id="b1Initials">B1</span><img class="player-avatar-photo" id="b1Photo" alt="Batter 1 portrait" loading="eager"><span class="col-name" id="b1Name">KUSAL MENDIS</span></div>
-                    <span style="text-align: center;" class="striker-highlight" id="b1Runs">87</span>
-                    <span style="text-align: center;" id="b1Balls">48</span>
-                    <span style="text-align: center;" id="b1Fours">9</span>
-                    <span style="text-align: center;" id="b1Sixes">4</span>
-                    <span style="text-align: center;" id="b1SR">181.25</span>
-                </div>
-                <div class="table-row-item" id="batter2Row">
-                    <div class="player-name-cell"><span class="player-avatar-initials" id="b2Initials">B2</span><img class="player-avatar-photo" id="b2Photo" alt="Batter 2 portrait" loading="eager"><span class="col-name" id="b2Name">KAMINDU MENDIS</span></div>
-                    <span style="text-align: center;" id="b2Runs">40</span>
-                    <span style="text-align: center;" id="b2Balls">27</span>
-                    <span style="text-align: center;" id="b2Fours">4</span>
-                    <span style="text-align: center;" id="b2Sixes">0</span>
-                    <span style="text-align: center;" id="b2SR">148.15</span>
-                </div>
-                <div class="table-row-item upcoming-row" id="batter3Row">
-                    <div class="player-name-cell"><span class="player-avatar-initials" id="b3Initials">N3</span><img class="player-avatar-photo" id="b3Photo" alt="Next batter 1 portrait" loading="eager"><span class="col-name" id="b3Name">NEXT BATTER 1</span><span class="upcoming-tag" id="b3RoleTag">NEXT</span></div>
-                    <span style="text-align:center;" id="b3Runs">—</span><span style="text-align:center;" id="b3Balls">—</span><span style="text-align:center;" id="b3Fours">—</span><span style="text-align:center;" id="b3Sixes">—</span><span style="text-align:center;" id="b3SR">—</span>
-                </div>
-                <div class="table-row-item upcoming-row" id="batter4Row">
-                    <div class="player-name-cell"><span class="player-avatar-initials" id="b4Initials">N4</span><img class="player-avatar-photo" id="b4Photo" alt="Next batter 2 portrait" loading="eager"><span class="col-name" id="b4Name">NEXT BATTER 2</span><span class="upcoming-tag" id="b4RoleTag">NEXT</span></div>
-                    <span style="text-align:center;" id="b4Runs">—</span><span style="text-align:center;" id="b4Balls">—</span><span style="text-align:center;" id="b4Fours">—</span><span style="text-align:center;" id="b4Sixes">—</span><span style="text-align:center;" id="b4SR">—</span>
-                </div>
+        <!-- V11 CENTRE LIVE EVENT BOX: LIVE INNINGS + EXTRAS + DISMISSALS -->
+        <section class="event-centre-box" id="eventCentreBox" aria-label="Live match events">
+            <div class="event-centre-heading">LIVE MATCH CENTRE</div>
+            <div class="event-centre-metrics">
+                <div class="event-metric"><span>RUNS</span><strong id="eventRuns">—</strong></div>
+                <div class="event-metric"><span>WICKETS</span><strong id="eventWickets">—</strong></div>
+                <div class="event-metric event-extra-nb"><span>NO BALLS</span><strong id="eventNoBalls">—</strong></div>
+                <div class="event-metric event-extra-wd"><span>WIDES</span><strong id="eventWides">—</strong></div>
+                <div class="event-metric"><span>OVERS</span><strong id="eventOvers">—</strong></div>
+                <div class="event-metric event-runout"><span>RUN OUTS</span><strong id="eventRunOuts">—</strong></div>
             </div>
+        </section>
 
-            <!-- BOWLER PANEL -->
-            <div class="bowler-panel">
-                <div class="table-header-red">
-                    <span>BOWLING OPTIONS</span>
-                    <span style="text-align: center;">O</span>
-                    <span style="text-align: center;">M</span>
-                    <span style="text-align: center;">R</span>
-                    <span style="text-align: center;">W</span>
-                    <span style="text-align: center;">ECO</span>
+        <!-- V9 CLEAR BROADCAST PLAYER CARDS: TWO BATTERS + CURRENT BOWLER -->
+        <div class="v9-player-deck" aria-label="Players currently involved">
+            <section class="v9-feature-card v9-batter-card" id="batter1Row">
+                <div class="v9-card-kicker"><span class="v9-live-dot"></span> STRIKING BATTER</div>
+                <div class="v9-feature-body">
+                    <div class="v9-avatar-wrap">
+                        <span class="player-avatar-initials" id="b1Initials">B1</span>
+                        <img class="player-avatar-photo" id="b1Photo" alt="Batter 1 portrait" loading="eager">
+                    </div>
+                    <div class="v9-player-copy">
+                        <div class="v9-player-name col-name" id="b1Name">KUSAL MENDIS</div>
+                        <div class="v9-primary-metric"><span>RUNS</span><strong id="b1Runs" class="striker-highlight">87</strong></div>
+                        <div class="v9-stat-grid">
+                            <span><b id="b1Balls">48</b><small>BALLS</small></span>
+                            <span><b id="b1Fours">9</b><small>4s</small></span>
+                            <span><b id="b1Sixes">4</b><small>6s</small></span>
+                            <span><b id="b1SR">181.25</b><small>SR</small></span>
+                        </div>
+                    </div>
                 </div>
-                <div class="table-row-item" id="bowlerRow">
-                    <div class="player-name-cell"><span class="player-avatar-initials bowler-avatar" id="bwlInitials">BW</span><img class="player-avatar-photo" id="bwlPhoto" alt="Bowler portrait" loading="eager"><span class="col-name" id="bwlName">RAZAULLAH</span></div>
-                    <span style="text-align: center;" id="bwlOvers">3.1</span>
-                    <span style="text-align: center;" id="bwlMaidens">0</span>
-                    <span style="text-align: center;" id="bwlRuns">37</span>
-                    <span style="text-align: center;" id="bwlWickets">0</span>
-                    <span style="text-align: center;" id="bwlEco">11.68</span>
+            </section>
+
+            <section class="v9-feature-card v9-batter-card" id="batter2Row">
+                <div class="v9-card-kicker"><span class="v9-live-dot"></span> NON-STRIKING BATTER</div>
+                <div class="v9-feature-body">
+                    <div class="v9-avatar-wrap">
+                        <span class="player-avatar-initials" id="b2Initials">B2</span>
+                        <img class="player-avatar-photo" id="b2Photo" alt="Batter 2 portrait" loading="eager">
+                    </div>
+                    <div class="v9-player-copy">
+                        <div class="v9-player-name col-name" id="b2Name">KAMINDU MENDIS</div>
+                        <div class="v9-primary-metric"><span>RUNS</span><strong id="b2Runs">40</strong></div>
+                        <div class="v9-stat-grid">
+                            <span><b id="b2Balls">27</b><small>BALLS</small></span>
+                            <span><b id="b2Fours">4</b><small>4s</small></span>
+                            <span><b id="b2Sixes">0</b><small>6s</small></span>
+                            <span><b id="b2SR">148.15</b><small>SR</small></span>
+                        </div>
+                    </div>
                 </div>
-                <div class="table-row-item upcoming-row" id="bowler2Row">
-                    <div class="player-name-cell"><span class="player-avatar-initials bowler-avatar" id="bwl2Initials">B2</span><img class="player-avatar-photo" id="bwl2Photo" alt="Bowler option portrait" loading="eager"><span class="col-name" id="bwl2Name">NEXT BOWLER</span><span class="upcoming-tag" id="bwl2RoleTag">NEXT</span></div>
-                    <span style="text-align:center;" id="bwl2Overs">—</span><span style="text-align:center;" id="bwl2Maidens">—</span><span style="text-align:center;" id="bwl2Runs">—</span><span style="text-align:center;" id="bwl2Wickets">—</span><span style="text-align:center;" id="bwl2Eco">—</span>
+            </section>
+
+            <section class="v9-feature-card v9-bowler-card" id="bowlerRow">
+                <div class="v9-card-kicker"><span class="v9-bowler-dot"></span> CURRENT BOWLER</div>
+                <div class="v9-feature-body">
+                    <div class="v9-avatar-wrap">
+                        <span class="player-avatar-initials bowler-avatar" id="bwlInitials">BW</span>
+                        <img class="player-avatar-photo" id="bwlPhoto" alt="Bowler portrait" loading="eager">
+                    </div>
+                    <div class="v9-player-copy">
+                        <div class="v9-player-name col-name" id="bwlName">RAZAULLAH</div>
+                        <div class="v9-primary-metric v9-bowler-metric"><span>OVERS</span><strong id="bwlOvers">3.1</strong><em>•</em><span>WICKETS</span><strong id="bwlWickets">0</strong></div>
+                        <div class="v9-stat-grid v9-bowler-stats">
+                            <span><b id="bwlMaidens">0</b><small>MAIDENS</small></span>
+                            <span><b id="bwlRuns">37</b><small>RUNS</small></span>
+                            <span><b id="bwlEco">11.68</b><small>ECONOMY</small></span>
+                        </div>
+                    </div>
                 </div>
+            </section>
+        </div>
+
+        <!-- UPCOMING PLAYERS: KEEP NEXT TWO BATTERS AND SECOND BOWLER VISIBLE -->
+        <div class="v9-upcoming-band" aria-label="Upcoming players">
+            <div class="v9-upcoming-heading">UP NEXT</div>
+            <div class="v9-next-player upcoming-row" id="batter3Row">
+                <span class="v9-next-avatar"><span class="player-avatar-initials" id="b3Initials">N3</span><img class="player-avatar-photo" id="b3Photo" alt="Next batter portrait" loading="eager"></span>
+                <span class="v9-next-name col-name" id="b3Name">NEXT BATTER 1</span><span class="upcoming-tag" id="b3RoleTag">BATTER</span>
+                <span class="v9-hidden-data" id="b3Runs">—</span><span class="v9-hidden-data" id="b3Balls">—</span><span class="v9-hidden-data" id="b3Fours">—</span><span class="v9-hidden-data" id="b3Sixes">—</span><span class="v9-hidden-data" id="b3SR">—</span>
+            </div>
+            <div class="v9-next-player upcoming-row" id="batter4Row">
+                <span class="v9-next-avatar"><span class="player-avatar-initials" id="b4Initials">N4</span><img class="player-avatar-photo" id="b4Photo" alt="Next batter portrait" loading="eager"></span>
+                <span class="v9-next-name col-name" id="b4Name">NEXT BATTER 2</span><span class="upcoming-tag" id="b4RoleTag">BATTER</span>
+                <span class="v9-hidden-data" id="b4Runs">—</span><span class="v9-hidden-data" id="b4Balls">—</span><span class="v9-hidden-data" id="b4Fours">—</span><span class="v9-hidden-data" id="b4Sixes">—</span><span class="v9-hidden-data" id="b4SR">—</span>
+            </div>
+            <div class="v9-next-player v9-next-bowler upcoming-row" id="bowler2Row">
+                <span class="v9-next-avatar"><span class="player-avatar-initials bowler-avatar" id="bwl2Initials">B2</span><img class="player-avatar-photo" id="bwl2Photo" alt="Next bowler portrait" loading="eager"></span>
+                <span class="v9-next-name col-name" id="bwl2Name">NEXT BOWLER</span><span class="upcoming-tag" id="bwl2RoleTag">BOWLER</span>
+                <span class="v9-hidden-data" id="bwl2Overs">—</span><span class="v9-hidden-data" id="bwl2Maidens">—</span><span class="v9-hidden-data" id="bwl2Runs">—</span><span class="v9-hidden-data" id="bwl2Wickets">—</span><span class="v9-hidden-data" id="bwl2Eco">—</span>
             </div>
         </div>
 
@@ -1599,10 +1637,10 @@ body.controls-visible .top-brand-wrap { margin-top: 53px !important; }
         </div>
 
         <!-- BOTTOM BROADCAST TICKER -->
-        <div class="bottom-meta-ribbon">
-            <div class="ribbon-pill-left">CRR <span class="num" id="ribbonCRR">—</span></div>
-            <div class="ribbon-footer-center">BAT: <strong id="footerBattingTeam">SL</strong><span>•</span>BOWL: <strong id="footerBowlingTeam">PAK</strong></div>
-            <div class="ribbon-toss-right" id="ribbonToss">SRI LANKA WON BY 8 WICKETS 🏆</div>
+        <div class="bottom-meta-ribbon subscribe-footer" aria-label="Subscribe to Preet Sports">
+            <span class="subscribe-live-dot"></span>
+            <span class="subscribe-footer-text">SUBSCRIBE <b>PREET SPORTS</b> <i>•</i> LIVE COMMENTARY</span>
+            <span class="subscribe-footer-cta">SUBSCRIBE NOW</span>
         </div>
 
     </div>
@@ -3185,6 +3223,544 @@ body.controls-visible .top-brand-wrap { margin-top:49px !important; }
   .table-row-item .col-name { font-size: 13px !important; }
 }
 </style>
+
+
+<style id="preetSportsV9MobileClear">
+:root{--v9-ink:#030B17;--v9-panel:#061A30;--v9-blue:#0878D8;--v9-cyan:#24DDF7;--v9-maroon:#850027;--v9-red:#EF3154;--v9-gold:#FFBE18;--v9-white:#F7FBFF;}
+html,body,.screen-wrapper{background:#030B17!important;}
+html.ps-obs-mode #urlControlBar,#urlControlBar.hidden-obs{display:none!important;visibility:hidden!important;pointer-events:none!important;}
+.scoreboard{position:relative!important;display:block!important;width:1280px!important;height:720px!important;min-width:1280px!important;min-height:720px!important;overflow:hidden!important;background:#04101F!important;isolation:isolate;}
+.stadium-background{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;z-index:0!important;opacity:1!important;background:linear-gradient(180deg,rgba(4,13,26,.16) 0%,rgba(4,13,26,.04) 35%,rgba(4,13,26,.28) 65%,rgba(4,13,26,.72) 100%),linear-gradient(90deg,rgba(4,13,26,.20),transparent 20%,transparent 80%,rgba(4,13,26,.20)),url("https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=1800&q=90") center 48%/cover no-repeat!important;filter:saturate(1.2) brightness(1.18)!important;transform:none!important;}
+body.controls-visible .top-brand-wrap{margin-top:0!important;top:8px!important;}
+.top-brand-wrap{position:absolute!important;top:8px!important;left:0!important;right:0!important;width:100%!important;height:44px!important;margin:0!important;padding:0!important;display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:center!important;gap:14px!important;z-index:30!important;}
+.brand-capsule{min-height:40px!important;height:40px!important;padding:4px 24px!important;border:1px solid rgba(106,194,255,.9)!important;border-radius:9px!important;background:linear-gradient(180deg,#0D3158,#020A17)!important;box-shadow:0 4px 12px rgba(0,0,0,.5)!important;}
+.brand-capsule .brand-white,.brand-capsule .brand-gold{font-size:26px!important;line-height:1!important;letter-spacing:1px!important;}
+.live-badge{height:36px!important;min-width:104px!important;display:flex!important;align-items:center!important;justify-content:center!important;margin:0!important;padding:2px 20px!important;border-radius:7px!important;font-size:20px!important;letter-spacing:1.6px!important;}
+.live-badge.result{background:linear-gradient(180deg,#FFD95A,#F2A700)!important;color:#06101D!important;text-shadow:none!important;border-color:#FFE9A0!important;}
+.match-fixture-bar{position:absolute!important;top:61px!important;left:0!important;width:100%!important;height:118px!important;display:flex!important;align-items:center!important;margin:0!important;padding:0 18px!important;z-index:20!important;}
+.fixture-pod{height:110px!important;min-width:0!important;flex:1 1 0!important;display:flex!important;align-items:center!important;gap:16px!important;padding:8px 18px!important;box-shadow:0 7px 18px rgba(0,0,0,.32)!important;}
+.fixture-pod.left-side{border:2px solid var(--v9-cyan)!important;border-radius:17px 5px 5px 17px!important;background:linear-gradient(105deg,#021C3C,#0757B2 58%,#06417F)!important;}
+.fixture-pod.right-side{border:2px solid #FF4774!important;border-radius:5px 17px 17px 5px!important;background:linear-gradient(255deg,#380014,#8E002C 58%,#59001E)!important;}
+.crest-shield{width:94px!important;height:94px!important;min-width:94px!important;flex:0 0 94px!important;padding:0!important;overflow:hidden!important;border-radius:50%!important;background:#fff!important;border:3px solid var(--v9-gold)!important;box-shadow:0 3px 11px rgba(0,0,0,.4)!important;}
+.crest-shield img{display:block!important;width:100%!important;height:100%!important;max-width:none!important;max-height:none!important;object-fit:cover!important;object-position:center!important;border-radius:50%!important;}
+.team-hero-copy{min-width:0!important;display:flex!important;flex:1 1 auto!important;flex-direction:column!important;gap:6px!important;}
+.left-copy{align-items:flex-start!important;text-align:left!important;}.right-copy{align-items:flex-end!important;text-align:right!important;}
+.team-name-hero{font-size:37px!important;line-height:1!important;letter-spacing:.5px!important;max-width:100%!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;text-shadow:0 2px 5px rgba(0,0,0,.4)!important;}
+.team-name-hero.long-team-name{font-size:29px!important;letter-spacing:0!important;}
+.team-hero-scoreline{display:flex!important;align-items:baseline!important;gap:12px!important;line-height:1!important;white-space:nowrap!important;}
+.team-hero-scoreline strong{font-size:39px!important;font-weight:900!important;letter-spacing:-.6px!important;}
+.team-hero-scoreline span{font-size:23px!important;color:#DDF0FF!important;}
+.center-vs-trap{width:132px!important;height:114px!important;min-width:132px!important;flex:0 0 132px!important;z-index:31!important;background:linear-gradient(180deg,#2B2108,#030B15)!important;border-top:3px solid var(--v9-gold)!important;border-bottom:3px solid var(--v9-gold)!important;}
+.vs-text-gold{font-size:51px!important;line-height:1!important;text-shadow:0 0 12px rgba(255,190,24,.35),0 2px 4px #000!important;}
+.sub-fixture-pill{bottom:3px!important;z-index:40!important;padding:3px 12px!important;border-color:var(--v9-gold)!important;background:#06101D!important;font-size:14px!important;letter-spacing:.6px!important;}
+.live-score-row{position:absolute!important;top:186px!important;left:0!important;width:100%!important;height:113px!important;display:flex!important;gap:12px!important;margin:0!important;padding:0 18px!important;z-index:18!important;}
+.score-card-main{flex:1.04 1 0!important;min-width:0!important;height:113px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;padding-right:20px!important;border:2px solid var(--v9-cyan)!important;border-radius:13px!important;background:linear-gradient(110deg,rgba(4,29,57,.985),rgba(2,14,29,.985))!important;box-shadow:0 7px 17px rgba(0,0,0,.35)!important;}
+.score-team-tag{width:128px!important;min-width:128px!important;height:100%!important;font-size:46px!important;background:linear-gradient(180deg,#fff,#DDEAF7)!important;color:#07254A!important;}
+.score-digits-hero{font-size:82px!important;line-height:1!important;letter-spacing:-1.5px!important;font-weight:900!important;color:#fff!important;text-shadow:0 2px 5px rgba(0,0,0,.42)!important;white-space:nowrap!important;}
+.overs-stack{min-width:94px!important;margin-left:5px!important;}.overs-num{font-size:39px!important;line-height:1!important;}.overs-text{font-size:17px!important;letter-spacing:.5px!important;color:#C5E0F5!important;}
+.current-over-card{flex:.96 1 0!important;min-width:0!important;height:113px!important;border:2px solid var(--v9-gold)!important;border-radius:13px!important;background:rgba(3,15,29,.98)!important;box-shadow:0 7px 17px rgba(0,0,0,.35)!important;}
+.over-card-header{height:31px!important;flex:0 0 31px!important;font-size:20px!important;letter-spacing:1.6px!important;background:linear-gradient(90deg,#FFDB63,#FFB800 55%,#F49A00)!important;color:#101622!important;}
+.over-card-balls{display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;align-items:center!important;justify-items:center!important;gap:8px!important;padding:4px 13px!important;background:rgba(2,12,24,.97)!important;}
+.ball-circle{width:55px!important;height:55px!important;max-width:100%!important;border-radius:16px!important;font-size:28px!important;font-weight:900!important;border:2px solid #3477AE!important;background:linear-gradient(180deg,#12395D,#08213B)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.09)!important;}
+.ball-circle.four{background:linear-gradient(180deg,#FFE27C,#FFB800)!important;color:#06101D!important;border-color:#FFE79B!important;}.ball-circle.six{background:linear-gradient(180deg,#FFA13B,#F36B00)!important;color:#fff!important;border-color:#FFC079!important;}.ball-circle.wicket{background:linear-gradient(180deg,#FF4D69,#B90028)!important;color:#fff!important;border-color:#FF9CAB!important;}.ball-circle.extra{background:linear-gradient(180deg,#19C6E5,#047F9F)!important;color:#fff!important;border-color:#8CEEFF!important;}.ball-circle.dot{color:#B2C7DC!important;}
+.match-context-bar{position:absolute!important;top:306px!important;left:14px!important;width:calc(100% - 28px)!important;height:39px!important;margin:0!important;padding:0 8px!important;display:grid!important;grid-template-columns:1.45fr .9fr .9fr!important;gap:0!important;border:1.5px solid rgba(255,190,24,.85)!important;border-radius:8px!important;background:linear-gradient(90deg,rgba(2,11,22,.98),rgba(7,28,50,.98),rgba(2,11,22,.98))!important;z-index:20!important;}
+.match-context-bar>div{display:flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;min-width:0!important;padding:0 8px!important;white-space:nowrap!important;overflow:hidden!important;}.match-context-bar>div+div{border-left:1px solid rgba(80,148,198,.45)!important;}.context-label{color:#5FE6F7!important;font-size:18px!important;font-weight:900!important;letter-spacing:.4px!important;}.match-context-bar strong{color:#fff!important;font-size:20px!important;font-weight:900!important;overflow:hidden!important;text-overflow:ellipsis!important;}.context-toss strong{color:#FFCE42!important;}
+.match-stats-bar{position:absolute!important;top:350px!important;left:14px!important;width:calc(100% - 28px)!important;height:39px!important;margin:0!important;padding:0 12px!important;display:flex!important;justify-content:space-around!important;align-items:center!important;gap:10px!important;border:1.5px solid rgba(255,190,24,.82)!important;border-radius:8px!important;background:rgba(3,14,28,.98)!important;z-index:20!important;}
+.stat-metric{display:flex!important;align-items:center!important;justify-content:center!important;min-width:0!important;gap:7px!important;font-size:20px!important;letter-spacing:0!important;white-space:nowrap!important;}.stat-metric .lbl{font-size:19px!important;color:#5FE6F7!important;}.stat-metric .val{font-size:20px!important;padding:0 2px!important;color:#FFCE42!important;white-space:nowrap!important;}.stat-divider{height:25px!important;flex:0 0 1px!important;background:rgba(75,137,184,.48)!important;}.stat-metric.last-wkt-metric{max-width:38%!important;overflow:hidden!important;}.stat-metric.last-wkt-metric .val{color:#FF7891!important;display:block!important;min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important;}
+.v9-player-deck{position:absolute!important;top:396px!important;left:0!important;width:100%!important;height:168px!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important;padding:0 18px!important;z-index:22!important;}
+.v9-feature-card{min-width:0!important;height:168px!important;overflow:hidden!important;border-radius:13px!important;box-shadow:0 7px 17px rgba(0,0,0,.36)!important;color:#fff!important;}
+.v9-batter-card{border:2px solid #1AA7FF!important;background:linear-gradient(150deg,rgba(4,55,103,.98),rgba(2,17,34,.99))!important;}.v9-bowler-card{border:2px solid #FF3157!important;background:linear-gradient(150deg,rgba(93,0,29,.98),rgba(20,3,12,.99))!important;}
+.v9-card-kicker{height:29px!important;display:flex!important;align-items:center!important;gap:8px!important;padding:0 12px!important;background:linear-gradient(90deg,#0877D5,#064B8F)!important;color:#F7FBFF!important;font:900 17px 'Montserrat',sans-serif!important;letter-spacing:.6px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;}.v9-bowler-card .v9-card-kicker{background:linear-gradient(90deg,#D50936,#850023)!important;}.v9-live-dot,.v9-bowler-dot{width:9px;height:9px;flex:0 0 9px;border-radius:50%;background:#FFCA36;box-shadow:0 0 8px rgba(255,202,54,.45);}.v9-bowler-dot{background:#fff;box-shadow:none;}
+.v9-feature-body{height:calc(100% - 29px)!important;display:flex!important;align-items:center!important;gap:13px!important;padding:9px 12px!important;min-width:0!important;}
+.v9-avatar-wrap{position:relative!important;width:112px!important;height:121px!important;min-width:112px!important;flex:0 0 112px!important;overflow:hidden!important;border-radius:10px!important;border:2px solid rgba(255,190,24,.9)!important;background:linear-gradient(145deg,#195887,#06172A)!important;box-shadow:0 3px 10px rgba(0,0,0,.35)!important;}
+.v9-avatar-wrap .player-avatar-initials,.v9-avatar-wrap .player-avatar-photo{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;min-width:0!important;max-width:none!important;flex:none!important;margin:0!important;border:0!important;border-radius:8px!important;object-fit:cover!important;object-position:center top!important;}
+.v9-avatar-wrap .player-avatar-initials{display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#1D679E,#071D34)!important;color:#fff!important;font:900 28px 'Montserrat',sans-serif!important;}.v9-avatar-wrap .player-avatar-photo,.v9-next-avatar .player-avatar-photo{display:none!important;}
+.v9-player-copy{display:flex!important;flex-direction:column!important;justify-content:center!important;gap:7px!important;min-width:0!important;flex:1 1 auto!important;}
+.v9-player-name{display:block!important;max-width:100%!important;color:#fff!important;font:900 27px 'Montserrat',sans-serif!important;line-height:1.05!important;letter-spacing:0!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;}
+.v9-primary-metric{display:flex!important;align-items:baseline!important;gap:8px!important;min-width:0!important;white-space:nowrap!important;}.v9-primary-metric>span{color:#9DDBFF!important;font:900 15px 'Montserrat',sans-serif!important;letter-spacing:.6px!important;}.v9-primary-metric>strong{color:#FFCE42!important;font:900 50px 'Montserrat',sans-serif!important;line-height:.95!important;letter-spacing:-1.4px!important;}.v9-bowler-metric{gap:6px!important;}.v9-primary-metric>em{color:#4ACFF0!important;font-style:normal!important;font-size:23px!important;}.v9-bowler-metric>span{font-size:13px!important;}.v9-bowler-metric>strong{font-size:35px!important;letter-spacing:-.5px!important;}
+.v9-stat-grid{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:4px!important;align-items:center!important;min-width:0!important;}.v9-stat-grid>span{display:flex!important;flex-direction:column!important;align-items:flex-start!important;justify-content:center!important;min-width:0!important;gap:1px!important;}.v9-stat-grid b{color:#fff!important;font:900 23px 'Montserrat',sans-serif!important;line-height:1!important;white-space:nowrap!important;}.v9-stat-grid small{color:#9BCBEA!important;font:900 12px 'Montserrat',sans-serif!important;letter-spacing:.45px!important;white-space:nowrap!important;}.v9-bowler-stats{grid-template-columns:repeat(3,minmax(0,1fr))!important;}.v9-bowler-stats b{font-size:25px!important;}
+.v9-upcoming-band{position:absolute!important;top:569px!important;left:14px!important;width:calc(100% - 28px)!important;height:38px!important;display:grid!important;grid-template-columns:120px repeat(3,minmax(0,1fr))!important;align-items:center!important;gap:8px!important;padding:4px 7px!important;border:1px solid rgba(42,168,255,.62)!important;border-radius:8px!important;background:linear-gradient(90deg,rgba(3,16,31,.98),rgba(5,29,51,.98))!important;z-index:24!important;}
+.v9-upcoming-heading{color:#FFCB3D!important;font:900 20px 'Montserrat',sans-serif!important;letter-spacing:.4px!important;text-align:center!important;white-space:nowrap!important;}.v9-next-player{display:flex!important;align-items:center!important;gap:7px!important;min-width:0!important;height:31px!important;padding:2px 6px!important;border:1px solid rgba(90,151,194,.36)!important;border-radius:6px!important;background:rgba(9,35,59,.8)!important;overflow:hidden!important;}.v9-next-player.upcoming-row-empty{opacity:.75!important;}.v9-next-avatar{position:relative!important;display:block!important;width:28px!important;height:28px!important;min-width:28px!important;flex:0 0 28px!important;border-radius:50%!important;overflow:hidden!important;border:1.5px solid var(--v9-gold)!important;background:#12365A!important;}.v9-next-avatar .player-avatar-initials,.v9-next-avatar .player-avatar-photo{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;min-width:0!important;border:0!important;border-radius:50%!important;object-fit:cover!important;object-position:center top!important;}.v9-next-avatar .player-avatar-initials{display:flex;align-items:center;justify-content:center;background:#12385B!important;color:#fff!important;font:900 9px 'Montserrat',sans-serif!important;}.v9-next-name{display:block!important;min-width:0!important;flex:1!important;color:#EDF7FF!important;font:900 16px 'Montserrat',sans-serif!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;}.v9-next-player .upcoming-tag{display:none!important;}.v9-hidden-data{display:none!important;}
+.bottom-analysis-row{position:absolute!important;top:610px!important;left:0!important;width:100%!important;height:78px!important;display:grid!important;grid-template-columns:1.48fr .82fr!important;gap:10px!important;margin:0!important;padding:0 14px!important;z-index:24!important;min-width:0!important;}
+.last-two-overs-panel{height:78px!important;min-height:0!important;display:flex!important;flex-direction:column!important;gap:1px!important;margin:0!important;padding:2px 5px!important;border:1px solid rgba(255,190,24,.85)!important;border-radius:8px!important;background:rgba(2,13,27,.98)!important;overflow:hidden!important;}
+.last-two-title{display:flex!important;align-items:center!important;gap:9px!important;min-height:14px!important;height:14px!important;flex:0 0 14px!important;padding:0 5px!important;border:0!important;border-bottom:1px solid rgba(255,190,24,.36)!important;}.last-two-kicker{font-size:11px!important;letter-spacing:.5px!important;}.last-two-title strong{font-size:15px!important;margin:0!important;line-height:1!important;}
+.last-over-card{display:grid!important;grid-template-columns:82px minmax(0,1fr) 78px!important;gap:4px!important;align-items:center!important;min-height:0!important;height:25px!important;min-height:25px!important;flex:0 0 25px!important;padding:0 4px!important;border-radius:4px!important;background:rgba(8,31,52,.83)!important;}.last-over-label{font-size:13px!important;font-weight:900!important;}.last-over-balls{display:flex!important;justify-content:center!important;align-items:center!important;gap:4px!important;min-width:0!important;}.mini-ball{display:flex!important;align-items:center!important;justify-content:center!important;width:24px!important;height:24px!important;min-width:0!important;flex:0 0 24px!important;font-size:12px!important;border-radius:50%!important;}.last-over-total{font-size:14px!important;white-space:nowrap!important;}
+.projection-panel{height:78px!important;min-width:0!important;border-radius:8px!important;overflow:hidden!important;border:1.5px solid #1A9AFF!important;background:linear-gradient(145deg,rgba(6,54,114,.99),rgba(3,18,42,.99))!important;}.projection-panel-header{height:18px!important;font-size:13px!important;letter-spacing:.1px!important;padding:0 5px!important;}.poll-result-body{height:calc(100% - 18px)!important;display:grid!important;grid-template-columns:1fr 1fr!important;gap:4px!important;padding:3px 5px!important;}.winner-summary{gap:1px!important;padding:0 4px 0 0!important;}.poll-kicker{font-size:9px!important;}.winner-summary strong{font-size:17px!important;line-height:1!important;}.winner-summary #winnerResultText{font-size:9px!important;line-height:1!important;max-height:14px!important;}.fan-poll-summary{gap:2px!important;}.fan-poll-heading{font-size:9px!important;gap:2px!important;}.fan-poll-heading span{font-size:7px!important;}.poll-result-line{grid-template-columns:23px minmax(0,1fr) 23px!important;gap:3px!important;font-size:9px!important;}.poll-result-line strong{font-size:9px!important;}.poll-meter{height:5px!important;}
+.bottom-meta-ribbon{position:absolute!important;left:0!important;top:691px!important;width:100%!important;height:29px!important;min-height:29px!important;margin:0!important;padding:0 18px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;border-top:1px solid rgba(255,190,24,.72)!important;background:rgba(2,7,15,.99)!important;z-index:30!important;}.ribbon-pill-left{font-size:17px!important;padding:2px 12px!important;}.ribbon-footer-center{font-size:17px!important;letter-spacing:.3px!important;white-space:nowrap!important;}.ribbon-footer-center span{padding:0 7px!important;}.ribbon-toss-right{max-width:40%!important;font-size:15px!important;letter-spacing:.15px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;}
+/* Fixed artboard scales as one unit in a mobile browser; these are native 1280x720 design sizes. */
+@media(max-width:1100px){.team-name-hero{font-size:37px!important;}.team-name-hero.long-team-name{font-size:29px!important;}.v9-player-name{font-size:27px!important;}.v9-avatar-wrap{width:112px!important;min-width:112px!important;flex-basis:112px!important;}}
+@media(max-height:560px){.top-brand-wrap{top:8px!important;margin-top:0!important;}}
+@media(prefers-reduced-motion:reduce){.ball-circle.wicket{animation:none!important;}}
+</style>
+<script id="preetSportsV9PortraitStateFix">
+function setPlayerPortrait(photoId, initialsId, player, data, name) {
+  const img = document.getElementById(photoId);
+  const initials = document.getElementById(initialsId);
+  const label = String(name || (player && (player.short_name || player.name)) || "?").trim();
+  if (initials) { initials.textContent = label.split(/\s+/).filter(Boolean).slice(0,2).map(part=>part[0]).join("").toUpperCase() || "•"; initials.style.setProperty("display","flex","important"); }
+  if (!img) return;
+  const url = playerImageUrl(player, data) || findCrexPlayerPhoto(label);
+  let failedUrl = "";
+  img.onload = () => { img.style.setProperty("display","block","important"); img.style.setProperty("visibility","visible","important"); if (initials) initials.style.setProperty("display","none","important"); };
+  img.onerror = () => { if (img.dataset.fallbackUrl && img.dataset.fallbackUrl !== failedUrl && img.src !== img.dataset.fallbackUrl) { failedUrl = img.dataset.fallbackUrl; img.src = failedUrl; return; } img.style.setProperty("display","none","important"); if (initials) initials.style.setProperty("display","flex","important"); };
+  if (url) { img.dataset.fallbackUrl = ""; img.style.setProperty("display","block","important"); img.src = url; }
+  else { img.removeAttribute("src"); img.style.setProperty("display","none","important"); if (initials) initials.style.setProperty("display","flex","important"); }
+}
+(function(){
+  try { const p = new URLSearchParams(window.location.search); if(p.get("hide")==="1"||p.get("obs")==="1") { document.documentElement.classList.add("ps-obs-mode"); const bar=document.getElementById("urlControlBar"); if(bar) bar.classList.add("hidden-obs"); } } catch(e){}
+})();
+</script>
+
+
+
+<style id="preetSportsV10ObsLandscape">
+/* V10: Keep the production output a true 16:9 1280x720 landscape scoreboard.
+   It is intentionally not rearranged into a vertical/mobile layout. */
+html, body { width:100%; height:100%; }
+.screen-wrapper { width:100vw!important; height:100vh!important; display:flex!important; align-items:center!important; justify-content:center!important; overflow:hidden!important; }
+.scoreboard { width:1280px!important; height:720px!important; min-width:1280px!important; min-height:720px!important; max-width:none!important; max-height:none!important; transform-origin:center center!important; }
+/* Portraits use the full image frame and remain visible when the image successfully loads. */
+.v9-avatar-wrap { width:126px!important; min-width:126px!important; flex:0 0 126px!important; height:126px!important; }
+.v9-avatar-wrap .player-avatar-photo { object-fit:cover!important; object-position:center 18%!important; }
+.v9-next-avatar { width:32px!important; height:32px!important; min-width:32px!important; flex:0 0 32px!important; }
+.v9-next-avatar .player-avatar-photo { object-fit:cover!important; object-position:center 18%!important; }
+/* Stronger legibility at the native OBS canvas size. */
+.v9-player-name { font-size:29px!important; }
+.v9-primary-metric>strong { font-size:52px!important; }
+.v9-stat-grid b { font-size:24px!important; }
+.v9-stat-grid small { font-size:13px!important; }
+.table-row-item .col-name { font-size:15px!important; }
+/* Do not shrink the design internally for narrow device widths; scale the whole 16:9 canvas. */
+@media(max-width:1100px) {
+  .scoreboard { width:1280px!important; height:720px!important; min-width:1280px!important; min-height:720px!important; }
+}
+</style>
+
+
+<style id="preetSportsV11EventCentre">
+/* V11: six live-event metrics and a strong subscription footer, native 1280x720. */
+.event-centre-box{position:absolute!important;left:14px!important;top:391px!important;width:calc(100% - 28px)!important;height:34px!important;display:grid!important;grid-template-columns:142px minmax(0,1fr)!important;align-items:stretch!important;overflow:hidden!important;border:1.5px solid rgba(255,184,0,.9)!important;border-radius:8px!important;background:linear-gradient(90deg,rgba(3,15,29,.99),rgba(6,32,57,.99),rgba(3,15,29,.99))!important;box-shadow:0 3px 10px rgba(0,0,0,.3)!important;z-index:23!important;}
+.event-centre-heading{display:flex!important;align-items:center!important;justify-content:center!important;padding:0 8px!important;background:linear-gradient(90deg,#FFDA5B,#FFB800)!important;color:#06101D!important;font:900 13px 'Montserrat',sans-serif!important;letter-spacing:.3px!important;white-space:nowrap!important;border-right:1px solid rgba(255,255,255,.25)!important;}
+.event-centre-metrics{display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;align-items:center!important;min-width:0!important;height:100%!important;}
+.event-metric{height:100%!important;min-width:0!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:7px!important;padding:0 5px!important;white-space:nowrap!important;overflow:hidden!important;}
+.event-metric+.event-metric{border-left:1px solid rgba(74,149,200,.36)!important;}
+.event-metric span{color:#8CEBFF!important;font:900 10px 'Montserrat',sans-serif!important;letter-spacing:.25px!important;}
+.event-metric strong{color:#FFFFFF!important;font:900 17px 'Montserrat',sans-serif!important;line-height:1!important;text-shadow:0 1px 3px rgba(0,0,0,.5)!important;}
+.event-extra-nb strong{color:#54E7FF!important}.event-extra-wd strong{color:#FFCE42!important}.event-runout strong{color:#FF758D!important}
+/* Make room for the new centre strip without changing the 16:9 canvas. */
+.v9-player-deck{top:430px!important;height:128px!important;gap:10px!important;}
+.v9-feature-card{height:128px!important;border-radius:10px!important;}
+.v9-card-kicker{height:24px!important;font-size:14px!important;padding:0 9px!important;}
+.v9-feature-body{height:calc(100% - 24px)!important;gap:10px!important;padding:6px 8px!important;}
+.v9-avatar-wrap{width:88px!important;height:88px!important;min-width:88px!important;flex:0 0 88px!important;border-radius:8px!important;}
+.v9-avatar-wrap .player-avatar-initials,.v9-avatar-wrap .player-avatar-photo{border-radius:6px!important;}
+.v9-player-copy{gap:4px!important;}
+.v9-player-name{font-size:22px!important;}
+.v9-primary-metric>span{font-size:11px!important}.v9-primary-metric>strong{font-size:36px!important;}
+.v9-bowler-metric>strong{font-size:27px!important}.v9-bowler-metric>span{font-size:10px!important}.v9-primary-metric>em{font-size:16px!important;}
+.v9-stat-grid b{font-size:17px!important}.v9-stat-grid small{font-size:10px!important;}
+.v9-upcoming-band{top:563px!important;height:34px!important;grid-template-columns:105px repeat(3,minmax(0,1fr))!important;gap:5px!important;padding:2px 5px!important;}
+.v9-upcoming-heading{font-size:15px!important}.v9-next-player{height:28px!important;gap:5px!important;padding:1px 4px!important}.v9-next-avatar{width:24px!important;height:24px!important;min-width:24px!important;flex-basis:24px!important}.v9-next-name{font-size:13px!important;}
+.bottom-analysis-row{top:602px!important;height:82px!important;}
+.last-two-overs-panel,.projection-panel{height:82px!important;}
+.bottom-meta-ribbon{top:691px!important;height:29px!important;min-height:29px!important;justify-content:center!important;gap:12px!important;padding:0 12px!important;}
+.subscribe-footer{background:linear-gradient(90deg,#020710,#061B31 50%,#020710)!important;border-top:1.5px solid #FFB800!important;}
+.subscribe-live-dot{width:9px!important;height:9px!important;flex:0 0 9px!important;border-radius:50%!important;background:#FFB800!important;box-shadow:0 0 8px rgba(255,184,0,.8)!important;}
+.subscribe-footer-text{color:#F5FAFF!important;font:900 18px 'Montserrat',sans-serif!important;letter-spacing:1.1px!important;white-space:nowrap!important;}
+.subscribe-footer-text b{color:#FFBE18!important}.subscribe-footer-text i{color:#29DFF5!important;font-style:normal!important;padding:0 8px!important;}
+.subscribe-footer-cta{color:#06101D!important;background:linear-gradient(180deg,#FFE06A,#FFB800)!important;border-radius:12px!important;padding:3px 11px!important;font:900 11px 'Montserrat',sans-serif!important;letter-spacing:.5px!important;white-space:nowrap!important;}
+@media(max-width:1100px){.event-centre-heading{font-size:13px!important}.event-metric span{font-size:10px!important}.event-metric strong{font-size:17px!important}.subscribe-footer-text{font-size:18px!important}}
+</style>
+<script id="preetSportsV11EventCentreLogic">
+(function(){
+  const byId = id => document.getElementById(id);
+  const first = (...vals) => { for (const v of vals) if(v!==undefined && v!==null && String(v).trim()!=='') return v; return null; };
+  const toNum = v => { if(v===null||v===undefined||String(v).trim()==='') return null; const n=Number(v); return Number.isFinite(n)?n:null; };
+  function currentOver(data){return first(data&&data.current_over,data&&data.currentOver,data&&data.currentOverData,{});}
+  function ballText(ball){if(ball&&typeof ball==='object') return String(first(ball.text,ball.value,ball.label,ball.result,ball.event,ball.extra_type,ball.extraType,'')).toLowerCase();return String(ball??'').toLowerCase();}
+  function countExtras(balls,kind){let n=0;for(const b of balls){const text=ballText(b);const obj=b&&typeof b==='object'?b:{};const type=String(first(obj.extra_type,obj.extraType,obj.type,obj.kind,'')).toLowerCase();const extras=obj.extras&&typeof obj.extras==='object'?obj.extras:{};const flag=kind==='nb'?(obj.no_ball||obj.noBall||obj.noball||extras.no_ball||extras.noballs):(obj.wide||obj.is_wide||obj.isWide||extras.wides);if(flag||type.includes(kind==='nb'?'no':'wide')||text.includes(kind==='nb'?'nb':'wd')||text.includes(kind==='nb'?'no-ball':'wide')) n++;}return n;}
+  function countRunOuts(balls){let n=0;for(const b of balls){const text=ballText(b);const obj=b&&typeof b==='object'?b:{};const dismissal=String(first(obj.dismissal,obj.dismissal_type,obj.dismissalType,obj.wicket_type,obj.wicketType,'')).toLowerCase();if(/run.?out/.test(text)||/run.?out/.test(dismissal)||obj.run_out||obj.runOut) n++;}return n;}
+  function render(data){if(!data||typeof data!=='object')return;const t1=data.team1&&typeof data.team1==='object'?data.team1:{};const t2=data.team2&&typeof data.team2==='object'?data.team2:{};const scoreText=String(first(byId('mainScoreHero')&&byId('mainScoreHero').textContent,t1.score,t1.total,'')).trim();const runs=(scoreText.match(/^(\d+)/)||[])[1];const wkts=(scoreText.match(/\/(\d+)/)||[])[1];
+    const overObj=currentOver(data);let balls=[];for(const key of ['balls','deliveries','events','ball_by_ball','ballByBall','results'])if(Array.isArray(overObj[key])){balls=overObj[key];break;}
+    const metrics={eventRuns:runs??'—',eventWickets:wkts??first(data.wickets,data.wicket_count,data.wicketCount,'—'),eventNoBalls:balls.length?countExtras(balls,'nb'):'—',eventWides:balls.length?countExtras(balls,'wd'):'—',eventOvers:first(byId('mainOversHero')&&byId('mainOversHero').textContent,t1.overs,t1.over,'—'),eventRunOuts:balls.length?countRunOuts(balls):'—'};
+    for(const [id,value] of Object.entries(metrics)){const el=byId(id);if(el)el.textContent=String(value);}
+  }
+  const oldRender=window.renderScoreData;
+  if(typeof oldRender==='function')window.renderScoreData=function(data){const result=oldRender.apply(this,arguments);try{render(data);}catch(e){}return result;};
+  document.addEventListener('DOMContentLoaded',()=>{try{if(window.latestScorePayloadForAssets)render(window.latestScorePayloadForAssets);}catch(e){}});
+  // Keep the centre metrics synchronized with the score fields in case an existing renderer updates them asynchronously.
+  let lastScore='';setInterval(()=>{const el=byId('mainScoreHero');if(el&&el.textContent!==lastScore){lastScore=el.textContent;const run=(el.textContent.match(/^(\d+)/)||[])[1];const w=(el.textContent.match(/\/(\d+)/)||[])[1];if(byId('eventRuns'))byId('eventRuns').textContent=run||'—';if(byId('eventWickets'))byId('eventWickets').textContent=w||'—';if(byId('eventOvers')&&byId('mainOversHero'))byId('eventOvers').textContent=byId('mainOversHero').textContent||'—';}},800);
+})();
+</script>
+
+
+<style id="preetSportsV12BlackOverBox">
+/* V12: only the centre fixture piece is restyled; the rest of the V11 layout is preserved. */
+.center-vs-trap {
+  clip-path: none !important;
+  width: 148px !important;
+  min-width: 148px !important;
+  flex: 0 0 148px !important;
+  height: 78px !important;
+  align-self: center !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 3px !important;
+  padding: 6px 5px !important;
+  overflow: hidden !important;
+  border: 2px solid #E5E74A !important;
+  border-radius: 10px !important;
+  background: linear-gradient(180deg, #07090D 0%, #000000 100%) !important;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.85), inset 0 0 0 1px rgba(255,255,255,.035), 0 5px 16px rgba(0,0,0,.4) !important;
+  z-index: 40 !important;
+}
+#centrePrimaryText.vs-text-gold {
+  position: static !important;
+  display: block !important;
+  transform: none !important;
+  margin: 0 !important;
+  max-width: 100% !important;
+  color: #FFFFFF !important;
+  font: 900 25px/1 'Rajdhani','Montserrat',sans-serif !important;
+  font-style: normal !important;
+  letter-spacing: 1.15px !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+  text-shadow: 0 1px 2px #000 !important;
+}
+#centrePrimaryText.compact-centre-text { font-size: 16px !important; letter-spacing: .2px !important; }
+.center-vs-trap .sub-fixture-pill {
+  position: static !important;
+  left: auto !important;
+  bottom: auto !important;
+  transform: none !important;
+  z-index: auto !important;
+  display: block !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 3px !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: #FFD85A !important;
+  box-shadow: none !important;
+  font: 800 10px/1.1 'Montserrat',sans-serif !important;
+  letter-spacing: .2px !important;
+  white-space: nowrap !important;
+}
+/* Ball-by-ball chips must remain readable inside the existing over card. */
+#currentOverBallsContainer .ball-circle { font-weight: 900 !important; }
+#currentOverBallsContainer .ball-circle.wicket { background: linear-gradient(180deg,#FF4E68,#BD002A) !important; color:#fff !important; }
+#currentOverBallsContainer .ball-circle.runout { background: linear-gradient(180deg,#FF4E68,#BD002A) !important; color:#fff !important; }
+#currentOverBallsContainer .ball-circle.four { background: linear-gradient(180deg,#FFE47B,#FFB800) !important; color:#06101D !important; }
+#currentOverBallsContainer .ball-circle.six { background: linear-gradient(180deg,#FF9D3A,#F36B00) !important; color:#fff !important; }
+@media (max-width: 700px) {
+  .center-vs-trap { width: 132px !important; min-width:132px !important; flex-basis:132px !important; }
+  #centrePrimaryText.vs-text-gold { font-size:22px !important; }
+}
+</style>
+
+
+<script id="preetSportsV12CrexCentreAndBallLogic">
+(function () {
+  'use strict';
+  const byId = id => document.getElementById(id);
+  let crexCentreTextFromPage = '';
+  let lastPayload = null;
+
+  function tidy(value) { return String(value ?? '').replace(/\s+/g, ' ').trim(); }
+  function validCountdown(value) {
+    const s = tidy(value);
+    // Prefer CREX's explicit pre-match countdown (e.g. 01h : 13m).
+    // Do not mistake fixture kick-off times such as 9:00 AM for a countdown.
+    const m = s.match(/\b(\d{1,3}\s*d(?:ays?)?\s*[: ,]*)?(\d{1,2}\s*h\s*[:：]\s*\d{1,2}\s*m|\d{1,2}\s*h\s+\d{1,2}\s*m)\b/i);
+    return m ? tidy(m[0]).replace(/\s*[:：]\s*/g, ' : ').toUpperCase() : '';
+  }
+  function captureCrexCentreText(doc) {
+    if (!doc) return;
+    const body = tidy(doc.body && (doc.body.innerText || doc.body.textContent) || '');
+    if (!body) return;
+    // CREX pre-match center countdown, e.g. "01h : 13m". Avoid browser/system clock strings.
+    const countdown = validCountdown(body);
+    if (countdown) { crexCentreTextFromPage = countdown; updateCentre(lastPayload); return; }
+    const lines = String(doc.body.innerText || doc.body.textContent || '').split(/\n+/).map(tidy).filter(Boolean);
+    const state = lines.find(line => /^(INNINGS BREAK|RAIN DELAY|BAD LIGHT|STUMPS|LUNCH|TEA|BOWLING|OVER|MATCH DELAYED|MATCH ABANDONED)$/i.test(line));
+    if (state) { crexCentreTextFromPage = state.toUpperCase(); updateCentre(lastPayload); }
+  }
+
+  // Wrap CREX document enrichment so centre-state text can be read from the same public page
+  // that is already being fetched for player portraits / over history.
+  const originalCollector = window.collectImagesFromCrexDocument;
+  if (typeof originalCollector === 'function' && !originalCollector.__v12CentreWrapped) {
+    const wrappedCollector = function (doc) {
+      try { captureCrexCentreText(doc); } catch (_) {}
+      return originalCollector.apply(this, arguments);
+    };
+    wrappedCollector.__v12CentreWrapped = true;
+    window.collectImagesFromCrexDocument = wrappedCollector;
+  }
+
+  function firstValue(...values) {
+    for (const value of values) {
+      if (value !== undefined && value !== null && String(value).trim() !== '') return value;
+    }
+    return null;
+  }
+  function objectBallLabel(ball) {
+    if (ball === null || ball === undefined) return { text: '•', cls: 'dot', title: '' };
+    if (typeof ball !== 'object') {
+      const raw = tidy(ball).replace(/[()]/g, '');
+      const low = raw.toLowerCase();
+      if (/run.?out|\bro\b/.test(low)) return { text: 'RO', cls: 'runout', title: raw };
+      if (/^(w|wk|out|wicket)$/.test(low) || /wicket/.test(low)) return { text: 'W', cls: 'wicket', title: raw };
+      if (/wd|wide/.test(low)) return { text: (raw.match(/^\d+/) || [''])[0] + 'WD' || 'WD', cls: 'extra', title: raw };
+      if (/nb|no.?ball/.test(low)) return { text: (raw.match(/^\d+/) || [''])[0] + 'NB' || 'NB', cls: 'extra', title: raw };
+      if (/^6(?:\D|$)/.test(raw)) return { text: '6', cls: 'six', title: raw };
+      if (/^4(?:\D|$)/.test(raw)) return { text: '4', cls: 'four', title: raw };
+      if (/^(0|\.|dot|•|-)$/i.test(raw)) return { text: '•', cls: 'dot', title: raw };
+      return { text: raw || '•', cls: /^\d+$/.test(raw) ? 'runs' : '', title: raw };
+    }
+    const extras = ball.extras && typeof ball.extras === 'object' ? ball.extras : {};
+    const dismissal = tidy(firstValue(ball.dismissal, ball.dismissal_type, ball.dismissalType, ball.wicket_type, ball.wicketType, ball.kind, '')).toLowerCase();
+    const type = tidy(firstValue(ball.extra_type, ball.extraType, ball.type, ball.kind, ball.event_type, ball.eventType, '')).toLowerCase();
+    const rawText = tidy(firstValue(ball.text, ball.value, ball.label, ball.result, ball.event, ball.commentary_short, ball.commentaryShort, ball.display, ball.notation, ball.short_text, ball.shortText, ''));
+    const low = (rawText + ' ' + type + ' ' + dismissal).toLowerCase();
+    const isRunOut = /run.?out/.test(low) || ball.run_out === true || ball.runOut === true;
+    const isWicket = isRunOut || ball.is_wicket === true || ball.isWicket === true || ball.wicket === true || /\bwicket\b|^out$/.test(low);
+    if (isRunOut) return { text: 'RO', cls: 'runout', title: rawText || 'Run out' };
+    if (isWicket) return { text: 'W', cls: 'wicket', title: rawText || 'Wicket' };
+    const isWide = ball.wide === true || ball.is_wide === true || ball.isWide === true || !!extras.wides || /\bwd\b|wide/.test(low);
+    const isNoBall = ball.no_ball === true || ball.noBall === true || ball.noball === true || !!extras.no_ball || !!extras.noballs || /\bnb\b|no.?ball/.test(low);
+    const numberFromText = (rawText.match(/^\s*(\d+)/) || [])[1];
+    const batRuns = Number(firstValue(ball.batsman_runs, ball.batsmanRuns, ball.batter_runs, ball.batterRuns, ball.bat_runs, ball.batRuns, 0)) || 0;
+    const extraRuns = Number(firstValue(ball.extra_runs, ball.extraRuns, ball.extras_runs, ball.extrasRuns, extras.total, extras.runs, 0)) || 0;
+    const totalMaybe = firstValue(ball.total_runs, ball.totalRuns, ball.run_total, ball.runTotal, ball.total, (ball.runs && typeof ball.runs === 'object' ? firstValue(ball.runs.total, ball.runs.total_runs, ball.runs.totalRuns) : ball.runs));
+    const totalRuns = totalMaybe !== null && Number.isFinite(Number(totalMaybe)) ? Number(totalMaybe) : batRuns + extraRuns;
+    const title = rawText || (totalMaybe !== null ? String(totalMaybe) : 'Delivery');
+    if (isWide || isNoBall) {
+      const label = numberFromText ? `${numberFromText}${isWide ? 'WD' : 'NB'}` : (rawText && /wd|wide/i.test(rawText) ? rawText.toUpperCase().replace(/\s+/g, '') : isWide ? 'WD' : 'NB');
+      return { text: label.length > 4 ? (isWide ? 'WD' : 'NB') : label, cls: 'extra', title };
+    }
+    if (totalRuns === 6 || rawText === '6') return { text: '6', cls: 'six', title };
+    if (totalRuns === 4 || rawText === '4') return { text: '4', cls: 'four', title };
+    if (totalRuns === 0 || /^(0|\.|dot|•|-)$/i.test(rawText)) return { text: '•', cls: 'dot', title };
+    if (Number.isFinite(totalRuns)) return { text: String(totalRuns), cls: 'runs', title };
+    return { text: rawText || '•', cls: '', title };
+  }
+
+  function enhancedRenderBalls(balls) {
+    const container = byId('currentOverBallsContainer');
+    if (!container) return;
+    container.replaceChildren();
+    const list = Array.isArray(balls) ? balls.slice(-6) : [];
+    for (let i = 0; i < 6; i++) {
+      const div = document.createElement('div');
+      if (i < list.length) {
+        const info = objectBallLabel(list[i]);
+        div.className = `ball-circle ${info.cls || ''}`.trim();
+        div.textContent = info.text;
+        div.title = info.title || info.text;
+        if (info.text.length > 3) div.classList.add('ball-label-long');
+        if (i === list.length - 1) div.classList.add('latest');
+      } else {
+        div.className = 'ball-circle dot empty-ball';
+        div.textContent = '–';
+        div.setAttribute('aria-hidden', 'true');
+      }
+      container.appendChild(div);
+    }
+  }
+  window.renderCurrentOverBalls = enhancedRenderBalls;
+
+  function ballsFromEntry(entry) {
+    if (Array.isArray(entry)) return entry;
+    if (!entry || typeof entry !== 'object') return [];
+    const keys = ['balls','deliveries','events','ball_by_ball','ballByBall','results','ball_results','ballResults','ball_events','ballEvents','current_over_balls','currentOverBalls','over_balls','overBalls','recent_balls','recentBalls'];
+    for (const key of keys) if (Array.isArray(entry[key]) && entry[key].length) return entry[key];
+    // Some scraped rows are keyed objects e.g. {"0.1": {runs: 1}, "0.2": {runs: 4}}.
+    for (const key of ['ball_by_ball','ballByBall','deliveries','events','balls']) {
+      if (entry[key] && typeof entry[key] === 'object' && !Array.isArray(entry[key])) {
+        const vals = Object.values(entry[key]);
+        if (vals.length && vals.every(v => typeof v === 'object' || typeof v === 'string' || typeof v === 'number')) return vals;
+      }
+    }
+    return [];
+  }
+  function scoreOversToken() { return tidy(byId('mainOversHero') && byId('mainOversHero').textContent); }
+  function isCompleted(data) {
+    const s = tidy([data && data.status, data && data.equation, data && data.result, data && data.match_status, data && data.matchStatus].join(' ')).toLowerCase();
+    return /(won by|lost by|match over|match finished|match completed|no result|abandoned|match tied|\btied\b|\bdrawn\b)/.test(s);
+  }
+  function chooseCurrentBalls(data) {
+    const directKeys = ['current_over','currentOver','currentOverData','current_over_data','currentOverData','over_current','overCurrent'];
+    for (const key of directKeys) {
+      const candidate = data && data[key];
+      const balls = ballsFromEntry(candidate);
+      if (balls.length) return balls;
+    }
+    for (const key of ['current_over_balls','currentOverBalls','current_ball_events','currentBallEvents','balls_in_current_over','ballsInCurrentOver','recent_ball_events','recentBallEvents','ball_by_ball','ballByBall']) {
+      const candidate = data && data[key];
+      if (Array.isArray(candidate) && candidate.length) {
+        // Don't mistake a full innings of deliveries for only the current over.
+        return candidate.slice(-6);
+      }
+    }
+    let histories = [];
+    try { if (typeof getOversList === 'function') histories.push(...(getOversList(data) || [])); } catch (_) {}
+    try { if (typeof findNestedOverHistory === 'function') histories.push(...(findNestedOverHistory(data) || [])); } catch (_) {}
+    try { if (typeof crexRecentOvers !== 'undefined' && Array.isArray(crexRecentOvers)) histories.push(...crexRecentOvers); } catch (_) {}
+    // Also accept common nested structured-over objects returned by CREX adapters.
+    const seen = new WeakSet();
+    function scan(node, depth) {
+      if (!node || typeof node !== 'object' || depth > 7 || seen.has(node)) return;
+      seen.add(node);
+      if (Array.isArray(node)) {
+        for (const item of node) scan(item, depth + 1);
+        return;
+      }
+      for (const [key, value] of Object.entries(node)) {
+        if (/(structured.?overs|over.?history|recent.?overs|overs.?summary|over.?by.?over|innings.?overs)/i.test(key)) {
+          if (Array.isArray(value)) histories.push(...value);
+          else if (value && typeof value === 'object') {
+            for (const subKey of ['overs','items','history','data','over_list','overList']) if (Array.isArray(value[subKey])) histories.push(...value[subKey]);
+          }
+        }
+        if (depth < 5 && value && typeof value === 'object') scan(value, depth + 1);
+      }
+    }
+    try { scan(data, 0); } catch (_) {}
+    histories = histories.filter(item => item && (Array.isArray(item) || typeof item === 'object') && ballsFromEntry(item).length);
+    if (!histories.length) return [];
+    const unique = [];
+    const seenKeys = new Set();
+    for (const item of histories) {
+      let no = null;
+      try { no = typeof overNo === 'function' ? overNo(item) : null; } catch (_) {}
+      const balls = ballsFromEntry(item);
+      const key = no !== null ? `over:${no}` : `balls:${balls.map(b => objectBallLabel(b).text).join(',')}`;
+      const at = unique.findIndex(record => record.key === key);
+      if (at >= 0) unique[at] = { key, no, item, balls };
+      else if (!seenKeys.has(key)) { unique.push({ key, no, item, balls }); seenKeys.add(key); }
+    }
+    const overs = scoreOversToken().match(/^(\d+)(?:\.(\d+))?/);
+    const whole = overs ? Number(overs[1]) : null;
+    const fraction = overs && overs[2] ? Number(overs[2]) : 0;
+    const target = whole === null ? null : (isCompleted(data) && fraction === 0 ? whole : whole + 1);
+    if (target !== null) {
+      const match = unique.slice().reverse().find(record => record.no === target);
+      if (match) return match.balls;
+      const nearby = unique.slice().reverse().find(record => record.no === whole);
+      if (nearby && (fraction === 0 || isCompleted(data))) return nearby.balls;
+    }
+    return unique[unique.length - 1].balls;
+  }
+
+  function fieldCentreText(data) {
+    // Prefer CREX's actual live/status text over countdowns or scheduled start times.
+    // CREX may label this as centre_text, live_text, status_text, match_state, etc.
+    const fields = [
+      'center_text','centerText','centre_text','centreText',
+      'center_status','centerStatus','centre_status','centreStatus',
+      'live_text','liveText','current_text','currentText',
+      'display_text','displayText','status_text','statusText',
+      'match_state','matchState','phase_text','phaseText',
+      'commentary','live_commentary','liveCommentary','match_note','matchNote',
+      'countdown','time_remaining','timeRemaining','time_until_start','timeUntilStart',
+      'starts_in','startsIn','start_countdown','startCountdown'
+    ];
+    for (const key of fields) {
+      const value = data && data[key];
+      if (typeof value !== 'string' && typeof value !== 'number') continue;
+      const text = tidy(value).replace(/\s+/g, ' ');
+      if (!text || text.length > 42) continue;
+      // Never put a clock/countdown into the centre event box.
+      if (validCountdown(text) || /^(?:\d{1,2}:\d{2}(?::\d{2})?|\d+\s*(?:m|min|mins|h|hr|hrs)\b)$/i.test(text)) continue;
+      if (/^(?:--|n\/a|na|null|undefined|live match)$/i.test(text)) continue;
+      // Allow CREX text such as "SPIN BOWLER", "BOWLING", "SACH OPT TO BOWL",
+      // while rejecting generic URLs or large serialized values.
+      if (/https?:\/\//i.test(text) || /^[{[]/.test(text)) continue;
+      return text.toUpperCase();
+    }
+    return '';
+  }
+  function updateCentre(data) {
+    const main = byId('centrePrimaryText');
+    if (!main) return;
+    data = data || lastPayload || {};
+    const sub = byId('matchSubTitle');
+    const status = tidy([data.status, data.equation, data.match_status, data.matchStatus, data.result].join(' '));
+    const statusLow = status.toLowerCase();
+    const overs = scoreOversToken();
+    const score = tidy(byId('mainScoreHero') && byId('mainScoreHero').textContent);
+    const runs = Number((score.match(/^(\d+)/) || [])[1] || 0);
+    const overMatch = overs.match(/^(\d+)(?:\.(\d+))?/);
+    const started = runs > 0 || !!(overMatch && (Number(overMatch[1]) > 0 || Number(overMatch[2] || 0) > 0));
+    const explicit = fieldCentreText(data);
+    let label = 'OVER';
+    if (/(won by|lost by|match over|match finished|match completed|no result|abandoned|match tied|\btied\b|\bdrawn\b)/i.test(status)) {
+      label = 'RESULT';
+    } else if (/innings break|innings interval/.test(statusLow)) {
+      label = 'INNINGS BREAK';
+    } else if (/rain delay|bad light|play stopped|weather delay/.test(statusLow)) {
+      label = 'RAIN DELAY';
+    } else if (/stumps/.test(statusLow)) {
+      label = 'STUMPS';
+    } else if (explicit && !/^(OVER|LIVE MATCH)$/i.test(explicit)) {
+      // Show the same meaningful live text CREX provides instead of a time/countdown.
+      label = explicit;
+    } else if (started) {
+      label = explicit && /^(OVER|BOWLING)$/i.test(explicit) ? explicit : 'OVER';
+    } else {
+      const pageText = tidy(crexCentreTextFromPage || '');
+      const pageIsTime = validCountdown(pageText);
+      if (pageText && !pageIsTime && pageText.length <= 42) label = pageText.toUpperCase();
+      else if (/scheduled|upcoming|starts soon|not started|match starts/.test(statusLow)) label = 'UP NEXT';
+      else label = 'OVER';
+    }
+    main.textContent = label;
+    main.classList.toggle('compact-centre-text', label.length > 7);
+    main.title = label;
+    if (sub && (!sub.textContent || sub.textContent.trim() === 'Vs')) sub.textContent = 'LIVE MATCH';
+  }
+
+  const originalRender = window.renderScoreData;
+  if (typeof originalRender === 'function' && !originalRender.__v12CentreWrapped) {
+    const wrappedRender = function (data) {
+      lastPayload = data || lastPayload;
+      const result = originalRender.apply(this, arguments);
+      try {
+        const balls = chooseCurrentBalls(data || {});
+        if (balls.length) enhancedRenderBalls(balls);
+        updateCentre(data || {});
+      } catch (error) { console.warn('V12 centre/ball update:', error); }
+      return result;
+    };
+    wrappedRender.__v12CentreWrapped = true;
+    window.renderScoreData = wrappedRender;
+  }
+  // Re-apply centre status and balls after CREX page enrichment resolves asynchronously.
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      try { updateCentre(lastPayload || window.latestScorePayloadForAssets || {}); } catch (_) {}
+      try { const b = chooseCurrentBalls(lastPayload || window.latestScorePayloadForAssets || {}); if (b.length) enhancedRenderBalls(b); } catch (_) {}
+    }, 500);
+  });
+  let lastOverDisplay = '';
+  setInterval(() => {
+    const payload = lastPayload || window.latestScorePayloadForAssets || {};
+    const overText = scoreOversToken();
+    const key = overText + '|' + (byId('mainScoreHero') && byId('mainScoreHero').textContent || '');
+    if (key !== lastOverDisplay) {
+      lastOverDisplay = key;
+      try { updateCentre(payload); const b = chooseCurrentBalls(payload); if (b.length) enhancedRenderBalls(b); } catch (_) {}
+    }
+  }, 1200);
+})();
+</script>
 
 </body>
 </html>
