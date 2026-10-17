@@ -2722,7 +2722,7 @@ const V6_KNOWN_MATCH = {
     { over_number: 18, balls: ["4"], total_runs: 4 }
   ]
 };
-let v6CrexMeta = { tossText: "", resultText: "", winnerCode: "", battingCode: "", poll: null };
+let v6CrexMeta = { tossText: "", resultText: "", winnerCode: "", battingCode: "", poll: null, nextBatters: [] };
 
 function v6CleanText(value) { return String(value || "").replace(/[\u00a0\u200b]/g, " ").replace(/\s+/g, " ").trim(); }
 function v6KnownMetaForUrl(url) {
@@ -2955,12 +2955,13 @@ function v6RefreshPortraitsWithCrexFallback(data) {
     if (!(merged.batsman1 || merged.batter1)) merged.batsman1 = { name: "Kusal Mendis" };
     if (!(merged.batsman2 || merged.batter2)) merged.batsman2 = { name: "Kamindu Mendis" };
     if (!merged.bowler) merged.bowler = { name: "Razaullah" };
-    if (!Array.isArray(merged.next_batsmen) && !Array.isArray(merged.nextBatters) && !Array.isArray(merged.next_batters)) {
-      merged.next_batsmen = (v6CrexMeta.nextBatters || []).map(name => ({ name }));
-    }
     if (!Array.isArray(merged.next_bowlers) && !Array.isArray(merged.nextBowlers) && !Array.isArray(merged.bowlers)) {
       merged.next_bowlers = (v6CrexMeta.nextBowlers || []).map(name => ({ name }));
     }
+  }
+  // Use the parsed CREX "Yet to bat" list for any match if the feed has no batter-order array.
+  if (!v6PlayerArray(merged, "batter").length && Array.isArray(v6CrexMeta.nextBatters) && v6CrexMeta.nextBatters.length) {
+    merged.next_batsmen = v6CrexMeta.nextBatters.map(name => ({ name }));
   }
   refreshPlayerPortraits(merged);
 }
@@ -3030,7 +3031,7 @@ function v6EnhanceScoreboard(data) {
   v6RenderPoll(data || {}, t1, t2, team1, team2, resultText, winner);
   // Ensure team scores remain available even when API fields are sparse.
   setTeamHero(team1, t1, 1); setTeamHero(team2, t2, 2);
-  refreshPlayerPortraits(data || {});
+  v6RefreshPortraitsWithCrexFallback(data || {});
 }
 
 const v5RenderScoreData = renderScoreData;
@@ -3045,6 +3046,32 @@ function v6ParseCrexText(doc) {
   const bodyText = String(doc.body && (doc.body.innerText || doc.body.textContent) || "").replace(/\r/g, "");
   const lines = bodyText.split(/\n+/).map(v6CleanText).filter(Boolean);
   const allText = lines.join("\n");
+
+  // Read the first two player names after CREX's "Yet to bat" heading.
+  // This is a fallback only; live API batter arrays retain priority.
+  const yetToBatIndex = lines.findIndex(line => /^yet\s+to\s+bat\b/i.test(line));
+  if (yetToBatIndex >= 0) {
+    const upcoming = [];
+    const sectionEnd = /^(?:fall of wickets?|partnership|current partnership|bowling(?: scorecard)?|commentary|match commentary|scorecard|match info|match details|fielding|extras|total|target|innings summary|recent overs?)\b/i;
+    const statLine = /^(?:avg(?:erage)?|runs?|balls?|fours?|sixes|4s|6s|sr|s\/?r|strike rate|econ(?:omy)?|wkts?|wickets?)\b\s*:?/i;
+    const nonPlayerLine = /^(?:yet\s+to\s+bat|did\s+not\s+bat|not\s+out|batter|batsman|bowler|player|player name|name|batting|bowling|r\s+b\s+4s\s+6s\s+sr)$/i;
+    for (let i = yetToBatIndex + 1; i < lines.length && upcoming.length < 2; i++) {
+      let candidate = v6CleanText(lines[i]);
+      if (!candidate) continue;
+      if (sectionEnd.test(candidate)) break;
+      if (statLine.test(candidate) || nonPlayerLine.test(candidate)) continue;
+      // CREX sometimes renders the average beside the player name on the same line.
+      candidate = candidate.replace(/\s+(?:avg(?:erage)?)\s*:?\s*[-\d.]+.*$/i, "").trim();
+      candidate = candidate.replace(/^[•·▪●\s]+|[•·▪●\s]+$/g, "").trim();
+      if (!candidate || candidate.length > 55 || /:/.test(candidate)) continue;
+      if (/^\d+(?:\.\d+)?$/.test(candidate)) continue;
+      if (candidate.split(/\s+/).length < 2) continue;
+      if (/^(?:yet to bat|fall of wickets?|partnership|commentary|scorecard)$/i.test(candidate)) break;
+      upcoming.push(candidate);
+    }
+    if (upcoming.length) v6CrexMeta.nextBatters = upcoming;
+  }
+
   const tossCandidates = [];
   for (const line of lines) {
     if (/toss/i.test(line) && /(won|opt|elect|bat|bowl|choose|chose)/i.test(line)) tossCandidates.push(line.replace(/^.*?toss update\s*:?\s*/i, ""));
