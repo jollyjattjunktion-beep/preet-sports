@@ -114,7 +114,7 @@ html, body {
 }
 
 /* =========================================================
-   1280 x 720 CANVAS - COMPLETE BROADCAST TELECAST
+    1280 x 720 CANVAS - COMPLETE BROADCAST TELECAST
 ========================================================= */
 .scoreboard {
     position: relative;
@@ -426,7 +426,7 @@ html, body {
 .stat-metric .val { color: #FFB800; }
 .stat-divider { width: 1.5px; height: 22px; background: #1f3f66; }
 
-/* PLAYER CARDS */
+/* PLAYER CARDS & PROJECTED SCORE CARD */
 .v9-player-deck {
     position: relative;
     z-index: 10;
@@ -443,9 +443,9 @@ html, body {
     background: linear-gradient(180deg, #081d36 0%, #030d19 100%);
     border: 1.8px solid #0077cc;
 }
-.v9-bowler-card {
-    background: linear-gradient(180deg, #2a050f 0%, #120106 100%);
-    border: 1.8px solid #d90429;
+.v9-projected-card {
+    background: linear-gradient(180deg, #05261d 0%, #02110c 100%);
+    border: 1.8px solid #10b981;
 }
 .v9-card-kicker {
     height: 28px;
@@ -458,9 +458,9 @@ html, body {
     color: #ffffff;
     background: linear-gradient(90deg, #005bb5 0%, #004080 100%);
 }
-.v9-bowler-card .v9-card-kicker { background: linear-gradient(90deg, #c40026 0%, #850019 100%); }
+.v9-projected-card .v9-card-kicker { background: linear-gradient(90deg, #047857 0%, #065f46 100%); }
 .v9-live-dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; }
-.v9-bowler-dot { width: 8px; height: 8px; border-radius: 50%; background: #ef4444; }
+.v9-proj-dot { width: 8px; height: 8px; border-radius: 50%; background: #34d399; }
 .v9-feature-body {
     display: flex;
     align-items: center;
@@ -481,6 +481,12 @@ html, body {
     color: #fff;
     flex-shrink: 0;
 }
+.v9-projected-card .v9-avatar-wrap {
+    border-color: #34d399;
+    background: #064e3b;
+    color: #34d399;
+    font-size: 15px;
+}
 .v9-player-copy { flex: 1; overflow: hidden; }
 .v9-player-name {
     font-size: 18px;
@@ -493,6 +499,7 @@ html, body {
 .v9-primary-metric { font-size: 13px; font-weight: 800; color: #9cb3ce; }
 .v9-primary-metric strong { font-size: 24px; color: #fff; }
 .v9-primary-metric strong.striker-highlight { color: #FFB800; }
+.v9-primary-metric strong.proj-highlight { color: #34d399; }
 .v9-stat-grid { display: flex; gap: 8px; margin-top: 3px; font-size: 12px; font-weight: 800; color: #cbd5e1; }
 .v9-stat-grid small { color: #64748b; margin-left: 2px; }
 
@@ -726,7 +733,7 @@ html, body {
             </div>
         </div>
 
-        <!-- PLAYER DECK -->
+        <!-- PLAYER DECK (STRIKER, NON-STRIKER, PROJECTED SCORE) -->
         <div class="v9-player-deck">
             <section class="v9-feature-card" id="batter1Row">
                 <div class="v9-card-kicker"><span class="v9-live-dot"></span> STRIKING BATTER</div>
@@ -762,17 +769,16 @@ html, body {
                 </div>
             </section>
 
-            <section class="v9-feature-card v9-bowler-card" id="bowlerRow">
-                <div class="v9-card-kicker"><span class="v9-bowler-dot"></span> CURRENT BOWLER</div>
+            <section class="v9-feature-card v9-projected-card" id="projectedScoreRow">
+                <div class="v9-card-kicker"><span class="v9-proj-dot"></span> PROJECTED SCORE</div>
                 <div class="v9-feature-body">
-                    <div class="v9-avatar-wrap" id="bwlInitials">JU</div>
+                    <div class="v9-avatar-wrap" id="projInitials">PS</div>
                     <div class="v9-player-copy">
-                        <div class="v9-player-name" id="bwlName">JAYDEV UNADKAT</div>
-                        <div class="v9-primary-metric">OV <strong id="bwlOvers">3.2</strong> • W <strong id="bwlWickets">1</strong></div>
+                        <div class="v9-player-name" id="projTitle">AT CURRENT RR</div>
+                        <div class="v9-primary-metric">SCORE <strong id="projScoreVal" class="proj-highlight">—</strong></div>
                         <div class="v9-stat-grid">
-                            <span><b id="bwlMaidens">2</b><small>M</small></span>
-                            <span><b id="bwlRuns">2</b><small>R</small></span>
-                            <span><b id="bwlEco">0.60</b><small>ECO</small></span>
+                            <span><b id="projRunRate">—</b><small>CRR</small></span>
+                            <span><b id="projOvsTotal">90</b><small>MAX</small></span>
                         </div>
                     </div>
                 </div>
@@ -970,7 +976,7 @@ function cleanPlayerNameToHindi(rawName) {
 }
 
 /* =======================================================================
-   3. RADIO COMMENTARY SCRIPT PHRASING (FROM test_voice_2.py)
+   3. RADIO COMMENTARY SCRIPT PHRASING
 ======================================================================= */
 const SIX_LINES = [
     "उठाकर मारा! गेंद आसमान में... बहुत ऊंची... और ये गई स्टैंड्स में! छह रन!",
@@ -1026,46 +1032,8 @@ function buildLiveWicketSpeech(dismissalText, batterName, batterRuns, batterBall
     return `विकेट पतन! बहुत बड़ा झटका! ${batterHi} ${status} पवेलियन की ओर रुख करते हुए!`;
 }
 
-function generateDeliveryCommentary(ballNum, badgeVal, bowlerRaw, batsmanRaw, lastDismissal) {
-    const ballPhrase = formatBallPhraseHindi(ballNum);
-    const bowler = cleanPlayerNameToHindi(bowlerRaw);
-    const batsman = cleanPlayerNameToHindi(batsmanRaw);
-    const badge = String(badgeVal || "").trim().toLowerCase();
-
-    if (badge === "w" || badge === "wkt" || badge === "out") {
-        const speech = buildLiveWicketSpeech(
-            lastDismissal?.howOut || "",
-            lastDismissal?.batter || batsmanRaw,
-            lastDismissal?.runs || "",
-            lastDismissal?.balls || "",
-            bowlerRaw
-        );
-        return { text: `${ballPhrase}, ${speech}`, level: 4 };
-    }
-    if (badge.includes("wd") || badge.includes("wide")) {
-        return { text: `${ballPhrase}, दिशाहीन गेंदबाज़ी, लेग स्टंप से काफी बाहर, अंपायर ने दोनों हाथ फैलाए, वाइड बॉल!`, level: 2 };
-    }
-    if (badge.includes("nb") || badge.includes("noball")) {
-        return { text: `${ballPhrase}, नो बॉल! गेंदबाज़ ने क्रीज़ को ओवरस्टेप किया, अब अगली गेंद फ्री हिट!`, level: 2 };
-    }
-    if (badge === "6") {
-        const line = SIX_LINES[Math.floor(Math.random() * SIX_LINES.length)];
-        return { text: `${ballPhrase}, ${bowler ? bowler + " की गेंद पर " : ""}${batsman ? batsman + " ने " : ""}${line}`, level: 4 };
-    }
-    if (badge === "4") {
-        const line = FOUR_LINES[Math.floor(Math.random() * FOUR_LINES.length)];
-        return { text: `${ballPhrase}, ${bowler ? bowler + " की गेंद पर " : ""}${line}`, level: 3 };
-    }
-    if (badge === "1") {
-        const line = SINGLE_LINES[Math.floor(Math.random() * SINGLE_LINES.length)];
-        return { text: `${ballPhrase}, ${line}`, level: 2 };
-    }
-    const line = DOT_LINES[Math.floor(Math.random() * DOT_LINES.length)];
-    return { text: `${ballPhrase}, ${line}`, level: 1 };
-}
-
 /* =======================================================================
-   4. MADHUR VOICE ENGINE & QUEUE (HUMANIZED AUDIO TIMING)
+   4. MADHUR VOICE ENGINE & QUEUE
 ======================================================================= */
 class RadioAnnouncer {
     constructor() {
@@ -1084,11 +1052,9 @@ class RadioAnnouncer {
         const item = this.queue.shift();
         this.isPlaying = true;
         
-        // Humanize text with micro-pauses at punctuation
         const humanized = item.text.replace(/!/g, "!... ").replace(/।/g, "।... ").replace(/,/g, ",... ");
         const utter = new SpeechSynthesisUtterance(humanized);
 
-        // Speed profiles matching test_voice_2.py AUDIO_PROFILES
         if (item.level === 4) { utter.rate = 1.30; utter.pitch = 1.15; }
         else if (item.level === 3) { utter.rate = 1.25; utter.pitch = 1.10; }
         else if (item.level === 2) { utter.rate = 1.20; utter.pitch = 1.05; }
@@ -1128,18 +1094,15 @@ document.getElementById("testAudioBtn").addEventListener("click", () => {
    5. SMART SLUG PARSER & EXTENDED TEAM RECOGNITION
 ======================================================================= */
 const TEAM_NAMES = {
-    // Domestic (Ranji, Syed Mushtaq Ali, Vijay Hazare)
     KER: "KERALA", SAU: "SAURASHTRA", MUM: "MUMBAI", DEL: "DELHI",
     KAR: "KARNATAKA", TN: "TAMIL NADU", BEN: "BENGAL", GUJ: "GUJARAT",
     UP: "UTTAR PRADESH", MP: "MADHYA PRADESH", RAJ: "RAJASTHAN", PUN: "PUNJAB",
     HAR: "HARYANA", HYD: "HYDERABAD", AND: "ANDHRA", BRO: "BARODA",
     VID: "VIDARBHA", JHA: "JHARKHAND", ODI: "ODISHA", ASS: "ASSAM",
     SER: "SERVICES", RLW: "RAILWAYS", HP: "HIMACHAL PRADESH", CHA: "CHHATTISGARH",
-    // International
     IND: "INDIA", WI: "WEST INDIES", PAK: "PAKISTAN", AUS: "AUSTRALIA",
     ENG: "ENGLAND", SA: "SOUTH AFRICA", NZ: "NEW ZEALAND", SL: "SRI LANKA",
     BAN: "BANGLADESH", AFG: "AFGHANISTAN", ZIM: "ZIMBABWE", IRE: "IRELAND",
-    // Emirates D10 / International Leagues
     ABD: "ABU DHABI", EMB: "EMIRATES BLUES", FUJ: "FUJAIRAH", SHA: "SHARJAH",
     DUB: "DUBAI", AJM: "AJMAN"
 };
@@ -1149,7 +1112,6 @@ function parseTeamsFromUrl(url) {
     const clean = url.split("?")[0].split("#")[0];
     const pathSlug = clean.split("/").filter(Boolean).pop() || "";
     
-    // Match standard Crex slug: "ker-vs-sau-..." or "pak-vs-sl-..."
     const m = pathSlug.match(/([a-z0-9]+)-vs-([a-z0-9]+)/i);
     if (!m) return null;
     
@@ -1179,15 +1141,15 @@ function applyImmediateUrlInfo(url) {
     document.getElementById("pollTeam1Label").textContent = info.code1;
     document.getElementById("pollTeam2Label").textContent = info.code2;
     
-    // Clean old figures on load
     document.getElementById("mainScoreHero").textContent = "—";
     document.getElementById("mainOversHero").textContent = "0.0";
     document.getElementById("team1HeroScore").textContent = "—";
     document.getElementById("team2HeroScore").textContent = "—";
+    document.getElementById("projScoreVal").textContent = "—";
 }
 
 /* =======================================================================
-   6. MULTI-PROXY CREX SCRAPER WITH TIMEOUT PROTECTION
+   6. MULTI-PROXY CREX SCRAPER & PROJECTED SCORE PARSING
 ======================================================================= */
 let liveSyncTimer = null;
 let lastOversToken = null;
@@ -1222,12 +1184,11 @@ async function fetchCrexLive() {
 
     let html = null;
 
-    // 1. Try local Render API if available
     try {
         const renderEndpoint = `https://preet-sports.onrender.com/api/scrape?url=${encodeURIComponent(rawUrl)}`;
         const jsonText = await fetchWithTimeout(renderEndpoint, 5000);
         const data = JSON.parse(jsonText);
-        if (data && (data.team1 || data.score || data.current_over)) {
+        if (data && (data.team1 || data.score || data.projectedScore)) {
             renderDirectJson(data);
             statusInd.textContent = "● Live • Synced (Backend)";
             statusInd.style.color = "#4ade80";
@@ -1235,7 +1196,6 @@ async function fetchCrexLive() {
         }
     } catch (_) {}
 
-    // 2. Cascade through CORS Proxies
     for (let i = 0; i < PROXY_CANDIDATES.length; i++) {
         try {
             const proxyUrl = PROXY_CANDIDATES[i](rawUrl);
@@ -1257,9 +1217,6 @@ async function fetchCrexLive() {
     statusInd.style.color = "#4ade80";
 }
 
-/* =======================================================================
-   7. DEEP DATA EXTRACTION: NEXT.JS STATE & TITLE TAG
-======================================================================= */
 function parseAndBindCrexHtml(html) {
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, "text/html");
@@ -1269,7 +1226,6 @@ function parseAndBindCrexHtml(html) {
     let liveOvers = null;
     let battingCode = null;
 
-    // 1. Title Parse (e.g., "KER 4-2 (6.2) (Sachin Baby 1*, Jalaj Saxena 0*) | Live Match")
     const title = doc.querySelector("title")?.textContent || "";
     const titleMatch = title.match(/([A-Za-z0-9\-]+)\s+(\d{1,3})[-/](\d{1,2})\s*\(([\d\.]+)\)/);
     if (titleMatch) {
@@ -1285,20 +1241,17 @@ function parseAndBindCrexHtml(html) {
         document.getElementById("team1HeroOvers").textContent = `${liveOvers} OV`;
     }
 
-    // 2. Next.js Embedded JSON Parse
     const nextScript = doc.querySelector("script#__NEXT_DATA__");
     if (nextScript) {
         try {
             const parsed = JSON.parse(nextScript.textContent);
             const matchData = parsed?.props?.pageProps?.matchData || parsed?.props?.pageProps?.data || {};
 
-            // Team Names
             if (matchData.team1 && matchData.team2) {
                 document.getElementById("team1HeroName").textContent = (matchData.team1.name || matchData.team1.shortName || "").toUpperCase();
                 document.getElementById("team2HeroName").textContent = (matchData.team2.name || matchData.team2.shortName || "").toUpperCase();
             }
 
-            // Batters
             if (matchData.currentBatter1) {
                 document.getElementById("b1Name").textContent = matchData.currentBatter1.name?.toUpperCase() || "BATTER 1";
                 document.getElementById("b1Runs").textContent = matchData.currentBatter1.runs ?? 0;
@@ -1318,24 +1271,37 @@ function parseAndBindCrexHtml(html) {
                 document.getElementById("b2Initials").textContent = matchData.currentBatter2.name?.slice(0, 2).toUpperCase() || "B2";
             }
 
-            // Bowler
-            if (matchData.currentBowler) {
-                document.getElementById("bwlName").textContent = matchData.currentBowler.name?.toUpperCase() || "BOWLER";
-                document.getElementById("bwlOvers").textContent = matchData.currentBowler.overs ?? "0.0";
-                document.getElementById("bwlWickets").textContent = matchData.currentBowler.wickets ?? 0;
-                document.getElementById("bwlMaidens").textContent = matchData.currentBowler.maidens ?? 0;
-                document.getElementById("bwlRuns").textContent = matchData.currentBowler.runs ?? 0;
-                document.getElementById("bwlEco").textContent = matchData.currentBowler.econ ?? "0.00";
-                document.getElementById("bwlInitials").textContent = matchData.currentBowler.name?.slice(0, 2).toUpperCase() || "BW";
+            // Projected Score extraction from Crex JSON state
+            const projScore = matchData.projectedScore || matchData.projScore || matchData.projected_score;
+            if (projScore) {
+                document.getElementById("projScoreVal").textContent = projScore;
+            } else if (liveRuns && liveOvers) {
+                const r = parseFloat(liveRuns);
+                const o = parseFloat(liveOvers);
+                if (o > 0) {
+                    const crr = r / o;
+                    const estimatedProj = Math.round(crr * 20); // Default T20/Limited overs projection
+                    document.getElementById("projScoreVal").textContent = estimatedProj;
+                }
             }
 
-            // CRR, Toss, & Partnership
-            if (matchData.crr) document.getElementById("valCRR").textContent = matchData.crr;
+            if (matchData.crr) {
+                document.getElementById("valCRR").textContent = matchData.crr;
+                document.getElementById("projRunRate").textContent = matchData.crr;
+            } else if (liveRuns && liveOvers) {
+                const r = parseFloat(liveRuns);
+                const o = parseFloat(liveOvers);
+                if (o > 0) {
+                    const crr = (r / o).toFixed(2);
+                    document.getElementById("valCRR").textContent = crr;
+                    document.getElementById("projRunRate").textContent = crr;
+                }
+            }
+
             if (matchData.toss) document.getElementById("valToss").textContent = matchData.toss.toUpperCase();
             if (matchData.partnership) document.getElementById("valPartnership").textContent = matchData.partnership;
             if (matchData.lastWicket) document.getElementById("valLastWkt").textContent = matchData.lastWicket;
 
-            // Who Will Win? (Win Probability)
             if (matchData.winProbability) {
                 const p1 = Math.round(matchData.winProbability.team1 || 50);
                 const p2 = 100 - p1;
@@ -1350,12 +1316,10 @@ function parseAndBindCrexHtml(html) {
         } catch (_) {}
     }
 
-    // 3. Audio Trigger on Delivery Update
     if (liveOvers && liveOvers !== lastOversToken) {
         lastOversToken = liveOvers;
         const b1 = document.getElementById("b1Name").textContent;
-        const bwl = document.getElementById("bwlName").textContent;
-        radio.say(`${bwl} की अगली गेंद, ${b1} के लिए! बढ़िया गेंदबाज़ी जारी।`, 2);
+        radio.say(`ओवर की समाप्ति पर स्कोर अपडेट। रन रेट और प्रोजेक्टेड स्कोर में बदलाव।`, 2);
     }
 }
 
@@ -1372,10 +1336,11 @@ function renderDirectJson(data) {
     }
     if (data.score) document.getElementById("mainScoreHero").textContent = data.score;
     if (data.overs) document.getElementById("mainOversHero").textContent = data.overs;
+    if (data.projectedScore) document.getElementById("projScoreVal").textContent = data.projectedScore;
 }
 
 /* =======================================================================
-   8. OBS URL & CONTROLS BINDING
+   7. OBS URL & CONTROLS BINDING
 ======================================================================= */
 document.getElementById("loadMatchUrlBtn").addEventListener("click", () => {
     const url = document.getElementById("crexUrlInput").value.trim();
@@ -1401,7 +1366,6 @@ window.addEventListener("keydown", (e) => {
     }
 });
 
-// Auto-run on page load
 window.addEventListener("load", () => {
     const initialUrl = document.getElementById("crexUrlInput").value.trim();
     applyImmediateUrlInfo(initialUrl);
