@@ -43,7 +43,7 @@ html, body {
     background: #000000;
 }
 
-/* FLOATING URL CONTROL BAR */
+/* FLOATING URL & AUDIO CONTROL BAR */
 .url-control-bar {
     position: absolute;
     top: 8px;
@@ -57,9 +57,10 @@ html, body {
     padding: 5px 14px;
     box-shadow: 0 6px 25px rgba(0,0,0,0.95);
     width: 90%;
-    max-width: 980px;
+    max-width: 1020px;
 }
-.url-control-bar.hidden-obs {
+.url-control-bar.hidden-obs,
+.ps-obs-mode .url-control-bar {
     display: none !important;
 }
 .url-control-bar span {
@@ -90,7 +91,7 @@ html, body {
     font-size: 13px;
     font-weight: 900;
     letter-spacing: 0.8px;
-    padding: 5px 13px;
+    padding: 5px 14px;
     cursor: pointer;
     white-space: nowrap;
 }
@@ -112,7 +113,9 @@ html, body {
     white-space: nowrap;
 }
 
-/* 1280 x 720 CANVAS */
+/* =========================================================
+   1280 x 720 CANVAS - COMPLETE BROADCAST TELECAST
+========================================================= */
 .scoreboard {
     position: relative;
     width: 1280px;
@@ -141,7 +144,7 @@ html, body {
     filter: saturate(1.2) brightness(1.15);
 }
 
-/* TOP BRAND */
+/* TOP BRAND & LIVE BADGE */
 .top-brand-wrap {
     position: relative;
     z-index: 10;
@@ -180,7 +183,7 @@ html, body {
     color: #06101D;
 }
 
-/* FIXTURE PODS */
+/* MATCH FIXTURE CHEVRONS */
 .match-fixture-bar {
     position: relative;
     z-index: 10;
@@ -297,7 +300,7 @@ html, body {
     white-space: nowrap;
 }
 
-/* SCORE ROW */
+/* LIVE SCORE ROW */
 .live-score-row {
     position: relative;
     z-index: 10;
@@ -395,7 +398,7 @@ html, body {
 .ball-circle.extra { background: #00a8ff; border-color: #70cfff; color: #fff; }
 .ball-circle.dot { color: #889fb8; }
 
-/* STATS BAR */
+/* MATCH STATS BAR */
 .match-stats-bar {
     position: relative;
     z-index: 10;
@@ -630,7 +633,7 @@ html, body {
 
 <div class="screen-wrapper">
 
-    <!-- CONTROL BAR -->
+    <!-- FLOATING CONTROL BAR -->
     <div class="url-control-bar" id="urlControlBar">
         <span>CREX MATCH:</span>
         <input type="text" id="crexUrlInput" placeholder="Paste CREX Match URL..." value="https://crex.com/cricket-live-score/ker-vs-sau-elite-group-c-ranji-trophy-2026-match-updates-17XY">
@@ -641,11 +644,11 @@ html, body {
         <span class="status-indicator" id="statusIndicator">● Ready</span>
     </div>
 
-    <!-- 1280x720 SCOREBOARD -->
-    <div class="scoreboard" id="scoreboardCanvas">
+    <!-- 1280x720 PRO SCOREBOARD -->
+    <div class="scoreboard" id="scoreboardCanvas" role="region" aria-label="Preet Sports live cricket scoreboard">
         <div class="stadium-background"></div>
 
-        <!-- BRAND & BADGE -->
+        <!-- TOP BRAND & BADGE -->
         <div class="top-brand-wrap">
             <div class="brand-capsule">
                 <span class="brand-white">PREET</span>
@@ -714,7 +717,7 @@ html, body {
             <div class="stat-divider"></div>
             <div class="stat-metric">
                 <span class="lbl">TOSS:</span>
-                <span class="val" id="valToss">SAURASHTRA WON TOSS • OPTED TO BOWL</span>
+                <span class="val" id="valToss">SAURASHTRA OPTED TO BOWL</span>
             </div>
             <div class="stat-divider"></div>
             <div class="stat-metric last-wkt-metric">
@@ -795,7 +798,7 @@ html, body {
                     </div>
                     <span class="last-over-total" id="lastOver1Runs">1 RUN</span>
                 </div>
-                <div class="last-over-card" id="lastOver2Card">
+                <div class="last-over-card current-last-over" id="lastOver2Card">
                     <span class="last-over-label" id="lastOver2Label">OVER 7</span>
                     <div class="last-over-balls" id="lastOver2Balls">
                         <span class="mini-ball wicket">W</span>
@@ -840,7 +843,7 @@ html, body {
             </div>
         </div>
 
-        <!-- MARQUEE -->
+        <!-- BOTTOM MARQUEE -->
         <div class="bottom-meta-ribbon subscribe-marquee-ribbon">
             <div class="subscribe-marquee-viewport">
                 <div class="subscribe-marquee-track">
@@ -855,7 +858,7 @@ html, body {
 
 <script>
 /* =======================================================================
-   1. AUTO RESIZE & ASPECT RATIO LOCK
+   1. AUTO RESIZE & CANVAS ASPECT LOCK
 ======================================================================= */
 function fitScoreboardToWindow() {
     const el = document.getElementById("scoreboardCanvas");
@@ -872,23 +875,273 @@ window.addEventListener("DOMContentLoaded", fitScoreboardToWindow);
 fitScoreboardToWindow();
 
 /* =======================================================================
-   2. TEAM DICTIONARY & SMART SLUG PARSER (DOMESTIC + INTERNATIONAL)
+   2. PYTHON COMMENTARY ENGINE PORT (PHONETICS & DICTIONARIES)
+======================================================================= */
+const HINDI_OVER_WORDS = {
+    1: "पहले", 2: "दूसरे", 3: "तीसरे", 4: "चौथे", 5: "पांचवें",
+    6: "छठे", 7: "सातवें", 8: "आठवें", 9: "नौवें", 10: "दसवें",
+    11: "ग्यारहवें", 12: "बारहवें", 13: "तेरहवें", 14: "चौदहवें", 15: "पंद्रहवें",
+    16: "सोलहवें", 17: "सत्रहवें", 18: "अठारहवें", 19: "उन्नीसवें", 20: "बीसवें"
+};
+
+const HINDI_BALL_WORDS = {
+    1: "पहली गेंद", 2: "दूसरी गेंद", 3: "तीसरी गेंद",
+    4: "चौथी गेंद", 5: "पांचवीं गेंद", 6: "आखिरी गेंद"
+};
+
+const NUM_TO_HINDI = {
+    0: "शून्य", 1: "एक", 2: "दो", 3: "तीन", 4: "चार", 5: "पांच",
+    6: "छह", 7: "सात", 8: "आठ", 9: "नौ", 10: "दस", 11: "ग्यारह",
+    12: "बारह", 13: "तेरह", 14: "चौदह", 15: "पंद्रह", 16: "सोलह",
+    17: "सत्रह", 18: "अठारह", 19: "उन्नीस", 20: "बीस", 21: "इक्कीस",
+    22: "बाईस", 23: "तेईस", 24: "चौबीस", 25: "पच्चीस", 26: "छब्बीस",
+    27: "सत्ताईस", 28: "अट्ठाईस", 29: "उनतीस", 30: "तीस", 31: "इकत्तीस",
+    32: "बत्तीस", 33: "तैंतीस", 34: "चौंतीस", 35: "पैंतीस", 36: "छत्तीस",
+    37: "सैंतीस", 38: "अड़तीस", 39: "उनतालीस", 40: "चालीस", 41: "इकतालीस",
+    42: "बयालीस", 43: "तैंतालीस", 44: "चौवालीस", 45: "पैंतालीस", 46: "छियालीस",
+    47: "सैंतालीस", 48: "अड़तालीस", 49: "उनचास", 50: "पचास", 51: "इक्यावन",
+    52: "बावन", 53: "तिरेपन", 54: "चौवन", 55: "पचपन", 56: "छप्पन",
+    57: "सत्तावन", 58: "अट्ठावन", 59: "उनसठ", 60: "साठ", 61: "इकसठ",
+    62: "बासठ", 63: "तिरसठ", 64: "चौंसठ", 65: "पैंसठ", 66: "छियासठ",
+    67: "सरसठ", 68: "अड़सठ", 69: "उनहत्तर", 70: "सत्तर", 71: "इकहत्तर",
+    72: "बहत्तर", 73: "तिहत्तर", 74: "चौहत्तर", 75: "पचहत्तर", 76: "छिहत्तर",
+    77: "सतहत्तर", 78: "अठहत्तर", 79: "उनासी", 80: "अस्सी", 81: "इक्यासी",
+    82: "बयासी", 83: "तिरासी", 84: "चौरासी", 85: "पचासी", 86: "छियासी",
+    87: "सत्तासी", 88: "अठासी", 89: "नवासी", 90: "नब्बे", 91: "इक्यानवे",
+    92: "बानवे", 93: "तिरानवे", 94: "चौरानवे", 95: "पंचानवे", 96: "छियानवे",
+    97: "सत्तानवे", 98: "अट्ठानवे", 99: "निन्यानवे", 100: "एक सौ"
+};
+
+const HINDI_HUNDREDS = {
+    1: "एक सौ", 2: "दो सौ", 3: "तीन सौ", 4: "चार सौ", 5: "पांच सौ",
+    6: "छह सौ", 7: "सात सौ", 8: "आठ सौ", 9: "नौ सौ"
+};
+
+const CORE_PHONETIC_DICT = {
+    "sachin": "सचिन", "baby": "बेबी", "jalaj": "जलज", "saxena": "सक्सेना",
+    "jaydev": "जयदेव", "unadkat": "उनादकट", "abhishek": "अभिषेक", "nair": "नायर",
+    "kusal": "कुसल", "mendis": "मेंडिस", "kamindu": "कमिंदु", "razaullah": "रज़ाउल्लाह",
+    "rohit": "रोहित", "sharma": "शर्मा", "virat": "विराट", "kohli": "कोहली",
+    "hardik": "हार्दिक", "pandya": "पंड्या", "bumrah": "बुमराह", "shami": "शमी",
+    "surya": "सूर्या", "suryakumar": "सूर्यकुमार", "pant": "पंत", "gill": "गिल",
+    "jaiswal": "जायसवाल", "siraj": "सिराज", "kuldeep": "कुलदीप", "chahal": "चहल"
+};
+
+function numberToHindiWords(numStr) {
+    const n = parseInt(String(numStr).trim(), 10);
+    if (isNaN(n)) return String(numStr);
+    if (NUM_TO_HINDI[n]) return NUM_TO_HINDI[n];
+    if (n >= 101 && n <= 999) {
+        const hundreds = Math.floor(n / 100);
+        const rem = n % 100;
+        const head = HINDI_HUNDREDS[hundreds] || `${hundreds} सौ`;
+        return rem === 0 ? head : `${head} ${NUM_TO_HINDI[rem] || rem}`;
+    }
+    return String(n);
+}
+
+function overOrdinalHindi(overNum) {
+    return HINDI_OVER_WORDS[overNum] || `${numberToHindiWords(overNum)}वें`;
+}
+
+function formatBallPhraseHindi(ballStr) {
+    try {
+        const parts = String(ballStr).trim().split(".");
+        const overNum = parseInt(parts[0], 10) + 1;
+        const rawBallIdx = parts.length > 1 ? parseInt(parts[1], 10) : 1;
+        const ballIdx = Math.min(Math.max(rawBallIdx, 1), 6);
+        return `${overOrdinalHindi(overNum)} ओवर की ${HINDI_BALL_WORDS[ballIdx] || `${ballIdx}वीं गेंद`}`;
+    } catch (e) {
+        return "अगली गेंद";
+    }
+}
+
+function cleanPlayerNameToHindi(rawName) {
+    if (!rawName) return "";
+    let cleaned = rawName.replace(/\b(to|wd|nb|wide|no\s*runs?|runs?|dots?|out|c|b|wkt|wk|\d+)\b/gi, "");
+    cleaned = cleaned.replace(/[^A-Za-z\s]/g, " ").trim();
+    const words = cleaned.split(/\s+/).filter(Boolean);
+    if (!words.length) return "";
+    return words.map(w => {
+        const lower = w.toLowerCase();
+        if (CORE_PHONETIC_DICT[lower]) return CORE_PHONETIC_DICT[lower];
+        return w.charAt(0).toUpperCase() + w.slice(1);
+    }).join(" ");
+}
+
+/* =======================================================================
+   3. RADIO COMMENTARY SCRIPT PHRASING (FROM test_voice_2.py)
+======================================================================= */
+const SIX_LINES = [
+    "उठाकर मारा! गेंद आसमान में... बहुत ऊंची... और ये गई स्टैंड्स में! छह रन!",
+    "क्रीज़ से बाहर निकलकर सीधा प्रहार! गेंद मैदान के बाहर, गगनचुंबी छक्का!",
+    "बल्ले के बिल्कुल बीचों-बीच लगी! गेंद सीमा रेखा के बहुत पार, दर्शकों के बीच! छह रन!"
+];
+
+const FOUR_LINES = [
+    "गजब की टाइमिंग! फील्डर को हिलने का भी मौका नहीं मिला, गेंद गोली की रफ्तार से सीमा रेखा के पार! चौका!",
+    "कलाइयों का जादू! खूबसूरत प्लेसमेंट, गेंद रस्सी के पार! चार रन!",
+    "गैप मिला और गेंद सीधी बाउंड्री पर! फील्डर ने पीछा किया पर बहुत देर हो चुकी थी, चौका!"
+];
+
+const DOT_LINES = [
+    "कसी हुई लाइन और लेंथ, बल्लेबाज़ ने संभलकर खेला, कोई रन नहीं, डॉट बॉल।",
+    "शानदार गेंद! बल्लेबाज़ को पूरी तरह छकाया, गेंद सीधे विकेटकीपर के दस्तानों में।",
+    "सीधा फील्डर के हाथों में खेला, रन का कोई मौका नहीं।"
+];
+
+const SINGLE_LINES = [
+    "हल्के हाथों से कवर्स की ओर खेला और तेज़ी से एक सिंगल पूरा किया।",
+    "कलाइयों को मोड़कर स्ट्राइक रोटेट की, आसानी से एक रन चुरा लिया।"
+];
+
+function buildLiveWicketSpeech(dismissalText, batterName, batterRuns, batterBalls, bowlerName) {
+    const batterHi = cleanPlayerNameToHindi(batterName) || "बल्लेबाज़";
+    const runsVal = parseInt(batterRuns, 10);
+    const runsHi = !isNaN(runsVal) ? numberToHindiWords(runsVal) : "";
+    const ballsHi = !isNaN(parseInt(batterBalls, 10)) ? numberToHindiWords(batterBalls) : "";
+
+    let status = "पवेलियन लौटते हुए";
+    if (!isNaN(runsVal) && runsVal > 0) {
+        status = ballsHi ? `${ballsHi} गेंदों में ${runsHi} रन बनाकर` : `${runsHi} रन बनाकर`;
+    } else if (!isNaN(runsVal) && runsVal === 0) {
+        status = "बिना खाता खोले";
+    }
+
+    const d = (dismissalText || "").toLowerCase();
+    const bowler = cleanPlayerNameToHindi(bowlerName);
+
+    if (d.includes("b ") && !d.includes("c ")) {
+        return `गिल्लियां बिखर गईं! क्लीन बोल्ड! ${bowler ? bowler + " की गेंद पर " : ""}${batterHi} ${status} पवेलियन लौट रहे हैं!`;
+    }
+    if (d.includes("c ") || d.includes("caught")) {
+        return `हवा में गेंद और सीधा फील्डर के हाथों में! कैच आउट! ${batterHi} ${status} वापस लौटते हुए!`;
+    }
+    if (d.includes("lbw")) {
+        return `ज़ोरदार अपील और अंपायर की उंगली हवा में! एलबीडब्ल्यू! ${batterHi} ${status} आउट!`;
+    }
+    if (d.includes("run out")) {
+        return `खराब तालमेल! सीधा थ्रो स्टंप्स पर और रन आउट! ${batterHi} ${status} पवेलियन लौटते हुए!`;
+    }
+    return `विकेट पतन! बहुत बड़ा झटका! ${batterHi} ${status} पवेलियन की ओर रुख करते हुए!`;
+}
+
+function generateDeliveryCommentary(ballNum, badgeVal, bowlerRaw, batsmanRaw, lastDismissal) {
+    const ballPhrase = formatBallPhraseHindi(ballNum);
+    const bowler = cleanPlayerNameToHindi(bowlerRaw);
+    const batsman = cleanPlayerNameToHindi(batsmanRaw);
+    const badge = String(badgeVal || "").trim().toLowerCase();
+
+    if (badge === "w" || badge === "wkt" || badge === "out") {
+        const speech = buildLiveWicketSpeech(
+            lastDismissal?.howOut || "",
+            lastDismissal?.batter || batsmanRaw,
+            lastDismissal?.runs || "",
+            lastDismissal?.balls || "",
+            bowlerRaw
+        );
+        return { text: `${ballPhrase}, ${speech}`, level: 4 };
+    }
+    if (badge.includes("wd") || badge.includes("wide")) {
+        return { text: `${ballPhrase}, दिशाहीन गेंदबाज़ी, लेग स्टंप से काफी बाहर, अंपायर ने दोनों हाथ फैलाए, वाइड बॉल!`, level: 2 };
+    }
+    if (badge.includes("nb") || badge.includes("noball")) {
+        return { text: `${ballPhrase}, नो बॉल! गेंदबाज़ ने क्रीज़ को ओवरस्टेप किया, अब अगली गेंद फ्री हिट!`, level: 2 };
+    }
+    if (badge === "6") {
+        const line = SIX_LINES[Math.floor(Math.random() * SIX_LINES.length)];
+        return { text: `${ballPhrase}, ${bowler ? bowler + " की गेंद पर " : ""}${batsman ? batsman + " ने " : ""}${line}`, level: 4 };
+    }
+    if (badge === "4") {
+        const line = FOUR_LINES[Math.floor(Math.random() * FOUR_LINES.length)];
+        return { text: `${ballPhrase}, ${bowler ? bowler + " की गेंद पर " : ""}${line}`, level: 3 };
+    }
+    if (badge === "1") {
+        const line = SINGLE_LINES[Math.floor(Math.random() * SINGLE_LINES.length)];
+        return { text: `${ballPhrase}, ${line}`, level: 2 };
+    }
+    const line = DOT_LINES[Math.floor(Math.random() * DOT_LINES.length)];
+    return { text: `${ballPhrase}, ${line}`, level: 1 };
+}
+
+/* =======================================================================
+   4. MADHUR VOICE ENGINE & QUEUE (HUMANIZED AUDIO TIMING)
+======================================================================= */
+class RadioAnnouncer {
+    constructor() {
+        this.queue = [];
+        this.isPlaying = false;
+        this.enabled = true;
+    }
+    say(text, level = 2, droppable = false) {
+        if (!this.enabled || !('speechSynthesis' in window)) return;
+        if (droppable && this.queue.length >= 2) return;
+        this.queue.push({ text, level });
+        this.process();
+    }
+    process() {
+        if (this.isPlaying || this.queue.length === 0) return;
+        const item = this.queue.shift();
+        this.isPlaying = true;
+        
+        // Humanize text with micro-pauses at punctuation
+        const humanized = item.text.replace(/!/g, "!... ").replace(/।/g, "।... ").replace(/,/g, ",... ");
+        const utter = new SpeechSynthesisUtterance(humanized);
+
+        // Speed profiles matching test_voice_2.py AUDIO_PROFILES
+        if (item.level === 4) { utter.rate = 1.30; utter.pitch = 1.15; }
+        else if (item.level === 3) { utter.rate = 1.25; utter.pitch = 1.10; }
+        else if (item.level === 2) { utter.rate = 1.20; utter.pitch = 1.05; }
+        else { utter.rate = 1.15; utter.pitch = 1.00; }
+
+        const voices = window.speechSynthesis.getVoices();
+        const hindiVoice = voices.find(v => 
+            v.name.includes("Madhur") || 
+            (v.lang.startsWith("hi") && (v.name.includes("Neural") || v.name.includes("Natural")))
+        ) || voices.find(v => v.lang.startsWith("hi") || v.name.toLowerCase().includes("hindi"));
+
+        if (hindiVoice) utter.voice = hindiVoice;
+
+        utter.onend = utter.onerror = () => {
+            this.isPlaying = false;
+            setTimeout(() => this.process(), 250);
+        };
+
+        window.speechSynthesis.speak(utter);
+    }
+}
+const radio = new RadioAnnouncer();
+
+document.getElementById("toggleAudioBtn").addEventListener("click", () => {
+    radio.enabled = !radio.enabled;
+    const btn = document.getElementById("toggleAudioBtn");
+    btn.textContent = radio.enabled ? "🎙 MADHUR VOICE: ON" : "🎙 MADHUR VOICE: OFF";
+    btn.style.background = radio.enabled ? "linear-gradient(180deg, #00d2ff, #0077b6)" : "#475569";
+    if (!radio.enabled) window.speechSynthesis.cancel();
+});
+
+document.getElementById("testAudioBtn").addEventListener("click", () => {
+    radio.say("गेंदबाज़ ने गेंद डाली, और शानदार चौका! बल्लेबाज़ ने गैप ढूंढकर गेंद सीमा रेखा के पार पहुंचा दी!", 3);
+});
+
+/* =======================================================================
+   5. SMART SLUG PARSER & EXTENDED TEAM RECOGNITION
 ======================================================================= */
 const TEAM_NAMES = {
-    // International
-    IND: "INDIA", WI: "WEST INDIES", PAK: "PAKISTAN", AUS: "AUSTRALIA",
-    ENG: "ENGLAND", SA: "SOUTH AFRICA", NZ: "NEW ZEALAND", SL: "SRI LANKA",
-    BAN: "BANGLADESH", AFG: "AFGHANISTAN", ZIM: "ZIMBABWE", IRE: "IRELAND",
-    NED: "NETHERLANDS", USA: "USA", CAN: "CANADA", NEP: "NEPAL", UAE: "UAE",
-    OMA: "OMAN", NAM: "NAMIBIA", SCO: "SCOTLAND", PNG: "PAPUA NEW GUINEA", HK: "HONG KONG",
-    // Indian Domestic / State Teams
+    // Domestic (Ranji, Syed Mushtaq Ali, Vijay Hazare)
     KER: "KERALA", SAU: "SAURASHTRA", MUM: "MUMBAI", DEL: "DELHI",
     KAR: "KARNATAKA", TN: "TAMIL NADU", BEN: "BENGAL", GUJ: "GUJARAT",
     UP: "UTTAR PRADESH", MP: "MADHYA PRADESH", RAJ: "RAJASTHAN", PUN: "PUNJAB",
     HAR: "HARYANA", HYD: "HYDERABAD", AND: "ANDHRA", BRO: "BARODA",
     VID: "VIDARBHA", JHA: "JHARKHAND", ODI: "ODISHA", ASS: "ASSAM",
     SER: "SERVICES", RLW: "RAILWAYS", HP: "HIMACHAL PRADESH", CHA: "CHHATTISGARH",
-    UTT: "UTTARAKHAND", GOA: "GOA", TRI: "TRIPURA", PON: "PONDICHERRY"
+    // International
+    IND: "INDIA", WI: "WEST INDIES", PAK: "PAKISTAN", AUS: "AUSTRALIA",
+    ENG: "ENGLAND", SA: "SOUTH AFRICA", NZ: "NEW ZEALAND", SL: "SRI LANKA",
+    BAN: "BANGLADESH", AFG: "AFGHANISTAN", ZIM: "ZIMBABWE", IRE: "IRELAND",
+    // Emirates D10 / International Leagues
+    ABD: "ABU DHABI", EMB: "EMIRATES BLUES", FUJ: "FUJAIRAH", SHA: "SHARJAH",
+    DUB: "DUBAI", AJM: "AJMAN"
 };
 
 function parseTeamsFromUrl(url) {
@@ -896,7 +1149,7 @@ function parseTeamsFromUrl(url) {
     const clean = url.split("?")[0].split("#")[0];
     const pathSlug = clean.split("/").filter(Boolean).pop() || "";
     
-    // Match "ker-vs-sau", "pak-vs-sl", "ind-vs-wi"
+    // Match standard Crex slug: "ker-vs-sau-..." or "pak-vs-sl-..."
     const m = pathSlug.match(/([a-z0-9]+)-vs-([a-z0-9]+)/i);
     if (!m) return null;
     
@@ -905,12 +1158,11 @@ function parseTeamsFromUrl(url) {
     const name1 = TEAM_NAMES[code1] || code1;
     const name2 = TEAM_NAMES[code2] || code2;
     
-    // Tournament Format Detection
     let format = "LIVE MATCH";
     if (/ranji/i.test(pathSlug)) format = "RANJI TROPHY";
     else if (/t20/i.test(pathSlug)) format = "T20 MATCH";
-    else if (/odi/i.test(pathSlug)) format = "ODI MATCH";
     else if (/d10/i.test(pathSlug)) format = "D10 LEAGUE";
+    else if (/odi/i.test(pathSlug)) format = "ODI MATCH";
     else if (/test/i.test(pathSlug)) format = "TEST MATCH";
 
     return { code1, code2, name1, name2, format };
@@ -927,7 +1179,7 @@ function applyImmediateUrlInfo(url) {
     document.getElementById("pollTeam1Label").textContent = info.code1;
     document.getElementById("pollTeam2Label").textContent = info.code2;
     
-    // Reset initial values cleanly
+    // Clean old figures on load
     document.getElementById("mainScoreHero").textContent = "—";
     document.getElementById("mainOversHero").textContent = "0.0";
     document.getElementById("team1HeroScore").textContent = "—";
@@ -935,68 +1187,11 @@ function applyImmediateUrlInfo(url) {
 }
 
 /* =======================================================================
-   3. MADHUR AUDIO COMMENTARY ENGINE
-======================================================================= */
-class MadhurRadioAnnouncer {
-    constructor() {
-        this.queue = [];
-        this.speaking = false;
-        this.enabled = true;
-    }
-    say(text, level = 2) {
-        if (!this.enabled || !('speechSynthesis' in window)) return;
-        if (this.queue.length >= 2) return; // Prevent backlog
-        this.queue.push({ text, level });
-        this.processQueue();
-    }
-    processQueue() {
-        if (this.speaking || this.queue.length === 0) return;
-        const item = this.queue.shift();
-        this.speaking = true;
-
-        const humanized = item.text.replace(/!/g, "!... ").replace(/।/g, "।... ").replace(/,/g, ",... ");
-        const utter = new SpeechSynthesisUtterance(humanized);
-
-        if (item.level === 4) { utter.rate = 1.30; utter.pitch = 1.15; }
-        else if (item.level === 3) { utter.rate = 1.25; utter.pitch = 1.10; }
-        else { utter.rate = 1.18; utter.pitch = 1.05; }
-
-        const voices = window.speechSynthesis.getVoices();
-        const hindiVoice = voices.find(v => 
-            v.name.includes("Madhur") || 
-            (v.lang.startsWith("hi") && (v.name.includes("Neural") || v.name.includes("Natural")))
-        ) || voices.find(v => v.lang.startsWith("hi") || v.name.toLowerCase().includes("hindi"));
-
-        if (hindiVoice) utter.voice = hindiVoice;
-
-        utter.onend = utter.onerror = () => {
-            this.speaking = false;
-            setTimeout(() => this.processQueue(), 250);
-        };
-        window.speechSynthesis.speak(utter);
-    }
-}
-const radio = new MadhurRadioAnnouncer();
-
-document.getElementById("toggleAudioBtn").addEventListener("click", () => {
-    radio.enabled = !radio.enabled;
-    const btn = document.getElementById("toggleAudioBtn");
-    btn.textContent = radio.enabled ? "🎙 MADHUR VOICE: ON" : "🎙 MADHUR VOICE: OFF";
-    btn.style.background = radio.enabled ? "linear-gradient(180deg, #00d2ff, #0077b6)" : "#475569";
-    if (!radio.enabled) window.speechSynthesis.cancel();
-});
-
-document.getElementById("testAudioBtn").addEventListener("click", () => {
-    radio.say("गेंदबाज़ ने गेंद डाली, और शानदार चौका! बल्लेबाज़ ने गैप ढूंढकर गेंद सीमा रेखा के पार पहुंचा दी!", 3);
-});
-
-/* =======================================================================
-   4. FAIL-SAFE MULTI-PROXY LIVE CREX FETCHER
+   6. MULTI-PROXY CREX SCRAPER WITH TIMEOUT PROTECTION
 ======================================================================= */
 let liveSyncTimer = null;
 let lastOversToken = null;
 
-// Multi-Proxy List with cascading fallbacks
 const PROXY_CANDIDATES = [
     url => `https://corsproxy.io/?url=${encodeURIComponent(url)}`,
     url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
@@ -1026,9 +1221,8 @@ async function fetchCrexLive() {
     statusInd.style.color = "#FFB800";
 
     let html = null;
-    let successProxy = null;
 
-    // Try Render Backend first if available
+    // 1. Try local Render API if available
     try {
         const renderEndpoint = `https://preet-sports.onrender.com/api/scrape?url=${encodeURIComponent(rawUrl)}`;
         const jsonText = await fetchWithTimeout(renderEndpoint, 5000);
@@ -1041,13 +1235,12 @@ async function fetchCrexLive() {
         }
     } catch (_) {}
 
-    // Cascade through Public CORS Proxies
+    // 2. Cascade through CORS Proxies
     for (let i = 0; i < PROXY_CANDIDATES.length; i++) {
         try {
             const proxyUrl = PROXY_CANDIDATES[i](rawUrl);
             html = await fetchWithTimeout(proxyUrl, 5000);
             if (html && (html.includes("__NEXT_DATA__") || html.includes("<title>"))) {
-                successProxy = i;
                 break;
             }
         } catch (_) {}
@@ -1065,7 +1258,7 @@ async function fetchCrexLive() {
 }
 
 /* =======================================================================
-   5. DEEP PARSING: __NEXT_DATA__ + TITLE REGEX (ZERO MISSING DATA)
+   7. DEEP DATA EXTRACTION: NEXT.JS STATE & TITLE TAG
 ======================================================================= */
 function parseAndBindCrexHtml(html) {
     const parser = new DOMParser();
@@ -1076,7 +1269,7 @@ function parseAndBindCrexHtml(html) {
     let liveOvers = null;
     let battingCode = null;
 
-    // 1. Parse Title Tag: "KER 4-2 (6.2) (Sachin Baby 1*, Jalaj Saxena 0*) | Live Match"
+    // 1. Title Parse (e.g., "KER 4-2 (6.2) (Sachin Baby 1*, Jalaj Saxena 0*) | Live Match")
     const title = doc.querySelector("title")?.textContent || "";
     const titleMatch = title.match(/([A-Za-z0-9\-]+)\s+(\d{1,3})[-/](\d{1,2})\s*\(([\d\.]+)\)/);
     if (titleMatch) {
@@ -1092,14 +1285,14 @@ function parseAndBindCrexHtml(html) {
         document.getElementById("team1HeroOvers").textContent = `${liveOvers} OV`;
     }
 
-    // 2. Parse Next.js Embedded State
+    // 2. Next.js Embedded JSON Parse
     const nextScript = doc.querySelector("script#__NEXT_DATA__");
     if (nextScript) {
         try {
             const parsed = JSON.parse(nextScript.textContent);
             const matchData = parsed?.props?.pageProps?.matchData || parsed?.props?.pageProps?.data || {};
 
-            // Teams
+            // Team Names
             if (matchData.team1 && matchData.team2) {
                 document.getElementById("team1HeroName").textContent = (matchData.team1.name || matchData.team1.shortName || "").toUpperCase();
                 document.getElementById("team2HeroName").textContent = (matchData.team2.name || matchData.team2.shortName || "").toUpperCase();
@@ -1136,11 +1329,13 @@ function parseAndBindCrexHtml(html) {
                 document.getElementById("bwlInitials").textContent = matchData.currentBowler.name?.slice(0, 2).toUpperCase() || "BW";
             }
 
-            // CRR & Toss
+            // CRR, Toss, & Partnership
             if (matchData.crr) document.getElementById("valCRR").textContent = matchData.crr;
             if (matchData.toss) document.getElementById("valToss").textContent = matchData.toss.toUpperCase();
+            if (matchData.partnership) document.getElementById("valPartnership").textContent = matchData.partnership;
+            if (matchData.lastWicket) document.getElementById("valLastWkt").textContent = matchData.lastWicket;
 
-            // Win Probability
+            // Who Will Win? (Win Probability)
             if (matchData.winProbability) {
                 const p1 = Math.round(matchData.winProbability.team1 || 50);
                 const p2 = 100 - p1;
@@ -1148,11 +1343,14 @@ function parseAndBindCrexHtml(html) {
                 document.getElementById("pollTeam2Value").textContent = `${p2}%`;
                 document.getElementById("pollTeam1Bar").style.width = `${p1}%`;
                 document.getElementById("pollTeam2Bar").style.width = `${p2}%`;
+                document.getElementById("winnerTeamLarge").textContent = p1 >= p2 
+                    ? document.getElementById("team1HeroName").textContent 
+                    : document.getElementById("team2HeroName").textContent;
             }
         } catch (_) {}
     }
 
-    // 3. Audio Trigger on Delivery
+    // 3. Audio Trigger on Delivery Update
     if (liveOvers && liveOvers !== lastOversToken) {
         lastOversToken = liveOvers;
         const b1 = document.getElementById("b1Name").textContent;
@@ -1177,7 +1375,7 @@ function renderDirectJson(data) {
 }
 
 /* =======================================================================
-   6. CONTROLS & OBS URL GENERATION
+   8. OBS URL & CONTROLS BINDING
 ======================================================================= */
 document.getElementById("loadMatchUrlBtn").addEventListener("click", () => {
     const url = document.getElementById("crexUrlInput").value.trim();
@@ -1203,12 +1401,12 @@ window.addEventListener("keydown", (e) => {
     }
 });
 
-// Auto-run on load
+// Auto-run on page load
 window.addEventListener("load", () => {
     const initialUrl = document.getElementById("crexUrlInput").value.trim();
     applyImmediateUrlInfo(initialUrl);
     fetchCrexLive();
-    liveSyncTimer = setInterval(fetchCrexLive, 2500);
+    liveSyncTimer = setInterval(fetchCrexLive, 3500);
 });
 </script>
 
