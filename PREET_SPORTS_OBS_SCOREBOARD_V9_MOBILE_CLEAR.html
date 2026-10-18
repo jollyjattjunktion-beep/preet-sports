@@ -3686,6 +3686,29 @@ function setPlayerPortrait(photoId, initialsId, player, data, name) {
   function parseNextBatter(doc) {
     if (!doc) return null;
     try { if (typeof collectImagesFromCrexDocument === "function") collectImagesFromCrexDocument(doc); } catch (_) {}
+
+    // CREX's current scorecard markup (also works if the backend returns only this fragment):
+    // .yet-to-bat > .custom-width > .content > a[href="/player/..."]
+    // The visible, abbreviated scoreboard name is .player-data .name and the real headshot
+    // is the image under /players/org/ (the second image is only the jersey).
+    const scorecardLinks = [...doc.querySelectorAll('.yet-to-bat .content a[href*="/player/"], .yet-to-bat a[href*="/player/"]')];
+    for (const anchor of scorecardLinks) {
+      const href = absoluteUrl(anchor.getAttribute("href"), "https://crex.com");
+      if (!href || !/crex\.com\/player\//i.test(href)) continue;
+      const displayedName = cleanPlayerLabel(
+        anchor.querySelector(".player-data .name")?.textContent ||
+        anchor.querySelector(".player-data .name")?.innerText ||
+        anchor.querySelector(".name")?.textContent || ""
+      );
+      const logo = anchor.querySelector('img[src*="/players/org/"], img[data-src*="/players/org/"], img[data-lazy-src*="/players/org/"]');
+      const fallbackImg = logo || anchor.querySelector('img[alt], img[title]');
+      const profileName = slugNameFromProfileUrl(href);
+      const name = displayedName || profileName || cleanPlayerLabel(fallbackImg?.getAttribute("alt") || fallbackImg?.getAttribute("title") || "");
+      if (!name || name.length > 60) continue;
+      const photo = imageUrlFromNode(logo || fallbackImg, "https://crex.com") || profileIdPhoto(href);
+      return { name, profileUrl: href, photo, photoFallback: profileIdPhoto(href) };
+    }
+
     const possibleHeaders = [...doc.querySelectorAll('h1,h2,h3,h4,h5,[role="heading"],div,span,p,strong')]
       .filter(el => /^yet\s+to\s+bat$/i.test(cleanText(el.innerText || el.textContent || "")));
     possibleHeaders.sort((a, b) => (a.querySelectorAll("*").length - b.querySelectorAll("*").length) || (cleanText(a.textContent).length - cleanText(b.textContent).length));
@@ -3885,7 +3908,7 @@ function setPlayerPortrait(photoId, initialsId, player, data, name) {
       const image = typeof findCrexPlayerPhoto === "function" ? findCrexPlayerPhoto(fallbackName) : "";
       showPlayer({ name: fallbackName, photo: image || "" }, clean);
     } else {
-      showPlayer({ name: "RETRYING CREX SCORECARD", photo: "" }, clean);
+      showPlayer({ name: "WAITING FOR CREX SCORECARD", photo: "" }, clean);
     }
   }
   function scheduleUpdate(delay) {
