@@ -1652,6 +1652,25 @@ body.controls-visible .top-brand-wrap { margin-top: 53px !important; }
             </div>
         </div>
 
+        <!-- LIVE NEXT BATTER MARQUEE: reads the "Yet to bat" list from this match's CREX scorecard -->
+        <div class="next-batter-scorecard-ticker" id="nextBatterScorecardTicker" role="region" aria-label="Next batter from CREX match scorecard">
+            <div class="next-batter-ticker-title"><span class="next-batter-live-dot"></span><strong>NEXT BATTER</strong></div>
+            <div class="next-batter-ticker-viewport">
+                <div class="next-batter-ticker-track" id="nextBatterTickerTrack">
+                    <div class="next-batter-ticker-item">
+                        <span class="next-batter-ticker-avatar"><span class="next-batter-ticker-initials" id="nextBatterTickerInitialsA">NB</span><img id="nextBatterTickerPhotoA" alt="Next batter player photo" loading="eager"></span>
+                        <span class="next-batter-ticker-name" id="nextBatterTickerNameA">FETCHING CREX SCORECARD...</span>
+                        <span class="next-batter-ticker-separator">◆</span>
+                    </div>
+                    <div class="next-batter-ticker-item" aria-hidden="true">
+                        <span class="next-batter-ticker-avatar"><span class="next-batter-ticker-initials" id="nextBatterTickerInitialsB">NB</span><img id="nextBatterTickerPhotoB" alt="" loading="eager"></span>
+                        <span class="next-batter-ticker-name" id="nextBatterTickerNameB">FETCHING CREX SCORECARD...</span>
+                        <span class="next-batter-ticker-separator">◆</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- BOTTOM SUBSCRIBE MARQUEE: moves continuously from right to left -->
         <div class="bottom-meta-ribbon subscribe-marquee-ribbon" role="region" aria-label="Subscribe Preet Sports Live Commentary">
             <div class="subscribe-marquee-viewport">
@@ -3541,6 +3560,296 @@ function setPlayerPortrait(photoId, initialsId, player, data, name) {
   overflow:hidden;
 }
 </style>
+
+<style id="preetSportsNextBatterScorecardTicker">
+/* Scorecard-driven next batter ticker, positioned immediately above the Subscribe Preet Sports ribbon. */
+.next-batter-scorecard-ticker {
+  position:absolute!important; top:650px!important; left:14px!important;
+  width:calc(100% - 28px)!important; height:33px!important; min-height:33px!important;
+  display:flex!important; align-items:center!important; gap:0!important; overflow:hidden!important;
+  border:1px solid rgba(255,190,24,.82)!important; border-radius:8px!important;
+  background:linear-gradient(90deg,rgba(3,16,31,.99),rgba(5,29,51,.99) 48%,rgba(2,10,21,.99))!important;
+  box-shadow:0 4px 12px rgba(0,0,0,.35)!important; z-index:29!important;
+}
+.next-batter-ticker-title {
+  align-self:stretch!important; flex:0 0 170px!important; min-width:170px!important;
+  display:flex!important; align-items:center!important; justify-content:center!important; gap:9px!important;
+  border-right:1px solid rgba(255,190,24,.46)!important;
+  background:linear-gradient(90deg,#073C72,#052342)!important;
+  color:#FFCB3D!important; font:900 17px 'Montserrat',sans-serif!important; letter-spacing:.65px!important;
+  white-space:nowrap!important;
+}
+.next-batter-live-dot { width:8px!important; height:8px!important; border-radius:50%!important; background:#FFB800!important; box-shadow:0 0 7px rgba(255,184,0,.75)!important; flex:0 0 8px!important; }
+.next-batter-ticker-viewport { flex:1 1 auto!important; min-width:0!important; height:100%!important; display:flex!important; align-items:center!important; overflow:hidden!important; white-space:nowrap!important; }
+.next-batter-ticker-track { display:flex!important; align-items:center!important; width:max-content!important; flex:0 0 auto!important; height:100%!important; will-change:transform; animation:preetNextBatterScroll 18s linear infinite!important; }
+.next-batter-ticker-item { display:inline-flex!important; flex:0 0 auto!important; align-items:center!important; gap:10px!important; height:100%!important; padding:0 56px 0 22px!important; white-space:nowrap!important; }
+.next-batter-ticker-avatar { position:relative!important; display:block!important; width:27px!important; height:27px!important; min-width:27px!important; flex:0 0 27px!important; overflow:hidden!important; border-radius:50%!important; border:1.5px solid #FFBE18!important; background:#12385B!important; }
+.next-batter-ticker-avatar img,.next-batter-ticker-initials { position:absolute!important; inset:0!important; width:100%!important; height:100%!important; border:0!important; border-radius:50%!important; object-fit:cover!important; object-position:center top!important; }
+.next-batter-ticker-avatar img { display:none; }
+.next-batter-ticker-initials { display:flex!important; align-items:center!important; justify-content:center!important; color:#fff!important; background:linear-gradient(145deg,#1D679E,#071D34)!important; font:900 10px 'Montserrat',sans-serif!important; }
+.next-batter-ticker-name { display:block!important; color:#F7FBFF!important; font:900 17px 'Montserrat',sans-serif!important; letter-spacing:.3px!important; text-shadow:0 1px 3px #000!important; }
+.next-batter-ticker-separator { color:#FFBE18!important; font-size:13px!important; padding-left:10px!important; }
+@keyframes preetNextBatterScroll { from { transform:translateX(0); } to { transform:translateX(-50%); } }
+.next-batter-scorecard-ticker:hover .next-batter-ticker-track { animation-play-state:paused!important; }
+@media(prefers-reduced-motion:reduce) { .next-batter-ticker-track { animation-duration:60s!important; } }
+</style>
+
+<script id="preetSportsNextBatterScorecardSource">
+(function () {
+  "use strict";
+  const TICKER_POLL_MS = 30000;
+  let requestSequence = 0;
+  let lastMatchUrl = "";
+  let pollingHandle = null;
+
+  function cleanText(value) {
+    return String(value || "").replace(/[\u00a0\u200b]/g, " ").replace(/\s+/g, " ").trim();
+  }
+  function currentMatchUrl() {
+    const fromState = (typeof activeTargetUrl !== "undefined" && activeTargetUrl) || "";
+    const fromInput = document.getElementById("crexUrlInput")?.value || "";
+    return cleanCrexUrl(fromState || fromInput || "");
+  }
+  function scorecardUrlFor(matchUrl) {
+    const clean = cleanCrexUrl(matchUrl || "");
+    if (!clean) return "";
+    return clean.replace(/\/match-scorecard\/?$/i, "").replace(/\/$/, "") + "/match-scorecard";
+  }
+  function absoluteUrl(url, base) {
+    try { return new URL(url, base || "https://crex.com").href; } catch (_) { return ""; }
+  }
+  function imageUrlFromNode(img, baseUrl) {
+    if (!img) return "";
+    const raw = img.getAttribute("src") || img.getAttribute("data-src") || img.getAttribute("data-lazy-src") ||
+      img.getAttribute("data-original") || img.getAttribute("data-image") || img.getAttribute("srcset")?.split(",")[0]?.trim().split(/\s+/)[0] || "";
+    if (typeof getImageUrl === "function") {
+      const resolved = getImageUrl(raw);
+      if (resolved) return resolved;
+    }
+    const resolved = absoluteUrl(raw, baseUrl);
+    return /^https?:\/\//i.test(resolved) && /\.(?:png|jpe?g|webp|avif)(?:[?#]|$)/i.test(resolved) ? resolved : "";
+  }
+  function slugNameFromProfileUrl(href) {
+    try {
+      const path = new URL(href, "https://crex.com").pathname;
+      const slug = path.split("/").filter(Boolean).pop() || "";
+      const words = slug.replace(/-[A-Za-z0-9]{3,5}$/i, "").split(/[-_]+/).filter(Boolean);
+      if (words.length < 2) return "";
+      return words.map(w => w.length <= 2 ? w.toUpperCase() : w[0].toUpperCase() + w.slice(1).toLowerCase()).join(" ");
+    } catch (_) { return ""; }
+  }
+  function profileIdPhoto(href) {
+    try {
+      const slug = new URL(href, "https://crex.com").pathname.split("/").filter(Boolean).pop() || "";
+      const match = slug.match(/-([A-Za-z0-9]{3,5})$/);
+      return match ? `https://cricketvectors.akamaized.net/players/org/${match[1]}.png` : "";
+    } catch (_) { return ""; }
+  }
+  function cleanPlayerLabel(value) {
+    return cleanText(value)
+      .replace(/\b(?:avg(?:erage)?|sr|strike\s*rate|econ(?:omy)?)\s*:?\s*[-\d.]*.*$/i, "")
+      .replace(/\b(?:view profile|player profile|profile)\b/ig, "")
+      .replace(/[•·▪●\s:|]+$/g, "")
+      .replace(/^[•·▪●\s:|]+/g, "")
+      .trim();
+  }
+  function isFollowingElement(header, element) {
+    try { return !!(header.compareDocumentPosition(element) & 4); } catch (_) { return false; }
+  }
+  function findPlayerAnchorAfter(header, doc) {
+    const anchors = [...doc.querySelectorAll('a[href]')].filter(a => isFollowingElement(header, a));
+    for (const anchor of anchors) {
+      const href = absoluteUrl(anchor.getAttribute("href"), "https://crex.com");
+      if (!/crex\.com\/player\//i.test(href)) continue;
+      const raw = cleanPlayerLabel(anchor.innerText || anchor.textContent || "");
+      const nestedImage = anchor.querySelector("img[alt], img[title]");
+      const alt = cleanPlayerLabel(nestedImage?.getAttribute("alt") || nestedImage?.getAttribute("title") || "");
+      const slugName = slugNameFromProfileUrl(href);
+      const name = slugName || ((alt && alt.length > 2 && !/^(image|player|profile|photo)$/i.test(alt)) ? alt : raw);
+      if (!name || name.length > 60 || /^(CREX|TERMS|PRIVACY|NEWS)$/i.test(name)) continue;
+      let photo = imageUrlFromNode(nestedImage, "https://crex.com");
+      if (!photo) {
+        const slug = href.split("/").filter(Boolean).pop() || "";
+        const escaped = slug.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        const candidates = [...doc.querySelectorAll("img")].filter(img => {
+          const desc = `${img.getAttribute("alt") || ""} ${img.getAttribute("title") || ""} ${img.getAttribute("src") || ""} ${img.getAttribute("data-src") || ""}`;
+          return new RegExp(escaped, "i").test(desc) || (name && new RegExp(name.split(/\s+/).slice(-1)[0].replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i").test(`${img.alt || ""} ${img.title || ""}`));
+        });
+        if (candidates.length === 1) photo = imageUrlFromNode(candidates[0], "https://crex.com");
+      }
+      if (!photo && typeof findCrexPlayerPhoto === "function") photo = findCrexPlayerPhoto(name) || "";
+      const backupPhoto = profileIdPhoto(href);
+      return { name, profileUrl: href, photo: photo || backupPhoto, photoFallback: backupPhoto };
+    }
+    return null;
+  }
+  function parseNextBatter(doc) {
+    if (!doc) return null;
+    try { if (typeof collectImagesFromCrexDocument === "function") collectImagesFromCrexDocument(doc); } catch (_) {}
+    const possibleHeaders = [...doc.querySelectorAll('h1,h2,h3,h4,h5,[role="heading"],div,span,p,strong')]
+      .filter(el => /^yet\s+to\s+bat$/i.test(cleanText(el.innerText || el.textContent || "")));
+    possibleHeaders.sort((a, b) => (a.querySelectorAll("*").length - b.querySelectorAll("*").length) || (cleanText(a.textContent).length - cleanText(b.textContent).length));
+    const header = possibleHeaders[0];
+    if (header) {
+      const player = findPlayerAnchorAfter(header, doc);
+      if (player) return player;
+    }
+    // Fallback for CREX variants which display the list as text rather than linked player rows.
+    const lines = cleanText(doc.body?.innerText || doc.body?.textContent || "").split(/\n+/).map(cleanText).filter(Boolean);
+    const index = lines.findIndex(line => /^yet\s+to\s+bat\b/i.test(line));
+    if (index >= 0) {
+      for (let i = index + 1; i < Math.min(lines.length, index + 12); i++) {
+        const name = cleanPlayerLabel(lines[i]);
+        if (!name || /^(fall of wickets?|partnership|bowling|commentary|scorecard|crex|extras|total|target)$/i.test(name)) continue;
+        if (/^(?:[\d.]+|avg|sr|4s|6s|batter|batsman)$/i.test(name) || name.length > 55) continue;
+        const match = [...doc.querySelectorAll('a[href*="/player/"]')].find(a => cleanPlayerLabel(a.innerText || a.textContent || "").toLowerCase().startsWith(name.toLowerCase().split(/\s+/)[0]));
+        const href = match ? absoluteUrl(match.getAttribute("href"), "https://crex.com") : "";
+        return { name: slugNameFromProfileUrl(href) || name, profileUrl: href, photo: (match && imageUrlFromNode(match.querySelector("img"), "https://crex.com")) || (href && profileIdPhoto(href)) || (typeof findCrexPlayerPhoto === "function" ? findCrexPlayerPhoto(name) : ""), photoFallback: href ? profileIdPhoto(href) : "" };
+      }
+    }
+    return null;
+  }
+  async function fetchDocument(url) {
+    // Prefer the existing Preet Sports backend proxy; fall back to AllOrigins if the route is unavailable.
+    if (typeof API_BASE !== "undefined" && API_BASE) {
+      try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 8500);
+        const response = await fetch(`${API_BASE}/api/crex-assets?url=${encodeURIComponent(url)}&t=${Date.now()}`, { cache: "no-store", signal: controller.signal });
+        clearTimeout(timeout);
+        if (response.ok) {
+          const type = response.headers.get("content-type") || "";
+          if (type.includes("application/json")) {
+            const payload = await response.json();
+            const pageHtml = payload.html || payload.page_html || payload.pageHtml || payload.document || payload.body_html || "";
+            if (typeof pageHtml === "string" && /<html|<body|<div|<main/i.test(pageHtml)) {
+              return { doc: new DOMParser().parseFromString(pageHtml, "text/html"), payload };
+            }
+            if (payload && (payload.yet_to_bat || payload.yetToBat || payload.next_batter || payload.nextBatter)) return { doc: null, payload };
+          } else {
+            const body = await response.text();
+            if (body && /<html|<body|<div|<main/i.test(body)) return { doc: new DOMParser().parseFromString(body, "text/html"), payload: null };
+          }
+        }
+      } catch (_) {}
+    }
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 10000);
+      const response = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`, { cache: "no-store", signal: controller.signal });
+      clearTimeout(timeout);
+      if (response.ok) {
+        const body = await response.text();
+        if (body && body.length < 8_000_000) return { doc: new DOMParser().parseFromString(body, "text/html"), payload: null };
+      }
+    } catch (_) {}
+    return { doc: null, payload: null };
+  }
+  function playerFromPayload(payload) {
+    if (!payload || typeof payload !== "object") return null;
+    const candidate = payload.yet_to_bat || payload.yetToBat || payload.next_batter || payload.nextBatter || payload.next_batsman || payload.nextBatsman || payload.next_batters || payload.nextBatters;
+    const player = Array.isArray(candidate) ? candidate[0] : candidate;
+    if (!player) return null;
+    const name = typeof player === "string" ? player : cleanText(player.full_name || player.fullName || player.name || player.player_name || player.playerName || player.short_name || player.shortName);
+    const photo = typeof player === "object" ? (player.image || player.image_url || player.imageUrl || player.photo || player.photo_url || player.photoUrl || player.avatar || "") : "";
+    return name ? { name, profileUrl: "", photo: (typeof getImageUrl === "function" ? getImageUrl(photo) : photo), photoFallback: "" } : null;
+  }
+  async function fetchProfilePhoto(player) {
+    if (!player || player.photo || !player.profileUrl) return player;
+    const result = await fetchDocument(player.profileUrl);
+    const doc = result.doc;
+    if (!doc) return player;
+    const h1 = cleanText(doc.querySelector("h1")?.innerText || doc.querySelector("h1")?.textContent || "");
+    if (h1) {
+      const cleaned = h1.replace(/\s+(?:profile|career|stats).*$/i, "").trim();
+      if (cleaned.length > 2) player.name = cleaned;
+    }
+    const candidates = [
+      doc.querySelector('meta[property="og:image"]')?.getAttribute("content"),
+      doc.querySelector('meta[name="twitter:image"]')?.getAttribute("content"),
+      doc.querySelector('img[src*="/players/org/"],img[data-src*="/players/org/"]')?.getAttribute("src") || doc.querySelector('img[data-src*="/players/org/"]')?.getAttribute("data-src"),
+      ...[...doc.querySelectorAll("img[alt],img[title]")].filter(img => new RegExp(player.name.split(/\s+/).slice(-1)[0].replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i").test(`${img.alt || ""} ${img.title || ""}`)).map(img => img.getAttribute("src") || img.getAttribute("data-src"))
+    ].filter(Boolean);
+    for (const raw of candidates) {
+      const resolved = typeof getImageUrl === "function" ? getImageUrl(raw) : absoluteUrl(raw, player.profileUrl);
+      if (resolved && /^https?:\/\//i.test(resolved)) { player.photo = resolved; break; }
+    }
+    return player;
+  }
+  function showPlayer(player, matchUrl) {
+    const name = cleanText(player?.name || "");
+    const photo = cleanText(player?.photo || "");
+    const initials = name.split(/\s+/).filter(Boolean).slice(0, 2).map(part => part[0]).join("").toUpperCase() || "NB";
+    for (const suffix of ["A", "B"]) {
+      const nameEl = document.getElementById(`nextBatterTickerName${suffix}`);
+      const initialsEl = document.getElementById(`nextBatterTickerInitials${suffix}`);
+      const img = document.getElementById(`nextBatterTickerPhoto${suffix}`);
+      if (nameEl) nameEl.textContent = name ? name.toUpperCase() : "NEXT BATTER NOT AVAILABLE";
+      if (initialsEl) { initialsEl.textContent = initials; initialsEl.style.setProperty("display", "flex", "important"); }
+      if (img) {
+        img.onload = () => { img.style.setProperty("display", "block", "important"); if (initialsEl) initialsEl.style.setProperty("display", "none", "important"); };
+        img.onerror = () => {
+          const fallback = cleanText(player?.photoFallback || profileIdPhoto(player?.profileUrl || ""));
+          if (fallback && fallback !== img.src && img.dataset.triedFallback !== "1") {
+            img.dataset.triedFallback = "1"; img.src = fallback; return;
+          }
+          img.style.setProperty("display", "none", "important");
+          if (initialsEl) initialsEl.style.setProperty("display", "flex", "important");
+        };
+        img.dataset.triedFallback = "0";
+        if (photo && /^https?:\/\//i.test(photo)) {
+          img.style.setProperty("display", "block", "important");
+          img.src = photo;
+        } else {
+          img.removeAttribute("src"); img.style.setProperty("display", "none", "important");
+        }
+      }
+    }
+    const ticker = document.getElementById("nextBatterScorecardTicker");
+    if (ticker) ticker.setAttribute("data-match-url", matchUrl || "");
+  }
+  async function updateTicker(matchUrl) {
+    const clean = cleanCrexUrl(matchUrl || "");
+    const scorecardUrl = scorecardUrlFor(clean);
+    if (!scorecardUrl) return;
+    const seq = ++requestSequence;
+    const ticker = document.getElementById("nextBatterScorecardTicker");
+    if (ticker) ticker.setAttribute("data-source-url", scorecardUrl);
+    const result = await fetchDocument(scorecardUrl);
+    if (seq !== requestSequence || clean !== cleanCrexUrl(currentMatchUrl())) return;
+    let player = (result.doc && parseNextBatter(result.doc)) || playerFromPayload(result.payload);
+    if (player && !player.photo && player.profileUrl) player = await fetchProfilePhoto(player);
+    if (seq !== requestSequence || clean !== cleanCrexUrl(currentMatchUrl())) return;
+    if (player && player.name) {
+      if (!player.photo && typeof findCrexPlayerPhoto === "function") player.photo = findCrexPlayerPhoto(player.name) || "";
+      showPlayer(player, clean);
+      return;
+    }
+    // Fallback to the existing live-feed next-batter list if CREX's scorecard is temporarily unavailable.
+    const fallbackName = Array.isArray(v6CrexMeta?.nextBatters) ? v6CrexMeta.nextBatters[0] : "";
+    if (fallbackName) {
+      const image = typeof findCrexPlayerPhoto === "function" ? findCrexPlayerPhoto(fallbackName) : "";
+      showPlayer({ name: fallbackName, photo: image || "" }, clean);
+    } else {
+      showPlayer({ name: "WAITING FOR CREX SCORECARD", photo: "" }, clean);
+    }
+  }
+  function scheduleUpdate(delay) {
+    if (pollingHandle) clearTimeout(pollingHandle);
+    pollingHandle = setTimeout(() => updateTicker(currentMatchUrl()), delay || 0);
+  }
+
+  // The existing click handler changes activeTargetUrl before its first await; re-read the selected URL after it runs.
+  document.getElementById("loadMatchUrlBtn")?.addEventListener("click", () => scheduleUpdate(350));
+  document.getElementById("crexUrlInput")?.addEventListener("keydown", event => {
+    if (event.key === "Enter") scheduleUpdate(450);
+  });
+  window.addEventListener("load", () => {
+    updateTicker(currentMatchUrl());
+    setInterval(() => updateTicker(currentMatchUrl()), TICKER_POLL_MS);
+  }, { once: true });
+})();
+</script>
 
 </body>
 </html>
