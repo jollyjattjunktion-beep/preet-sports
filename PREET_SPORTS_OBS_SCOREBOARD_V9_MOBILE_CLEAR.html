@@ -1,860 +1,1050 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cricket Scoreboard Overlay</title>
-  <link href="https://fonts.googleapis.com/css2?family=Teko:wght@500;600;700&family=Oswald:wght@500;600;700&family=Roboto+Condensed:wght@700;900&display=swap" rel="stylesheet">
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Oswald', sans-serif;
-      user-select: none;
-    }
-
-    body {
-      background-color: #0b0f19;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      overflow: hidden;
-    }
-
-    /* 16:9 Canvas Container */
-    .screen-container {
-      position: relative;
-      width: 1280px;
-      height: 720px;
-      background-image: url('https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=1280&q=80');
-      background-size: cover;
-      background-position: center bottom;
-      overflow: hidden;
-      border: 1px solid #1e293b;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    /* ========================================================
-       TOP SCOREBOARD SECTION
-       ======================================================== */
-    .scoreboard-top {
-      position: relative;
-      width: 100%;
-      z-index: 10;
-    }
-
-    /* Vertical SCORE tab on the far left */
-    .score-vertical-tag {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 30px;
-      height: 154px;
-      background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: #ffffff;
-      font-family: 'Teko', sans-serif;
-      font-size: 26px;
-      line-height: 20px;
-      font-weight: 700;
-      border-right: 1px solid rgba(255,255,255,0.4);
-      z-index: 20;
-    }
-
-    /* Main colored score block */
-    .score-main-bar {
-      margin-left: 30px;
-      height: 154px;
-      position: relative;
-      background: linear-gradient(90deg, #1d4ed8 0%, #2563eb 45%, #054a29 55%, #04381f 100%);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 25px 0 15px;
-      border-bottom: 2px solid #eab308;
-    }
-
-    /* Wavy curved SVG overlay divider between ENGCH & SACH */
-    .curved-edge-svg {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-    }
-
-    /* Left Side: ENGCH */
-    .team-section-left {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-      position: relative;
-      z-index: 2;
-    }
-
-    .crest-circle {
-      width: 90px;
-      height: 90px;
-      border-radius: 50%;
-      border: 3.5px solid #fbbf24;
-      background: #0f172a;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 10px rgba(251, 191, 36, 0.4);
-    }
-
-    .crest-circle svg {
-      width: 44px;
-      height: 44px;
-      fill: #e2e8f0;
-    }
-
-    .crest-circle .crest-text {
-      font-size: 8px;
-      color: #94a3b8;
-      font-weight: 700;
-      text-transform: uppercase;
-      line-height: 1;
-      margin-top: 2px;
-    }
-
-    .team-badge-label {
-      background: #dc2626;
-      border: 1.5px solid #ffffff;
-      color: #ffffff;
-      font-family: 'Teko', sans-serif;
-      font-size: 26px;
-      line-height: 1;
-      padding: 1px 24px;
-      border-radius: 4px;
-      clip-path: polygon(10% 0%, 90% 0%, 100% 100%, 0% 100%);
-      text-align: center;
-      font-weight: 700;
-      letter-spacing: 1px;
-      margin-bottom: 2px;
-    }
-
-    .team-score-num {
-      font-family: 'Teko', sans-serif;
-      font-size: 78px;
-      line-height: 0.85;
-      color: #ffffff;
-      font-weight: 700;
-      letter-spacing: 1px;
-    }
-
-    .team-overs-num {
-      font-family: 'Teko', sans-serif;
-      font-size: 28px;
-      color: #facc15;
-      font-weight: 600;
-      text-align: right;
-    }
-
-    /* Center: Event Alert Pill */
-    .center-status-badge {
-      position: relative;
-      z-index: 2;
-      background: #000000;
-      border: 2px solid #84cc16;
-      border-radius: 12px;
-      padding: 10px 24px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.8);
-    }
-
-    .center-status-badge span {
-      font-family: 'Teko', sans-serif;
-      font-size: 48px;
-      color: #facc15;
-      font-weight: 800;
-      letter-spacing: 2px;
-      line-height: 1;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
-    }
-
-    /* Right Side: SACH */
-    .team-section-right {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      position: relative;
-      z-index: 2;
-    }
-
-    .bowl-hero-text {
-      font-family: 'Teko', sans-serif;
-      font-size: 82px;
-      line-height: 0.85;
-      color: #ffffff;
-      font-weight: 700;
-      letter-spacing: 2px;
-    }
-
-    /* ========================================================
-       BAR 2: CRR, P'SHIP, TOSS STRIP
-       ======================================================== */
-    .stats-middle-bar {
-      display: flex;
-      background: #070e68;
-      border-top: 1.5px solid #1e3a8a;
-      border-bottom: 2px solid #000000;
-      font-size: 20px;
-      font-weight: 700;
-      color: #ffffff;
-    }
-
-    .stats-cell-crr {
-      width: 140px;
-      padding: 3px 12px;
-      border-right: 2px solid #000000;
-      color: #facc15;
-      font-family: 'Teko', sans-serif;
-      font-size: 26px;
-      letter-spacing: 1px;
-    }
-
-    .stats-cell-crr span {
-      color: #ffffff;
-    }
-
-    .stats-cell-pship {
-      width: 250px;
-      padding: 3px 12px;
-      border-right: 2px solid #000000;
-      color: #ffffff;
-      font-family: 'Teko', sans-serif;
-      font-size: 26px;
-      letter-spacing: 1px;
-    }
-
-    .stats-cell-pship span {
-      color: #facc15;
-    }
-
-    .stats-cell-toss {
-      flex: 1;
-      text-align: right;
-      padding: 3px 20px;
-      font-family: 'Teko', sans-serif;
-      font-size: 26px;
-      letter-spacing: 1.5px;
-      color: #ffffff;
-    }
-
-    /* ========================================================
-       BAR 3: RECENT OVERS STRIP
-       ======================================================== */
-    .recent-overs-bar {
-      display: flex;
-      align-items: center;
-      background: #08031a;
-      padding: 3px 10px;
-      border-bottom: 2px solid #000000;
-    }
-
-    .recent-label-badge {
-      border: 1.5px solid #a855f7;
-      color: #ffffff;
-      font-family: 'Teko', sans-serif;
-      font-size: 22px;
-      line-height: 1;
-      padding: 1px 12px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      margin-right: 80px;
-      border-radius: 2px;
-    }
-
-    .over-block {
-      display: flex;
-      align-items: center;
-      margin-right: 40px;
-    }
-
-    .over-label {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      font-size: 11px;
-      line-height: 10px;
-      font-weight: 700;
-      color: #ffffff;
-      margin-right: 6px;
-      text-transform: uppercase;
-    }
-
-    .over-label .over-num {
-      font-size: 14px;
-      line-height: 12px;
-    }
-
-    .balls-stream {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .ball-pill {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      border: 1.5px solid #3b82f6;
-      background: #1e3a8a;
-      color: #ffffff;
-      font-size: 14px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Roboto Condensed', sans-serif;
-    }
-
-    .ball-pill.six {
-      background: #16a34a;
-      border-color: #22c55e;
-      color: #ffffff;
-    }
-
-    .ball-pill.wicket {
-      background: #ef4444;
-      border-color: #f87171;
-      color: #ffffff;
-      font-weight: 900;
-    }
-
-    .ball-pill.empty {
-      background: #172554;
-      border-color: #2563eb;
-    }
-
-    .over-total-eq {
-      color: #facc15;
-      font-weight: 700;
-      font-size: 16px;
-      margin-left: 6px;
-    }
-
-    /* ========================================================
-       BAR 4: WIN % & LAST WICKET STRIP
-       ======================================================== */
-    .status-summary-bar {
-      display: flex;
-      align-items: center;
-      background: #000000;
-      height: 28px;
-      border-bottom: 2px solid #000;
-      font-family: 'Oswald', sans-serif;
-    }
-
-    .last-wicket-sec {
-      background: #1d4ed8;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      padding: 0 14px;
-      color: #ffffff;
-      font-size: 15px;
-      font-weight: 600;
-      width: 440px;
-      border-right: 2px solid #000;
-    }
-
-    .last-wicket-sec span {
-      color: #facc15;
-      margin-left: 5px;
-    }
-
-    .win-prob-sec {
-      display: flex;
-      align-items: center;
-      justify-content: space-evenly;
-      flex: 1;
-      background: #ffffff;
-      height: 100%;
-      color: #000000;
-      font-weight: 800;
-      font-size: 17px;
-      font-family: 'Teko', sans-serif;
-      letter-spacing: 0.5px;
-      border-right: 2px solid #000;
-    }
-
-    .win-prob-sec .prob-side {
-      display: flex;
-      gap: 6px;
-    }
-
-    .next-bat-sec {
-      width: 320px;
-      height: 100%;
-      background: #000000;
-      display: flex;
-      align-items: center;
-      padding-left: 12px;
-      color: #ffffff;
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    .next-bat-sec span {
-      color: #facc15;
-      margin-left: 6px;
-    }
-
-    /* ========================================================
-       BOTTOM SECTION: 3 PLAYER CARDS + RUNNING TICKER
-       ======================================================== */
-    .bottom-bar-area {
-      position: relative;
-      width: 100%;
-      z-index: 10;
-    }
-
-    .players-row {
-      display: flex;
-      padding: 0 4px;
-      gap: 6px;
-      align-items: flex-end;
-    }
-
-    .player-card {
-      flex: 1;
-      position: relative;
-      background: #000000;
-      border-radius: 4px 4px 0 0;
-      overflow: hidden;
-      border: 1.5px solid #22c55e;
-    }
-
-    .player-card.active-batter {
-      border: 2px solid #eab308;
-    }
-
-    /* Batter / Bowler Header Tag */
-    .card-role-header {
-      background: #070c40;
-      height: 30px;
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      padding-right: 14px;
-      position: relative;
-      border-bottom: 1.5px solid #000;
-    }
-
-    .player-card.active-batter .card-role-header {
-      background: #070c40;
-    }
-
-    .card-team-icon {
-      position: absolute;
-      left: 145px;
-      top: 3px;
-      width: 22px;
-      height: 22px;
-      border: 1px solid #ffffff;
-      border-radius: 50%;
-      background: #000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .card-role-title {
-      color: #ffffff;
-      font-family: 'Teko', sans-serif;
-      font-size: 24px;
-      line-height: 1;
-      letter-spacing: 2px;
-      font-weight: 600;
-    }
-
-    /* Card Middle (Avatar, Name, Main Stat) */
-    .card-body {
-      background: linear-gradient(180deg, #162454 0%, #0c1433 100%);
-      display: flex;
-      height: 95px;
-      position: relative;
-      padding-left: 130px;
-    }
-
-    .player-card.bowler-theme .card-body {
-      background: linear-gradient(180deg, #092c1b 0%, #03140b 100%);
-    }
-
-    .avatar-wrapper {
-      position: absolute;
-      left: 6px;
-      bottom: 0;
-      width: 120px;
-      height: 110px;
-      z-index: 5;
-      overflow: hidden;
-    }
-
-    .avatar-wrapper img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: top center;
-    }
-
-    .card-name-score-col {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding-left: 10px;
-    }
-
-    .card-player-name {
-      font-family: 'Teko', sans-serif;
-      font-size: 38px;
-      line-height: 0.9;
-      color: #ffffff;
-      font-weight: 700;
-      letter-spacing: 1px;
-      white-space: nowrap;
-    }
-
-    .card-score-line {
-      display: flex;
-      align-items: baseline;
-      gap: 6px;
-      margin-top: 4px;
-    }
-
-    .big-score-digits {
-      font-family: 'Teko', sans-serif;
-      font-size: 40px;
-      line-height: 0.8;
-      color: #ffffff;
-      font-weight: 700;
-    }
-
-    .score-balls-sub {
-      font-family: 'Teko', sans-serif;
-      font-size: 26px;
-      line-height: 0.8;
-      color: #ffffff;
-    }
-
-    .bowler-highlight-overs {
-      color: #a3e635 !important;
-    }
-
-    .strike-bat-icon {
-      width: 14px;
-      height: 24px;
-      margin-left: 6px;
-      transform: rotate(-30deg);
-    }
-
-    /* Card Bottom Details Strip */
-    .card-footer-strip {
-      background: #7f1d1d;
-      border-top: 1.5px solid #000;
-      display: flex;
-      justify-content: space-between;
-      padding: 2px 14px;
-      font-size: 16px;
-      font-weight: 700;
-      font-family: 'Teko', sans-serif;
-      letter-spacing: 0.5px;
-      color: #ffffff;
-    }
-
-    .player-card.bowler-theme .card-footer-strip {
-      background: #022c22;
-      justify-content: flex-start;
-      gap: 30px;
-      align-items: center;
-    }
-
-    .card-footer-strip span strong {
-      color: #facc15;
-      font-weight: 700;
-    }
-
-    .cricket-ball-bullet {
-      width: 16px;
-      height: 16px;
-      background: radial-gradient(circle at 30% 30%, #ef4444 0%, #7f1d1d 80%);
-      border-radius: 50%;
-      border: 1px solid rgba(255,255,255,0.4);
-      margin-left: auto;
-    }
-
-    /* ========================================================
-       BOTTOM TICKER BAR
-       ======================================================== */
-    .running-ticker-wrap {
-      width: 100%;
-      background: #000000;
-      border-top: 2px solid #1e3a8a;
-      overflow: hidden;
-      white-space: nowrap;
-      height: 26px;
-      display: flex;
-      align-items: center;
-    }
-
-    .ticker-scroll-content {
-      display: inline-block;
-      padding-left: 100%;
-      animation: tickerLoop 30s linear infinite;
-      font-family: 'Teko', sans-serif;
-      font-size: 21px;
-      letter-spacing: 0.5px;
-      font-weight: 600;
-      color: #ffffff;
-    }
-
-    .ticker-scroll-content .accent {
-      color: #facc15;
-    }
-
-    @keyframes tickerLoop {
-      0% { transform: translate3d(0, 0, 0); }
-      100% { transform: translate3d(-100%, 0, 0); }
-    }
-  </style>
+<script>
+(function(){try{var p=new URLSearchParams(window.location.search);if(p.get("hide")==="1"||p.get("obs")==="1")document.documentElement.classList.add("ps-obs-mode");}catch(e){}})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="referrer" content="no-referrer">
+<title>Live Cricket Telecast Scoreboard Overlay</title>
+
+<!-- BROADCAST FONTS -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Teko:wght@600;700;800&family=Rajdhani:wght@600;700;800;900&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #000;
+    font-family: 'Rajdhani', sans-serif;
+    color: #fff;
+}
+
+.screen-wrapper {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+    background: #000;
+}
+
+/* FLOATING URL & AUDIO BAR */
+.url-control-bar {
+    position: absolute;
+    top: 8px;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(8, 16, 32, 0.96);
+    border: 2px solid #ffb800;
+    border-radius: 30px;
+    padding: 5px 14px;
+    box-shadow: 0 6px 25px rgba(0,0,0,0.95);
+    width: 92%;
+    max-width: 960px;
+}
+.ps-obs-mode .url-control-bar,
+.url-control-bar.hidden-obs {
+    display: none !important;
+}
+.url-control-bar span {
+    color: #ffb800;
+    font-size: 13px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+.url-control-bar input {
+    flex: 1;
+    background: #030d1c;
+    border: 1.5px solid #00f0ff;
+    border-radius: 18px;
+    color: #fff;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 4px 12px;
+    outline: none;
+}
+.url-control-bar button {
+    background: linear-gradient(180deg, #ffb800, #d97706);
+    border: none;
+    border-radius: 18px;
+    color: #000;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 13px;
+    font-weight: 900;
+    padding: 5px 13px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.url-control-bar button.btn-audio {
+    background: linear-gradient(180deg, #00d2ff, #0077b6);
+    color: #fff;
+}
+.status-indicator {
+    font-size: 12px;
+    font-weight: 800;
+    color: #4ade80;
+    white-space: nowrap;
+}
+
+/* =========================================================
+   1280 x 720 CANVAS - EXACT REPLICA OF THE BROADCAST IMAGE
+========================================================= */
+.scoreboard {
+    position: relative;
+    width: 1280px;
+    height: 720px;
+    min-width: 1280px;
+    min-height: 720px;
+    background: #000;
+    transform-origin: center center;
+    flex-shrink: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 0 50px rgba(0,0,0,0.95);
+}
+
+/* DAYLIGHT STADIUM BACKGROUND FILL */
+.stadium-background {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    background: 
+        linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0) 30%, rgba(0,0,0,0.6) 100%),
+        url("https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=1400&q=90") center 38% / cover no-repeat;
+}
+
+/* =========================================================
+   TOP SCOREBOARD WIDGET
+========================================================= */
+.top-telecast-wrapper {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* VERTICAL ORANGE SCORE STRIP */
+.vertical-score-tag {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 26px;
+    height: 110px;
+    background: linear-gradient(180deg, #ff8c00 0%, #ff5500 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 2px solid #ffd700;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.6);
+    z-index: 25;
+}
+.vertical-score-tag span {
+    writing-mode: vertical-lr;
+    transform: rotate(180deg);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 15px;
+    font-weight: 900;
+    color: #ffffff;
+    letter-spacing: 3px;
+}
+
+/* TOP MAIN BANNER (BLUE BATTING POD + CENTER EVENT + GREEN BOWLING POD) */
+.main-header-row {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    height: 110px;
+    padding-left: 26px; /* Offset for vertical score strip */
+    background: #000;
+}
+
+/* Blue Batting Pod */
+.batting-banner-pod {
+    flex: 1.25;
+    background: linear-gradient(135deg, #1828f7 0%, #0012b8 100%);
+    display: flex;
+    align-items: center;
+    padding: 0 16px 0 20px;
+    position: relative;
+    border-top: 2px solid #5a75ff;
+    border-bottom: 2px solid #5a75ff;
+    overflow: hidden;
+}
+.batting-banner-pod::after {
+    content: '';
+    position: absolute;
+    right: -25px;
+    top: 0;
+    width: 50px;
+    height: 100%;
+    background: #ffd700;
+    transform: skewX(-22deg);
+    z-index: 2;
+}
+
+.team-crest-circle {
+    width: 78px;
+    height: 78px;
+    border-radius: 50%;
+    border: 3px solid #ffcc00;
+    background: #05102a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 14px rgba(0,0,0,0.8), inset 0 0 8px rgba(255,204,0,0.5);
+    flex-shrink: 0;
+    overflow: hidden;
+}
+.team-crest-circle img {
+    width: 90%;
+    height: 90%;
+    object-fit: contain;
+}
+
+.batting-center-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 5;
+}
+
+/* Red Hexagonal Team Badges */
+.team-pill-badge {
+    background: linear-gradient(180deg, #e60000 0%, #8b0000 100%);
+    border: 1.5px solid #ff8080;
+    clip-path: polygon(10% 0%, 90% 0%, 100% 50%, 90% 100%, 10% 100%, 0% 50%);
+    padding: 2px 28px;
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 17px;
+    font-weight: 900;
+    letter-spacing: 1.2px;
+    text-shadow: 1px 1px 3px #000;
+}
+
+.score-overs-wrap {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-top: -2px;
+}
+.bat-score-digits {
+    font-family: 'Teko', sans-serif;
+    font-size: 72px;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 0.9;
+    letter-spacing: -1px;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.8);
+}
+.bat-overs-digits {
+    font-family: 'Teko', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: #8ce627;
+    line-height: 1;
+}
+
+/* Center Event Box */
+.center-event-pod {
+    width: 250px;
+    flex-shrink: 0;
+    background: #020409;
+    border-top: 3px solid #ffcc00;
+    border-bottom: 3px solid #ffcc00;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 10;
+    margin: 0 -4px;
+}
+.event-gold-box {
+    width: 92%;
+    height: 78%;
+    background: #000;
+    border: 2px solid #ffe600;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 15px rgba(255, 230, 0, 0.4), inset 0 0 10px rgba(0,0,0,0.9);
+}
+.event-gold-box span {
+    font-family: 'Teko', sans-serif;
+    font-size: 42px;
+    font-weight: 800;
+    color: #ffe600;
+    letter-spacing: 1.5px;
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+/* Green Bowling Pod */
+.bowling-banner-pod {
+    flex: 1.25;
+    background: linear-gradient(135deg, #093c18 0%, #031c0a 100%);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px 0 24px;
+    position: relative;
+    border-top: 2px solid #28803e;
+    border-bottom: 2px solid #28803e;
+    overflow: hidden;
+}
+.bowling-banner-pod::before {
+    content: '';
+    position: absolute;
+    left: -25px;
+    top: 0;
+    width: 50px;
+    height: 100%;
+    background: #ffd700;
+    transform: skewX(-22deg);
+    z-index: 2;
+}
+
+.bowling-center-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 5;
+}
+.bowl-hero-text {
+    font-family: 'Teko', sans-serif;
+    font-size: 64px;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 0.95;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+}
+
+/* =========================================================
+   SECONDARY METRICS RIBBON (CRR, P'SHIP, TOSS)
+========================================================= */
+.meta-stats-ribbon {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 34px;
+    background: linear-gradient(90deg, #021a63 0%, #001247 50%, #021a63 100%);
+    border-top: 1.5px solid #00f0ff;
+    border-bottom: 1.5px solid #00f0ff;
+    padding: 0 24px 0 34px;
+    font-size: 19px;
+    font-weight: 800;
+}
+.meta-metric-left {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+}
+.meta-metric-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #ffd700;
+}
+.meta-metric-item span {
+    color: #ffffff;
+}
+.meta-toss-right {
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 900;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+}
+
+/* =========================================================
+   RECENT BALLS & OVER-BY-OVER STRIP
+========================================================= */
+.recent-overs-ribbon {
+    display: flex;
+    align-items: center;
+    height: 38px;
+    background: #000;
+    border-bottom: 2px solid #5a0099;
+    padding: 0 16px 0 28px;
+    gap: 16px;
+}
+.recent-badge-pill {
+    background: #470877;
+    border: 1.5px solid #8e2be2;
+    border-radius: 4px;
+    padding: 1px 12px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 900;
+    color: #ffffff;
+    letter-spacing: 1px;
+}
+
+.overs-dual-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.single-over-track {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.over-label-num {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    font-weight: 900;
+    color: #fff;
+    line-height: 1;
+    text-align: right;
+    margin-right: 4px;
+}
+.over-label-num span {
+    display: block;
+    font-size: 14px;
+    color: #ffcc00;
+}
+
+.ball-pills-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.ball-dot {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #092659;
+    border: 1.5px solid #3388ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 900;
+    color: #ffffff;
+}
+.ball-dot.six {
+    background: #15803d;
+    border-color: #4ade80;
+    color: #fff;
+}
+.ball-dot.four {
+    background: #eab308;
+    border-color: #fef08a;
+    color: #000;
+}
+.ball-dot.wicket {
+    background: #dc2626;
+    border-color: #f87171;
+    color: #fff;
+    box-shadow: 0 0 8px rgba(220, 38, 38, 0.8);
+}
+.over-sum-text {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 15px;
+    font-weight: 900;
+    color: #ffe600;
+    margin-left: 4px;
+}
+
+/* =========================================================
+   WIN PROBABILITY & LAST WICKET BAR
+========================================================= */
+.win-probability-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 30px;
+    background: #05143a;
+    border-bottom: 2px solid #ffd700;
+    padding: 0 20px 0 28px;
+    font-size: 16px;
+    font-weight: 800;
+}
+.status-seg-left {
+    color: #fff;
+}
+.status-seg-left strong {
+    color: #ffea79;
+}
+.status-seg-center {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+.win-tag {
+    font-weight: 900;
+    color: #ffffff;
+}
+.win-tag span {
+    color: #40c4ff;
+}
+.status-seg-right {
+    color: #fff;
+}
+.status-seg-right strong {
+    color: #ffea79;
+}
+
+/* =========================================================
+   BOTTOM PLAYER CARDS (3-COLUMN SECTION)
+========================================================= */
+.bottom-players-section {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.player-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    padding: 0 16px;
+    margin-bottom: 6px;
+}
+
+.player-card-box {
+    background: linear-gradient(180deg, #10061e 0%, #030108 100%);
+    border: 2px solid #a855f7;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.8);
+}
+
+.player-card-box.striker-active {
+    border-color: #ffd700;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+}
+
+.card-role-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    background: #000;
+    padding: 2px 10px;
+    gap: 6px;
+    border-bottom: 1.5px solid #444;
+}
+.role-crest-mini {
+    width: 20px;
+    height: 20px;
+}
+.role-crest-mini img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+.role-pill-text {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 900;
+    color: #ffffff;
+    letter-spacing: 1px;
+}
+
+.card-main-body {
+    display: flex;
+    align-items: flex-end;
+    height: 110px;
+    padding: 0 12px 6px 10px;
+    position: relative;
+}
+
+/* Realistic Character Portraits */
+.player-portrait-wrap {
+    width: 115px;
+    height: 120px;
+    flex-shrink: 0;
+    position: relative;
+    margin-bottom: -6px;
+}
+.player-portrait-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.9));
+}
+
+.player-details-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-end;
+}
+.player-display-name {
+    font-family: 'Teko', sans-serif;
+    font-size: 40px;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 0.9;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+.player-live-score {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Teko', sans-serif;
+    font-size: 42px;
+    font-weight: 700;
+    color: #60a5fa;
+    line-height: 0.9;
+}
+.player-live-score .score-bold {
+    color: #ffffff;
+    font-size: 46px;
+}
+.icon-strike-bat {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+}
+
+/* Card Bottom Metrics Strip */
+.card-stats-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 3px 12px;
+    background: #8b0000;
+    border-top: 1.5px solid #ff4d4d;
+    font-size: 15px;
+    font-weight: 800;
+    color: #ffffff;
+}
+.card-stats-footer span strong {
+    color: #ffd700;
+}
+.card-stats-footer.bowler-footer {
+    background: #000;
+    border-color: #444;
+}
+.bowler-ball-icon {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+}
+
+/* =========================================================
+   BOTTOM CONTINUOUS TICKER
+========================================================= */
+.bottom-news-ticker {
+    width: 100%;
+    height: 28px;
+    background: #8b0000;
+    border-top: 2px solid #ffd700;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.ticker-content {
+    display: inline-block;
+    padding-left: 100%;
+    animation: broadcastTicker 25s linear infinite;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+}
+@keyframes broadcastTicker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+}
+</style>
 </head>
 <body>
 
-  <div class="screen-container">
+<div class="screen-wrapper">
 
-    <!-- ==================== TOP SCOREBOARD ==================== -->
-    <div class="scoreboard-top">
-      
-      <!-- Side Tag -->
-      <div class="score-vertical-tag">
-        <span>S</span>
-        <span>C</span>
-        <span>O</span>
-        <span>R</span>
-        <span>E</span>
-      </div>
-
-      <!-- Main Header Row -->
-      <div class="score-main-bar">
-        
-        <!-- Background curved path -->
-        <svg class="curved-edge-svg" viewBox="0 0 1250 154" preserveAspectRatio="none">
-          <path d="M 0,0 L 450,0 Q 520,0 540,60 T 600,154 L 0,154 Z" fill="none" />
-          <path d="M 0,154 L 1250,154 L 1250,0 L 700,0 Q 640,0 620,80 T 560,154 Z" fill="none" />
-          <circle cx="95" cy="77" r="54" fill="none" stroke="#fbbf24" stroke-width="3"/>
-          <circle cx="1165" cy="77" r="54" fill="none" stroke="#fbbf24" stroke-width="3"/>
-        </svg>
-
-        <!-- ENGCH (Batting) -->
-        <div class="team-section-left">
-          <div class="crest-circle">
-            <svg viewBox="0 0 24 24"><path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3zm0 2.18l6 2.25v4.66c0 4.14-2.73 8.01-6 9.08-3.27-1.07-6-4.94-6-9.08V6.43l6-2.25z"/></svg>
-            <span class="crest-text">ENGLAND</span>
-          </div>
-
-          <div style="display: flex; flex-direction: column; align-items: flex-start;">
-            <div class="team-badge-label">ENGCH</div>
-            <div style="display: flex; align-items: baseline; gap: 8px;">
-              <span class="team-score-num">10-1</span>
-            </div>
-            <div class="team-overs-num" style="width: 100%; text-align: right; margin-top: -10px;">(2.1)</div>
-          </div>
-        </div>
-
-        <!-- Central Alert Pill -->
-        <div class="center-status-badge">
-          <span>CAUGHT OUT</span>
-        </div>
-
-        <!-- SACH (Bowling) -->
-        <div class="team-section-right">
-          <div style="display: flex; flex-direction: column; align-items: flex-end;">
-            <div class="team-badge-label" style="background: #dc2626;">SACH</div>
-            <span class="bowl-hero-text">BOWL</span>
-          </div>
-
-          <div class="crest-circle">
-            <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 14.93V18h-2v-1.07A4.006 4.006 0 0 1 8 13h2a2 2 0 1 0 4 0c0-1.1-.9-2-2-2a4.006 4.006 0 0 1-4-4V6h2v1.07A4.006 4.006 0 0 1 14 11h-2a2 2 0 1 0-4 0c0 1.1.9 2 2 2a4.006 4.006 0 0 1 3 3.93z"/></svg>
-            <span class="crest-text">SOUTH AFRICA</span>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- CRR / P'SHIP / Toss Row -->
-      <div class="stats-middle-bar">
-        <div class="stats-cell-crr">CRR: <span>4.62</span></div>
-        <div class="stats-cell-pship">P'SHIP: <span>0 (0)</span></div>
-        <div class="stats-cell-toss">SACH OPT TO BOWL</div>
-      </div>
-
-      <!-- Recent Balls Row -->
-      <div class="recent-overs-bar">
-        <div class="recent-label-badge">RECENT</div>
-        
-        <!-- Over 2 -->
-        <div class="over-block">
-          <div class="over-label">
-            <span>OVER</span>
-            <span class="over-num">2</span>
-          </div>
-          <div class="balls-stream">
-            <div class="ball-pill">1</div>
-            <div class="ball-pill six">6</div>
-            <div class="ball-pill">0</div>
-            <div class="ball-pill">1</div>
-            <div class="ball-pill">0</div>
-            <div class="ball-pill">0</div>
-          </div>
-          <span class="over-total-eq">= 8</span>
-        </div>
-
-        <!-- Over 3 -->
-        <div class="over-block">
-          <div class="over-label">
-            <span>OVER</span>
-            <span class="over-num">3</span>
-          </div>
-          <div class="balls-stream">
-            <div class="ball-pill wicket">W</div>
-            <div class="ball-pill empty"></div>
-            <div class="ball-pill empty"></div>
-            <div class="ball-pill empty"></div>
-            <div class="ball-pill empty"></div>
-            <div class="ball-pill empty"></div>
-          </div>
-          <span class="over-total-eq">= 0</span>
-        </div>
-      </div>
-
-      <!-- Summary / Probabilities Row -->
-      <div class="status-summary-bar">
-        <div class="last-wicket-sec">
-          Last Wicket: <span>Ravi Bopara 8(8)</span>
-        </div>
-        <div class="win-prob-sec">
-          <div class="prob-side">SACH <span>81%</span></div>
-          <div class="prob-side">ENGCH <span>19%</span></div>
-        </div>
-        <div class="next-bat-sec">
-          Next Batsman: <span>Moeen Ali</span>
-        </div>
-      </div>
-
+    <!-- TOP CONTROL PANEL: CREX URL & AUDIO COMMENTARY -->
+    <div class="url-control-bar" id="urlControlBar">
+        <span>CREX MATCH URL:</span>
+        <input type="text" id="crexUrlInput" placeholder="Paste Crex Match URL..." value="https://crex.live/scoreboard/engch-vs-sach-live-match">
+        <button onclick="fetchCrexScoreLive()">SYNC CREX</button>
+        <button class="btn-audio" onclick="playMadhurCommentarySpeed()">🎙 TEST MADHUR VOICE</button>
+        <span class="status-indicator" id="statusIndicator">● READY</span>
     </div>
 
-    <!-- ==================== BOTTOM 3 PLAYER CARDS ==================== -->
-    <div class="bottom-bar-area">
-      <div class="players-row">
+    <!-- MAIN 1280x720 PRO SCOREBOARD -->
+    <div class="scoreboard" id="scoreboardCanvas">
         
-        <!-- Card 1: J ROY -->
-        <div class="player-card active-batter">
-          <div class="card-role-header">
-            <div class="card-team-icon">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="#fbbf24"><path d="M12 2L4 5v6c0 5 8 11 8 11s8-6 8-11V5l-8-3z"/></svg>
+        <!-- STADIUM BG -->
+        <div class="stadium-background"></div>
+
+        <!-- TOP TELECAST BAR -->
+        <div class="top-telecast-wrapper">
+            
+            <!-- Left Vertical SCORE tab -->
+            <div class="vertical-score-tag">
+                <span>SCORE</span>
             </div>
-            <span class="card-role-title">BATTER</span>
-          </div>
-          <div class="card-body">
-            <div class="avatar-wrapper">
-              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=220&q=80" alt="J Roy">
+
+            <!-- Top Row: Batting Pod, Event Center, Bowling Pod -->
+            <div class="main-header-row">
+                
+                <!-- BATTING POD (ENGCH) -->
+                <div class="batting-banner-pod">
+                    <div class="team-crest-circle">
+                        <img id="crestBat" src="https://flagcdn.com/w160/gb-eng.png" alt="ENGCH">
+                    </div>
+                    <div class="batting-center-info">
+                        <div class="team-pill-badge" id="nameBat">ENGCH</div>
+                        <div class="score-overs-wrap">
+                            <span class="bat-score-digits" id="batScoreHero">10-1</span>
+                            <span class="bat-overs-digits" id="batOversHero">(2.1)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CENTER EVENT BADGE -->
+                <div class="center-event-pod">
+                    <div class="event-gold-box">
+                        <span id="centerDismissalTag">CAUGHT OUT</span>
+                    </div>
+                </div>
+
+                <!-- BOWLING POD (SACH) -->
+                <div class="bowling-banner-pod">
+                    <div class="bowling-center-info">
+                        <div class="team-pill-badge" id="nameBowl">SACH</div>
+                        <div class="bowl-hero-text">BOWL</div>
+                    </div>
+                    <div class="team-crest-circle">
+                        <img id="crestBowl" src="https://flagcdn.com/w160/za.png" alt="SACH">
+                    </div>
+                </div>
             </div>
-            <div class="card-name-score-col">
-              <div class="card-player-name">J ROY</div>
-              <div class="card-score-line">
-                <span class="big-score-digits">0</span>
-                <span class="score-balls-sub">(0)</span>
-                <!-- Cricket bat strike indicator -->
-                <svg class="strike-bat-icon" viewBox="0 0 10 30" fill="#e2e8f0">
-                  <path d="M4 0 h2 v8 h-2 z M3 8 h4 l1 18 h-6 z" stroke="#000" stroke-width="0.5"/>
-                </svg>
-              </div>
+
+            <!-- SECONDARY METRICS: CRR, P'SHIP, TOSS -->
+            <div class="meta-stats-ribbon">
+                <div class="meta-metric-left">
+                    <div class="meta-metric-item">CRR: <span id="crrVal">4.62</span></div>
+                    <div class="meta-metric-item">P'SHIP: <span id="pshipVal">0 (0)</span></div>
+                </div>
+                <div class="meta-toss-right" id="tossHero">SACH OPT TO BOWL</div>
             </div>
-          </div>
-          <div class="card-footer-strip">
-            <span>4s: <strong>0</strong></span>
-            <span>6s: <strong>0</strong></span>
-            <span>SR: <strong>0.00</strong></span>
-          </div>
+
+            <!-- RECENT OVERS BALL BY BALL -->
+            <div class="recent-overs-ribbon">
+                <div class="recent-badge-pill">RECENT</div>
+                <div class="overs-dual-container">
+                    <!-- Over 2 -->
+                    <div class="single-over-track">
+                        <div class="over-label-num">OVER<span id="prevOverNo">2</span></div>
+                        <div class="ball-pills-row" id="prevOverBalls">
+                            <div class="ball-dot">1</div>
+                            <div class="ball-dot six">6</div>
+                            <div class="ball-dot">0</div>
+                            <div class="ball-dot">1</div>
+                            <div class="ball-dot">0</div>
+                            <div class="ball-dot">0</div>
+                        </div>
+                        <div class="over-sum-text">= 8</div>
+                    </div>
+                    <!-- Over 3 -->
+                    <div class="single-over-track">
+                        <div class="over-label-num">OVER<span id="currOverNo">3</span></div>
+                        <div class="ball-pills-row" id="currOverBalls">
+                            <div class="ball-dot wicket">W</div>
+                            <div class="ball-dot">0</div>
+                            <div class="ball-dot">0</div>
+                            <div class="ball-dot">0</div>
+                            <div class="ball-dot">0</div>
+                            <div class="ball-dot">0</div>
+                        </div>
+                        <div class="over-sum-text">= 0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WIN PROBABILITY & LAST WICKET -->
+            <div class="win-probability-bar">
+                <div class="status-seg-left">
+                    Last Wicket: <strong id="lastWktName">Ravi Bopara 8(8)</strong>
+                </div>
+                <div class="status-seg-center">
+                    <div class="win-tag">SACH <span id="winPctTeam2">81%</span></div>
+                    <div class="win-tag">ENGCH <span id="winPctTeam1">19%</span></div>
+                </div>
+                <div class="status-seg-right">
+                    Next Batsman: <strong id="nextBatName">Moeen Ali</strong>
+                </div>
+            </div>
+
         </div>
 
-        <!-- Card 2: D MALAN -->
-        <div class="player-card">
-          <div class="card-role-header">
-            <div class="card-team-icon">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="#fbbf24"><path d="M12 2L4 5v6c0 5 8 11 8 11s8-6 8-11V5l-8-3z"/></svg>
+        <!-- BOTTOM PLAYERS SECTION (3-CARDS + TICKER) -->
+        <div class="bottom-players-section">
+            <div class="player-cards-grid">
+                
+                <!-- STRIKER BATTER (J ROY) -->
+                <div class="player-card-box striker-active" id="cardStriker">
+                    <div class="card-role-header">
+                        <div class="role-crest-mini"><img src="https://flagcdn.com/w80/gb-eng.png" alt="flag"></div>
+                        <div class="role-pill-text">BATTER</div>
+                    </div>
+                    <div class="card-main-body">
+                        <div class="player-portrait-wrap">
+                            <img id="imgStriker" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80" alt="J Roy">
+                        </div>
+                        <div class="player-details-col">
+                            <div class="player-display-name" id="nameStriker">J ROY</div>
+                            <div class="player-live-score">
+                                <span class="score-bold" id="runsStriker">0</span> (<span id="ballsStriker">0</span>)
+                                <img class="icon-strike-bat" src="https://cdn-icons-png.flaticon.com/512/1041/1041071.png" alt="Bat">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-stats-footer">
+                        <span>4s: <strong id="foursStriker">0</strong></span>
+                        <span>6s: <strong id="sixesStriker">0</strong></span>
+                        <span>SR: <strong id="srStriker">0.00</strong></span>
+                    </div>
+                </div>
+
+                <!-- NON-STRIKER BATTER (D MALAN) -->
+                <div class="player-card-box" id="cardNonStriker">
+                    <div class="card-role-header">
+                        <div class="role-crest-mini"><img src="https://flagcdn.com/w80/gb-eng.png" alt="flag"></div>
+                        <div class="role-pill-text">BATTER</div>
+                    </div>
+                    <div class="card-main-body">
+                        <div class="player-portrait-wrap">
+                            <img id="imgNonStriker" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80" alt="D Malan">
+                        </div>
+                        <div class="player-details-col">
+                            <div class="player-display-name" id="nameNonStriker">D MALAN</div>
+                            <div class="player-live-score">
+                                <span class="score-bold" id="runsNonStriker">2</span> (<span id="ballsNonStriker">5</span>)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-stats-footer">
+                        <span>4s: <strong id="foursNonStriker">0</strong></span>
+                        <span>6s: <strong id="sixesNonStriker">0</strong></span>
+                        <span>SR: <strong id="srNonStriker">40.00</strong></span>
+                    </div>
+                </div>
+
+                <!-- BOWLER (R FRYLINCK) -->
+                <div class="player-card-box" id="cardBowler">
+                    <div class="card-role-header">
+                        <div class="role-crest-mini"><img src="https://flagcdn.com/w80/za.png" alt="flag"></div>
+                        <div class="role-pill-text">BOWLER</div>
+                    </div>
+                    <div class="card-main-body">
+                        <div class="player-portrait-wrap">
+                            <img id="imgBowler" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" alt="R Frylinck">
+                        </div>
+                        <div class="player-details-col">
+                            <div class="player-display-name" id="nameBowler">R FRYLINCK</div>
+                            <div class="player-live-score">
+                                <span class="score-bold" id="figsBowler">1-2</span> (<span id="oversBowler">1.1</span>)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-stats-footer bowler-footer">
+                        <span>Econ: <strong id="econBowler">1.71</strong></span>
+                        <img class="bowler-ball-icon" src="https://cdn-icons-png.flaticon.com/512/33/33736.png" alt="ball">
+                    </div>
+                </div>
+
             </div>
-            <span class="card-role-title">BATTER</span>
-          </div>
-          <div class="card-body">
-            <div class="avatar-wrapper">
-              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=220&q=80" alt="D Malan">
+
+            <!-- RUNNING MARQUEE TICKER -->
+            <div class="bottom-news-ticker">
+                <div class="ticker-content" id="tickerText">
+                    Dawid Malan 2 (5) • Jason Roy 0 (0) • YET TO BAT PLAYERS: Moeen Ali (Avg. N/A) • Samit Patel (Avg. N/A) • Chris Jordan • Luke Wright • Ian Bell
+                </div>
             </div>
-            <div class="card-name-score-col">
-              <div class="card-player-name">D MALAN</div>
-              <div class="card-score-line">
-                <span class="big-score-digits">2</span>
-                <span class="score-balls-sub">(5)</span>
-              </div>
-            </div>
-          </div>
-          <div class="card-footer-strip">
-            <span>4s: <strong>0</strong></span>
-            <span>6s: <strong>0</strong></span>
-            <span>SR: <strong>40.00</strong></span>
-          </div>
         </div>
 
-        <!-- Card 3: R FRYLINCK -->
-        <div class="player-card bowler-theme">
-          <div class="card-role-header">
-            <div class="card-team-icon">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="#84cc16"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z"/></svg>
-            </div>
-            <span class="card-role-title">BOWLER</span>
-          </div>
-          <div class="card-body">
-            <div class="avatar-wrapper">
-              <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=220&q=80" alt="R Frylinck">
-            </div>
-            <div class="card-name-score-col">
-              <div class="card-player-name">R FRYLINCK</div>
-              <div class="card-score-line">
-                <span class="big-score-digits">1-2</span>
-                <span class="score-balls-sub bowler-highlight-overs">(1.1)</span>
-              </div>
-            </div>
-          </div>
-          <div class="card-footer-strip">
-            <span>Econ: <strong>1.71</strong></span>
-            <div class="cricket-ball-bullet"></div>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Running Ticker Bottom Strip -->
-      <div class="running-ticker-wrap">
-        <div class="ticker-scroll-content">
-          ) - Dawid Malan <span class="accent">2 (5)</span> - Jason Roy <span class="accent">0 (0)</span> - YET TO BAT PLAYERS: Moeen Ali (Avg. <span class="accent">N/A</span>) - Samit Patel (A
-        </div>
-      </div>
     </div>
+</div>
 
-  </div>
+<script>
+/* =========================================================
+   1. AUTO RESIZE / SCALE TO FIT CONTAINER PRESERVING 16:9
+========================================================= */
+function autoFitCanvas() {
+    const el = document.getElementById("scoreboardCanvas");
+    if (!el) return;
+    const targetW = 1280;
+    const targetH = 720;
+    const winW = window.innerWidth || 1280;
+    const winH = window.innerHeight || 720;
+    const scale = Math.min(winW / targetW, winH / targetH);
+    el.style.transform = `scale(${scale > 0.05 ? scale : 1})`;
+}
+window.addEventListener("resize", autoFitCanvas);
+window.addEventListener("DOMContentLoaded", autoFitCanvas);
+autoFitCanvas();
+
+/* =========================================================
+   2. MADHUR HIGH-SPEED HINDI VOICE COMMENTARY ENGINE
+========================================================= */
+function playMadhurCommentarySpeed(textMessage) {
+    if (!('speechSynthesis' in window)) {
+        alert("Speech Synthesis is not supported in this browser.");
+        return;
+    }
+    window.speechSynthesis.cancel();
+
+    const commentaryText = textMessage || "कॉट आउट! बड़ा झटका यहां पर! गेंद हवा में और फील्डर ने कोई गलती नहीं की! चलिए इसी बीच इस ओवर की अगली गेंद लेकर तैयार!";
+    const utter = new SpeechSynthesisUtterance(commentaryText);
+
+    // Madhur fast commentary settings matching the video audio tempo
+    utter.rate = 1.28;
+    utter.pitch = 1.10;
+
+    const voices = window.speechSynthesis.getVoices();
+    const hindiVoice = voices.find(v => 
+        v.name.toLowerCase().includes('madhur') || 
+        v.name.toLowerCase().includes('hindi') || 
+        v.lang === 'hi-IN' ||
+        v.lang.startsWith('hi')
+    );
+
+    if (hindiVoice) {
+        utter.voice = hindiVoice;
+    }
+
+    window.speechSynthesis.speak(utter);
+}
+
+if ('speechSynthesis' in window) {
+    window.speechSynthesis.onvoiceschanged = () => {
+        window.speechSynthesis.getVoices();
+    };
+}
+
+/* =========================================================
+   3. CREX LIVE DATA PARSING & BINDING SCRIPT
+========================================================= */
+let pollIntervalTimer = null;
+let isSyncActive = false;
+
+async function fetchCrexScoreLive() {
+    const inputUrl = document.getElementById("crexUrlInput").value.trim();
+    const indicator = document.getElementById("statusIndicator");
+    if (!inputUrl) return;
+
+    indicator.innerText = "● SYNCING...";
+    indicator.style.color = "#ffb800";
+
+    try {
+        const corsProxy = "https://api.allorigins.win/raw?url=" + encodeURIComponent(inputUrl);
+        const res = await fetch(corsProxy);
+        if (!res.ok) throw new Error("Network response failed");
+        const html = await res.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+
+        // Dynamic extractors
+        const scoreNode = doc.querySelector(".team-score, .score, .total-score");
+        const overNode = doc.querySelector(".overs, .overs-score");
+        const crrNode = doc.querySelector(".crr, .run-rate");
+        
+        if (scoreNode) {
+            document.getElementById("batScoreHero").innerText = scoreNode.innerText.trim();
+        }
+        if (overNode) {
+            document.getElementById("batOversHero").innerText = '(' + overNode.innerText.trim().replace(/[()]/g, '') + ')';
+        }
+        if (crrNode) {
+            document.getElementById("crrVal").innerText = crrNode.innerText.trim();
+        }
+
+        indicator.innerText = "● LIVE SYNCED";
+        indicator.style.color = "#4ade80";
+
+    } catch (err) {
+        console.warn("Proxy notice: Utilizing automated live broadcast tick fallback:", err);
+        indicator.innerText = "● SIMULATING LIVE";
+        indicator.style.color = "#38bdf8";
+        simulateLiveMatchTick();
+    }
+}
+
+// Fallback simulator to demonstrate live commentary triggers and ball pills
+let ballSequence = 1;
+function simulateLiveMatchTick() {
+    ballSequence++;
+    const outcomes = ["0", "1", "4", "6", "W", "1", "0"];
+    const outcome = outcomes[Math.floor(Math.random() * outcomes.length)];
+    
+    const currContainer = document.getElementById("currOverBalls");
+    const pill = document.createElement("div");
+    pill.className = "ball-dot";
+
+    if (outcome === "4") pill.classList.add("four");
+    else if (outcome === "6") pill.classList.add("six");
+    else if (outcome === "W") pill.classList.add("wicket");
+    pill.innerText = outcome;
+
+    if (currContainer.children.length >= 6) {
+        currContainer.removeChild(currContainer.firstChild);
+    }
+    currContainer.appendChild(pill);
+
+    // Audio triggers
+    if (outcome === "W") {
+        document.getElementById("centerDismissalTag").innerText = "CAUGHT OUT";
+        playMadhurCommentarySpeed("कॉट आउट! बहुत बड़ा विकेट गिरा है यहां पर! बल्लेबाज़ पवेलियन की तरफ लौटते हुए!");
+    } else if (outcome === "4") {
+        document.getElementById("centerDismissalTag").innerText = "FOUR";
+        playMadhurCommentarySpeed("गेंदबाज़ के ऊपर से खेल दिया है! गेंद बाउंड्री लाइन के पार चार रनों के लिए!");
+    } else if (outcome === "6") {
+        document.getElementById("centerDismissalTag").innerText = "MAXIMUM SIX";
+        playMadhurCommentarySpeed("हवा में गेंद! और सीधे दर्शकों के बीच जाकर गिरी! छह रनों के लिए शानदार शॉट!");
+    }
+}
+
+// Start continuous sync on page load
+window.addEventListener("load", () => {
+    fetchCrexScoreLive();
+    pollIntervalTimer = setInterval(fetchCrexScoreLive, 3500);
+});
+</script>
 
 </body>
 </html>
