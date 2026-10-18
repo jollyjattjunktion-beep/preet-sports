@@ -3695,7 +3695,8 @@ function setPlayerPortrait(photoId, initialsId, player, data, name) {
       if (player) return player;
     }
     // Fallback for CREX variants which display the list as text rather than linked player rows.
-    const lines = cleanText(doc.body?.innerText || doc.body?.textContent || "").split(/\n+/).map(cleanText).filter(Boolean);
+    const bodyText = String(doc.body?.innerText || doc.body?.textContent || "").replace(/\r/g, "");
+    const lines = bodyText.split(/\n+/).map(line => cleanText(line)).filter(Boolean);
     const index = lines.findIndex(line => /^yet\s+to\s+bat\b/i.test(line));
     if (index >= 0) {
       for (let i = index + 1; i < Math.min(lines.length, index + 12); i++) {
@@ -3709,50 +3710,103 @@ function setPlayerPortrait(photoId, initialsId, player, data, name) {
     }
     return null;
   }
-  async function fetchDocument(url) {
-    // Prefer the existing Preet Sports backend proxy; fall back to AllOrigins if the route is unavailable.
-    if (typeof API_BASE !== "undefined" && API_BASE) {
-      try {
-        const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 8500);
-        const response = await fetch(`${API_BASE}/api/crex-assets?url=${encodeURIComponent(url)}&t=${Date.now()}`, { cache: "no-store", signal: controller.signal });
-        clearTimeout(timeout);
-        if (response.ok) {
-          const type = response.headers.get("content-type") || "";
-          if (type.includes("application/json")) {
-            const payload = await response.json();
-            const pageHtml = payload.html || payload.page_html || payload.pageHtml || payload.document || payload.body_html || "";
-            if (typeof pageHtml === "string" && /<html|<body|<div|<main/i.test(pageHtml)) {
-              return { doc: new DOMParser().parseFromString(pageHtml, "text/html"), payload };
-            }
-            if (payload && (payload.yet_to_bat || payload.yetToBat || payload.next_batter || payload.nextBatter)) return { doc: null, payload };
-          } else {
-            const body = await response.text();
-            if (body && /<html|<body|<div|<main/i.test(body)) return { doc: new DOMParser().parseFromString(body, "text/html"), payload: null };
-          }
-        }
-      } catch (_) {}
+  function htmlFromPayload(payload) {
+    if (!payload || typeof payload !== "object") return "";
+    const candidates = [
+      payload.html, payload.page_html, payload.pageHtml, payload.document,
+      payload.body_html, payload.bodyHtml, payload.content, payload.contents,
+      payload.data && (payload.data.html || payload.data.page_html || payload.data.pageHtml || payload.data.content),
+      payload.result && (payload.result.html || payload.result.page_html || payload.result.pageHtml || payload.result.content),
+      payload.payload && (payload.payload.html || payload.payload.page_html || payload.payload.pageHtml)
+    ];
+    return candidates.find(value => typeof value === "string" && /<\s*(?:!doctype\s+html|html|body|main|div|section|article)\b/i.test(value)) || "";
+  }
+  function resultFromBody(body, payload) {
+    if (typeof body === "string" && body.length > 0 && body.length < 8000000 && /<\s*(?:!doctype\s+html|html|body|main|div|section|article)\b/i.test(body)) {
+      return { doc: new DOMParser().parseFromString(body, "text/html"), payload: payload || null };
     }
+    return { doc: null, payload: payload || null };
+  }
+  async function requestDocument(endpoint, timeoutMs) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => { try { controller.abort(); } catch (_) {} }, timeoutMs || 7000);
     try {
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 10000);
-      const response = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`, { cache: "no-store", signal: controller.signal });
-      clearTimeout(timeout);
-      if (response.ok) {
-        const body = await response.text();
-        if (body && body.length < 8_000_000) return { doc: new DOMParser().parseFromString(body, "text/html"), payload: null };
+      const response = await fetch(endpoint, { cache: "no-store", signal: controller.signal });
+      if (!response.ok) return null;
+      const type = response.headers.get("content-type") || "";
+      if (/application\/json/i.test(type)) {
+        const payload = await response.json();
+        const html = htmlFromPayload(payload);
+        if (html) return { doc: new DOMParser().parseFromString(html, "text/html"), payload };
+        return { doc: null, payload };
       }
-    } catch (_) {}
-    return { doc: null, payload: null };
+      const body = await response.text();
+      return resultFromBody(body, null);
+    } catch (_) {
+      return null;
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+  async function fetchDocument(url) {
+    // Only accept a response as successful if it actually contains a player from
+    // the scorecard's "Yet to bat" section (or a structured next-batter field).
+    // This prevents an HTML shell / bot-check page from stopping later fallbacks.
+    const isUsable = result => !!(result && (
+      (result.doc && parseNextBatter(result.doc)) || playerFromPayload(result.payload)
+    ));
+    const tryInParallel = async endpoints => {
+      const results = await Promise.all(endpoints.map(async item => {
+        const result = await requestDocument(item.url, item.timeout || 8000);
+        return isUsable(result) ? result : null;
+      }));
+      return results.find(Boolean) || null;
+    };
+
+    // 1) Prefer PREET SPORTS server routes: these avoid browser-side Crex CORS restrictions.
+    if (typeof API_BASE !== "undefined" && API_BASE) {
+      const backendResult = await tryInParallel([
+        { url: `${API_BASE}/api/crex-assets?url=${encodeURIComponent(url)}&t=${Date.now()}`, timeout: 6500 },
+        { url: `${API_BASE}/api/scrape?url=${encodeURIComponent(url)}&t=${Date.now()}`, timeout: 7500 }
+      ]);
+      if (backendResult) return backendResult;
+    }
+
+    // 2) Fallback proxies are tested together. Each candidate must contain the actual
+    // Yet-to-bat player; an unrelated CREX page or empty app shell is rejected.
+    const proxyResult = await tryInParallel([
+      { url: `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}&t=${Date.now()}`, timeout: 8500 },
+      { url: `https://api.allorigins.win/get?url=${encodeURIComponent(url)}&t=${Date.now()}`, timeout: 8500 },
+      { url: `https://corsproxy.io/?url=${encodeURIComponent(url)}`, timeout: 8500 }
+    ]);
+    return proxyResult || { doc: null, payload: null };
   }
   function playerFromPayload(payload) {
     if (!payload || typeof payload !== "object") return null;
-    const candidate = payload.yet_to_bat || payload.yetToBat || payload.next_batter || payload.nextBatter || payload.next_batsman || payload.nextBatsman || payload.next_batters || payload.nextBatters;
-    const player = Array.isArray(candidate) ? candidate[0] : candidate;
-    if (!player) return null;
-    const name = typeof player === "string" ? player : cleanText(player.full_name || player.fullName || player.name || player.player_name || player.playerName || player.short_name || player.shortName);
-    const photo = typeof player === "object" ? (player.image || player.image_url || player.imageUrl || player.photo || player.photo_url || player.photoUrl || player.avatar || "") : "";
-    return name ? { name, profileUrl: "", photo: (typeof getImageUrl === "function" ? getImageUrl(photo) : photo), photoFallback: "" } : null;
+    const candidateKeys = ["yet_to_bat", "yetToBat", "next_batter", "nextBatter", "next_batsman", "nextBatsman", "next_batters", "nextBatters"];
+    const queue = [payload];
+    const seen = new Set();
+    let inspected = 0;
+    while (queue.length && inspected++ < 40) {
+      const current = queue.shift();
+      if (!current || typeof current !== "object" || seen.has(current)) continue;
+      seen.add(current);
+      for (const key of candidateKeys) {
+        const candidate = current[key];
+        const player = Array.isArray(candidate) ? candidate[0] : candidate;
+        if (!player) continue;
+        const name = typeof player === "string" ? player : cleanText(player.full_name || player.fullName || player.name || player.player_name || player.playerName || player.short_name || player.shortName);
+        if (!name) continue;
+        const photo = typeof player === "object" ? (player.image || player.image_url || player.imageUrl || player.photo || player.photo_url || player.photoUrl || player.avatar || player.image_path || "") : "";
+        const profileUrl = typeof player === "object" ? absoluteUrl(player.profile_url || player.profileUrl || player.player_url || player.playerUrl || player.url || "", "https://crex.com") : "";
+        return { name, profileUrl, photo: (typeof getImageUrl === "function" ? getImageUrl(photo) : photo) || (profileUrl ? profileIdPhoto(profileUrl) : ""), photoFallback: profileUrl ? profileIdPhoto(profileUrl) : "" };
+      }
+      for (const key of ["data", "result", "match", "match_info", "matchInfo", "scorecard", "innings", "live", "payload", "response"]) {
+        const nested = current[key];
+        if (nested && typeof nested === "object") queue.push(nested);
+      }
+    }
+    return null;
   }
   async function fetchProfilePhoto(player) {
     if (!player || player.photo || !player.profileUrl) return player;
@@ -3831,7 +3885,7 @@ function setPlayerPortrait(photoId, initialsId, player, data, name) {
       const image = typeof findCrexPlayerPhoto === "function" ? findCrexPlayerPhoto(fallbackName) : "";
       showPlayer({ name: fallbackName, photo: image || "" }, clean);
     } else {
-      showPlayer({ name: "WAITING FOR CREX SCORECARD", photo: "" }, clean);
+      showPlayer({ name: "RETRYING CREX SCORECARD", photo: "" }, clean);
     }
   }
   function scheduleUpdate(delay) {
