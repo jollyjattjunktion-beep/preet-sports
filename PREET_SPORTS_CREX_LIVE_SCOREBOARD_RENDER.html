@@ -1463,6 +1463,39 @@ body.controls-visible .top-brand-wrap { margin-top: 53px !important; }
 }
 </style>
 
+
+<style id="preetSportsPlayingXiStyles">
+/* Additive option-C enhancement: modal lives outside the 1280x720 OBS artboard. */
+#preetPlayingXiOverlay[hidden]{display:none!important}
+#preetPlayingXiOverlay{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(1,7,16,.88);backdrop-filter:blur(7px);font-family:'Montserrat',Arial,sans-serif;color:#f5f9ff}
+#preetPlayingXiDialog{position:relative;width:min(1180px,96vw);max-height:min(92vh,900px);overflow:auto;border:2px solid #ffc928;border-radius:16px;background:linear-gradient(145deg,#071b32,#020914 70%);box-shadow:0 20px 70px rgba(0,0,0,.72),0 0 30px rgba(50,217,255,.13);padding:18px}
+.psxi-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 0 14px;border-bottom:1px solid rgba(255,201,40,.45);margin-bottom:14px}
+.psxi-title{font-size:clamp(18px,2.4vw,28px);font-weight:900;letter-spacing:.8px;color:#ffd04b}
+.psxi-subtitle{font-size:12px;font-weight:700;color:#a9d9f2;margin-top:5px}
+.psxi-actions{display:flex;gap:8px;align-items:center}
+.psxi-btn{border:1px solid rgba(50,217,255,.65);border-radius:8px;padding:9px 12px;background:#0a3154;color:#fff;font:900 12px 'Montserrat',Arial,sans-serif;cursor:pointer}
+.psxi-btn:hover{filter:brightness(1.2)}
+.psxi-close{border-color:rgba(255,100,130,.8);background:#5e1028}
+.psxi-teams{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.psxi-team{min-width:0;border:1px solid rgba(50,217,255,.45);border-radius:12px;overflow:hidden;background:rgba(3,17,32,.88)}
+.psxi-team:nth-child(2){border-color:rgba(255,100,130,.58)}
+.psxi-team-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:11px 13px;background:linear-gradient(90deg,#075aa4,#082744);font-size:15px;font-weight:900;letter-spacing:.5px}
+.psxi-team:nth-child(2) .psxi-team-head{background:linear-gradient(90deg,#8b1234,#350b1b)}
+.psxi-count{font-size:11px;color:#ffe18a;white-space:nowrap}
+.psxi-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;padding:10px}
+.psxi-player{display:flex;align-items:center;gap:8px;min-width:0;min-height:52px;padding:6px;border:1px solid rgba(145,190,220,.18);border-radius:8px;background:rgba(13,39,63,.72)}
+.psxi-avatar{width:40px;height:40px;flex:0 0 40px;display:block;border-radius:50%;object-fit:cover;object-position:center top;border:1.5px solid #ffc928;background:#12385b}
+.psxi-initials{display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:900}
+.psxi-player-copy{min-width:0}
+.psxi-player-name{font-size:12px;font-weight:900;line-height:1.2;overflow-wrap:anywhere}
+.psxi-player-role{font-size:10px;color:#8fdcf7;margin-top:4px;font-weight:700}
+.psxi-empty{grid-column:1/-1;padding:18px 12px;color:#bdd0df;font-size:12px;line-height:1.55;text-align:center}
+.psxi-status{font-size:12px;color:#a9d9f2;line-height:1.5;margin:12px 2px 0}
+.psxi-source{color:#ffd04b}
+@media(max-width:720px){#preetPlayingXiDialog{padding:12px;width:98vw;max-height:94vh}.psxi-teams{grid-template-columns:1fr}.psxi-list{grid-template-columns:repeat(2,minmax(0,1fr))}.psxi-head{align-items:flex-start}.psxi-title{font-size:18px}.psxi-btn{padding:8px 9px}}
+@media(max-width:390px){.psxi-list{grid-template-columns:1fr}.psxi-head{flex-direction:column}.psxi-actions{width:100%;justify-content:flex-end}}
+</style>
+
 </head>
 
 <body>
@@ -1475,6 +1508,7 @@ body.controls-visible .top-brand-wrap { margin-top: 53px !important; }
         <input type="text" id="crexUrlInput" placeholder="Paste CREX URL or Match ID...">
         <button id="loadMatchUrlBtn">LOAD MATCH</button>
         <button id="generateObsBtn">COPY OBS URL</button>
+        <button id="openPlayingXiBtn" type="button" aria-haspopup="dialog">PLAYING XI</button>
         <span class="status-indicator" id="statusIndicator">Ready</span>
     </div>
 
@@ -1670,6 +1704,21 @@ body.controls-visible .top-brand-wrap { margin-top: 53px !important; }
         </div>
 
     </div>
+</div>
+
+
+<div id="preetPlayingXiOverlay" hidden>
+  <section id="preetPlayingXiDialog" role="dialog" aria-modal="true" aria-labelledby="psxiTitle">
+    <div class="psxi-head">
+      <div><div class="psxi-title" id="psxiTitle">PREET SPORTS • PLAYING XI</div><div class="psxi-subtitle" id="psxiSubtitle">Loading confirmed line-ups from the selected CREX match…</div></div>
+      <div class="psxi-actions"><button class="psxi-btn" id="psxiRefreshBtn" type="button">REFRESH XI</button><button class="psxi-btn psxi-close" id="psxiCloseBtn" type="button" aria-label="Close Playing XI">CLOSE ✕</button></div>
+    </div>
+    <div class="psxi-teams">
+      <section class="psxi-team"><div class="psxi-team-head"><span id="psxiTeam1Name">TEAM 1</span><span class="psxi-count" id="psxiTeam1Count">0/11</span></div><div class="psxi-list" id="psxiTeam1List"></div></section>
+      <section class="psxi-team"><div class="psxi-team-head"><span id="psxiTeam2Name">TEAM 2</span><span class="psxi-count" id="psxiTeam2Count">0/11</span></div><div class="psxi-list" id="psxiTeam2List"></div></section>
+    </div>
+    <div class="psxi-status" id="psxiStatus">Only line-ups detected in the selected match source will be shown. Missing player names or portraits will not be invented.</div>
+  </section>
 </div>
 
 <script>
@@ -3782,6 +3831,241 @@ function setPlayerPortrait(photoId, initialsId, player, data, name) {
 .url-control-bar input { font-family: 'Rajdhani', Arial, sans-serif !important; font-weight: 800 !important; }
 .url-control-bar button { font-size: 14px !important; letter-spacing: .35px !important; }
 </style>
+
+
+<script id="preetSportsPlayingXiEnhancement">
+(function(){
+  "use strict";
+  const overlay = document.getElementById("preetPlayingXiOverlay");
+  const openBtn = document.getElementById("openPlayingXiBtn");
+  const closeBtn = document.getElementById("psxiCloseBtn");
+  const refreshBtn = document.getElementById("psxiRefreshBtn");
+  const subtitle = document.getElementById("psxiSubtitle");
+  const status = document.getElementById("psxiStatus");
+  if (!overlay || !openBtn) return;
+
+  let parsedLineups = [];
+  let lastXiUrl = "";
+  let xiLoadPromise = null;
+  const roleWords = /\b(batter|batsman|bowler|all.?rounder|wicket.?keeper|wk|captain|keeper)\b/i;
+
+  function xiClean(v){ return String(v || "").replace(/[\u00a0\u200b]/g," ").replace(/\s+/g," ").trim(); }
+  function xiName(p){
+    if (typeof p === "string") return xiClean(p);
+    if (!p || typeof p !== "object") return "";
+    return xiClean(p.full_name || p.fullName || p.player_name || p.playerName || p.display_name || p.displayName || p.short_name || p.shortName || p.name || p.title);
+  }
+  function xiRole(p){
+    if (!p || typeof p !== "object") return "";
+    return xiClean(p.role || p.player_role || p.playerRole || p.playing_role || p.playingRole || p.specialization || p.type || "");
+  }
+  function xiImage(p){
+    if (!p || typeof p !== "object") return "";
+    return getImageUrl(p.icc_photo_url || p.iccPhotoUrl || p.crex_photo_url || p.crexPhotoUrl || p.player_photo_url || p.playerPhotoUrl || p.player_image_url || p.playerImageUrl || p.image_url || p.imageUrl || p.profile_image || p.profileImage || p.photo_url || p.photoUrl || p.headshot || p.avatar || p.image || p.photo || "");
+  }
+  function xiPlayers(value){
+    const arr = Array.isArray(value) ? value : (value && typeof value === "object" ? Object.values(value) : []);
+    const out = [], seen = new Set();
+    for (const item of arr) {
+      const name = xiName(item);
+      if (!name || name.length > 75 || /^(playing\s*xi|playing\s*11|squad|team|players|name|role)$/i.test(name)) continue;
+      const key = normalizePlayerKey(name);
+      if (!key || seen.has(key)) continue;
+      seen.add(key);
+      out.push({name, role:xiRole(item), image:xiImage(item), raw:item});
+    }
+    return out.slice(0,11);
+  }
+  function xiTeamLabel(obj, fallback){
+    if (!obj || typeof obj !== "object") return fallback;
+    return xiClean(obj.team_name || obj.teamName || obj.team_full_name || obj.teamFullName || obj.full_name || obj.fullName || obj.team || obj.short_name || obj.shortName || obj.code || fallback) || fallback;
+  }
+  function collectXIFromJson(root){
+    const groups = [];
+    const seen = new WeakSet();
+    function walk(obj, inheritedTeam, depth){
+      if (!obj || typeof obj !== "object" || depth > 12 || seen.has(obj)) return;
+      seen.add(obj);
+      if (Array.isArray(obj)) { for (const v of obj) walk(v, inheritedTeam, depth+1); return; }
+      const localTeam = xiTeamLabel(obj, inheritedTeam || "");
+      for (const [key,val] of Object.entries(obj)) {
+        if (/^(playing[_\s-]?(xi|11|eleven)|playingxi|playing11|playingeleven|playing_xi|playing_11|line.?up)$/i.test(key) || /playing.?xi|playing.?11|playing.?eleven|line.?up/i.test(key)) {
+          const players = xiPlayers(val);
+          if (players.length >= 5) groups.push({team:localTeam,players});
+        }
+      }
+      // Team-nested objects may expose a playingXI array without the team name on the array.
+      for (const [key,val] of Object.entries(obj)) {
+        if (val && typeof val === "object") {
+          const keyTeam = /^(team1|team_1|home|away|team2|team_2)$/i.test(key) ? xiTeamLabel(val, key) : localTeam;
+          walk(val, keyTeam, depth+1);
+        }
+      }
+    }
+    try { walk(root, "", 0); } catch(e){}
+    const unique = [];
+    for (const group of groups) {
+      const signature = group.players.map(p=>normalizePlayerKey(p.name)).join("|");
+      if (!signature || unique.some(x=>x.signature===signature)) continue;
+      unique.push({...group,signature});
+    }
+    return unique.slice(0,4);
+  }
+  function xiTeamCodes(){
+    let fromUrl = null;
+    try { fromUrl = typeof extractTeamsFromCrexUrl === "function" ? extractTeamsFromCrexUrl(activeTargetUrl) : null; } catch(e){}
+    const d = latestScorePayloadForAssets || {};
+    const a = d.team1 || {}, b = d.team2 || {};
+    const t1 = xiClean(a.full_name || a.fullName || a.name || a.short || (fromUrl && fromUrl.teamA) || document.getElementById("team1HeroName")?.textContent || "TEAM 1");
+    const t2 = xiClean(b.full_name || b.fullName || b.name || b.short || (fromUrl && fromUrl.teamB) || document.getElementById("team2HeroName")?.textContent || "TEAM 2");
+    return [t1,t2];
+  }
+  function xiParseRenderedPage(doc){
+    if (!doc || !doc.body) return [];
+    const lines = String(doc.body.innerText || doc.body.textContent || "").split(/\n+/).map(xiClean).filter(Boolean);
+    const idx = lines.findIndex(x=>/^playing\s*(?:xi|11|eleven)\b/i.test(x));
+    if (idx < 0) return [];
+    const candidates = [];
+    const stop = /^(?:scorecard|commentary|match info|match details|fall of wickets|partnership|recent overs|toss update|result|points table|team comparison)$/i;
+    for (let i=idx+1; i<lines.length && i<idx+90; i++){
+      const line = lines[i];
+      if (stop.test(line)) break;
+      if (line.length > 85 || /^(?:playing\s*(?:xi|11|eleven)|team|players|role|batter|bowler|all.?rounder)$/i.test(line)) continue;
+      const roleMatch = line.match(/^(.{2,55}?)\s+(Batter|Batsman|Bowler|All.?Rounder|Wicket.?Keeper|WK)(?:\b.*)?$/i);
+      const name = roleMatch ? xiClean(roleMatch[1].replace(/\s*\((?:c|wk|vc)\)\s*/ig," ").trim()) : "";
+      if (!name || name.split(/\s+/).length < 2 || /won the toss|innings|overs|target|run rate/i.test(name)) continue;
+      if (!candidates.some(p=>normalizePlayerKey(p.name)===normalizePlayerKey(name))) candidates.push({name,role:roleMatch[2],image:"",raw:null});
+      if (candidates.length >= 22) break;
+    }
+    if (!candidates.length) return [];
+    const [t1,t2] = xiTeamCodes();
+    const groups = [];
+    if (candidates.length >= 12) {
+      groups.push({team:t1,players:candidates.slice(0,11)});
+      groups.push({team:t2,players:candidates.slice(11,22)});
+    } else {
+      groups.push({team:t1,players:candidates.slice(0,11)});
+    }
+    return groups;
+  }
+  function xiRenderTeam(listId,countId,team,players){
+    const list = document.getElementById(listId), count = document.getElementById(countId);
+    if (!list || !count) return;
+    list.replaceChildren();
+    count.textContent = players.length + "/11";
+    if (!players.length){
+      const empty = document.createElement("div"); empty.className="psxi-empty";
+      empty.textContent="Playing XI not found in the fetched CREX page/data. Refresh after CREX publishes the confirmed line-up.";
+      list.appendChild(empty); return;
+    }
+    for (const p of players.slice(0,11)){
+      const row=document.createElement("div"); row.className="psxi-player";
+      const initials=document.createElement("span"); initials.className="psxi-avatar psxi-initials";
+      initials.textContent=xiClean(p.name).split(/\s+/).slice(0,2).map(x=>x[0]||"").join("").toUpperCase()||"•";
+      const img=document.createElement("img"); img.className="psxi-avatar"; img.alt=p.name+" portrait"; img.loading="lazy";
+      img.style.display="none";
+      const portrait = p.image || (typeof findCrexPlayerPhoto==="function" ? findCrexPlayerPhoto(p.name) : "");
+      if (portrait) {
+        img.onload=()=>{img.style.display="block";initials.style.display="none";};
+        img.onerror=()=>{img.style.display="none";initials.style.display="flex";};
+        img.src=portrait;
+      }
+      const copy=document.createElement("div"); copy.className="psxi-player-copy";
+      const nm=document.createElement("div"); nm.className="psxi-player-name"; nm.textContent=p.name;
+      const role=document.createElement("div"); role.className="psxi-player-role"; role.textContent=p.role || "PLAYER";
+      copy.append(nm,role); row.append(initials,img,copy); list.appendChild(row);
+    }
+  }
+  function renderXI(){
+    const [t1,t2] = xiTeamCodes();
+    document.getElementById("psxiTeam1Name").textContent=t1.toUpperCase();
+    document.getElementById("psxiTeam2Name").textContent=t2.toUpperCase();
+    const a = parsedLineups[0] ? parsedLineups[0].players : [];
+    const b = parsedLineups[1] ? parsedLineups[1].players : [];
+    // Use team labels only when they clearly correspond to current match; never carry prior-match squads.
+    const aLabel = parsedLineups[0] && parsedLineups[0].team;
+    const bLabel = parsedLineups[1] && parsedLineups[1].team;
+    if (aLabel) document.getElementById("psxiTeam1Name").textContent=aLabel.toUpperCase();
+    if (bLabel) document.getElementById("psxiTeam2Name").textContent=bLabel.toUpperCase();
+    xiRenderTeam("psxiTeam1List","psxiTeam1Count",t1,a);
+    xiRenderTeam("psxiTeam2List","psxiTeam2Count",t2,b);
+    const total=a.length+b.length;
+    subtitle.textContent = total ? (total===22 ? "Confirmed Playing XI detected for both teams." : "Partial Playing XI detected; missing line-up data is left blank.") : "No confirmed Playing XI found yet for this match.";
+    status.innerHTML = total ? '<span class="psxi-source">SOURCE: selected CREX match page/data</span> • Portraits use extracted image URLs where available; initials are shown when an actual portrait is unavailable.' : 'No names were fabricated. Confirmed line-ups will appear when CREX exposes them in its page HTML or embedded match data.';
+  }
+  async function loadXI(force){
+    const url = String(activeTargetUrl || (document.getElementById("crexUrlInput")?.value || "")).trim();
+    if (!url) { subtitle.textContent="Paste and load a CREX match URL first."; return; }
+    if (!force && url===lastXiUrl && xiLoadPromise) return xiLoadPromise;
+    lastXiUrl=url;
+    subtitle.textContent="Fetching the selected match's published line-ups…";
+    status.textContent="Loading match page and checking embedded CREX player data.";
+    xiLoadPromise=(async()=>{
+      try { if (typeof fetchCrexAssetsForMatch==="function") await fetchCrexAssetsForMatch(url); } catch(e){}
+      // Parse the exact match HTML through the existing CREX asset route, then the same public-page fallback.
+      let groups=[];
+      try {
+        const response=await fetch(`${API_BASE}/api/crex-assets?url=${encodeURIComponent(url)}`,{cache:"no-store"});
+        if(response.ok){
+          const type=response.headers.get("content-type")||"";
+          if(type.includes("application/json")){
+            const payload=await response.json();
+            groups=collectXIFromJson(payload);
+            if(payload.html){
+              const doc=new DOMParser().parseFromString(payload.html,"text/html");
+              const domGroups=xiParseRenderedPage(doc);
+              if(domGroups.length>groups.length) groups=domGroups;
+            }
+          } else {
+            const html=await response.text();
+            if(html && html.length<8000000){
+              const doc=new DOMParser().parseFromString(html,"text/html");
+              groups=xiParseRenderedPage(doc);
+              const scripts=[...doc.querySelectorAll('script[type="application/json"],script[type="application/ld+json"],script#__NEXT_DATA__')];
+              for(const sc of scripts){try{groups=groups.concat(collectXIFromJson(JSON.parse(sc.textContent||"{}")));}catch(e){}}
+            }
+          }
+        }
+      } catch(e){}
+      if(!groups.length){
+        try{
+          const response=await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,{cache:"no-store"});
+          if(response.ok){
+            const html=await response.text();
+            if(html && html.length<8000000){
+              const doc=new DOMParser().parseFromString(html,"text/html");
+              groups=xiParseRenderedPage(doc);
+              const scripts=[...doc.querySelectorAll('script[type="application/json"],script[type="application/ld+json"],script#__NEXT_DATA__')];
+              for(const sc of scripts){try{groups=groups.concat(collectXIFromJson(JSON.parse(sc.textContent||"{}")));}catch(e){}}
+            }
+          }
+        }catch(e){}
+      }
+      // De-duplicate equivalent groups and reject stale groups by never retaining them between URL changes.
+      const unique=[];
+      for(const g of groups){
+        const players=xiPlayers(g.players);
+        const sig=players.map(p=>normalizePlayerKey(p.name)).join("|");
+        if(players.length<5 || !sig || unique.some(x=>x.sig===sig)) continue;
+        unique.push({team:xiClean(g.team),players,sig});
+      }
+      parsedLineups=unique.slice(0,2);
+      renderXI();
+    })();
+    return xiLoadPromise;
+  }
+  function open(){overlay.hidden=false;document.body.style.overflow="hidden";loadXI(false);}
+  function close(){overlay.hidden=true;document.body.style.overflow="";openBtn.focus();}
+  openBtn.addEventListener("click",open);
+  closeBtn?.addEventListener("click",close);
+  refreshBtn?.addEventListener("click",()=>{lastXiUrl="";xiLoadPromise=null;loadXI(true);});
+  overlay.addEventListener("click",e=>{if(e.target===overlay)close();});
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!overlay.hidden)close();});
+  document.getElementById("loadMatchUrlBtn")?.addEventListener("click",()=>{if(!overlay.hidden){lastXiUrl="";xiLoadPromise=null;parsedLineups=[];renderXI();loadXI(true);}});
+  // Clear any line-up immediately when the selected match URL changes, preventing cross-match leakage.
+  document.getElementById("crexUrlInput")?.addEventListener("input",()=>{if(overlay.hidden)return;parsedLineups=[];lastXiUrl="";xiLoadPromise=null;renderXI();});
+})();
+</script>
 
 </body>
 </html>
