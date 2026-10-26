@@ -2838,7 +2838,7 @@ function v6WinnerCode(data, t1, t2, team1Obj, team2Obj, resultText) {
 }
 function v6TossBelongsToCurrentMatch(tossText, data) {
   const text = v6CleanText(tossText).toUpperCase();
-  const match = text.match(/^(.+?)\\s+WON\\s+(?:THE\\s+)?TOSS\\b/);
+  const match = text.match(/^(.+?)\s+WON\s+(?:THE\s+)?TOSS\b/);
   if (!match) return false;
   const winner = match[1].replace(/[^A-Z0-9]+/g, " ").trim();
   const aliases = new Set();
@@ -2847,7 +2847,7 @@ function v6TossBelongsToCurrentMatch(tossText, data) {
     const raw = String(value).toUpperCase().trim();
     if (!raw || raw.length < 2) return;
     aliases.add(raw.replace(/[^A-Z0-9]+/g, " ").trim());
-    aliases.add(raw.replace(/\\b(WOMEN|WOMENS|MEN|MENS)\\b/g, " ").replace(/[^A-Z0-9]+/g, " ").trim());
+    aliases.add(raw.replace(/\b(WOMEN|WOMENS|MEN|MENS)\b/g, " ").replace(/[^A-Z0-9]+/g, " ").trim());
   };
   const team1 = data && data.team1 && typeof data.team1 === "object" ? data.team1 : {};
   const team2 = data && data.team2 && typeof data.team2 === "object" ? data.team2 : {};
