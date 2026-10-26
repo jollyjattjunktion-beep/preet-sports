@@ -1542,7 +1542,7 @@ body.controls-visible .top-brand-wrap { margin-top: 53px !important; }
 
         <!-- V6 MATCH CONTEXT: TOSS + CURRENT/LAST INNINGS -->
         <div class="match-context-bar" aria-label="Toss, batting and bowling teams">
-            <div class="context-toss"><span class="context-label">TOSS</span><strong id="tossUpdate">AUSTRALIA WOMEN WON THE TOSS • OPTED TO BOWL FIRST</strong></div>
+            <div class="context-toss"><span class="context-label">TOSS</span><strong id="tossUpdate">TOSS UPDATE UNAVAILABLE</strong></div>
             <div><span class="context-label">BATTING</span><strong id="battingNow">NEW ZEALAND WOMEN</strong></div>
             <div><span class="context-label">BOWLING</span><strong id="bowlingNow">AUSTRALIA WOMEN</strong></div>
         </div>
@@ -1665,7 +1665,7 @@ body.controls-visible .top-brand-wrap { margin-top: 53px !important; }
                 <span id="ribbonCRR">—</span>
                 <strong id="footerBattingTeam">NZ-W</strong>
                 <strong id="footerBowlingTeam">AUS-W</strong>
-                <span id="ribbonToss">AUSTRALIA WOMEN WON THE TOSS • OPTED TO BOWL FIRST</span>
+                <span id="ribbonToss">TOSS UPDATE UNAVAILABLE</span>
             </div>
         </div>
 
@@ -2836,6 +2836,39 @@ function v6WinnerCode(data, t1, t2, team1Obj, team2Obj, resultText) {
   const fallback = String(v6CrexMeta.winnerCode || "").toUpperCase();
   return fallback === t1 || fallback === t2 ? fallback : "";
 }
+function v6TossBelongsToCurrentMatch(tossText, data) {
+  const text = v6CleanText(tossText).toUpperCase();
+  const match = text.match(/^(.+?)\\s+WON\\s+(?:THE\\s+)?TOSS\\b/);
+  if (!match) return false;
+  const winner = match[1].replace(/[^A-Z0-9]+/g, " ").trim();
+  const aliases = new Set();
+  const addAlias = value => {
+    if (value == null || typeof value === "object") return;
+    const raw = String(value).toUpperCase().trim();
+    if (!raw || raw.length < 2) return;
+    aliases.add(raw.replace(/[^A-Z0-9]+/g, " ").trim());
+    aliases.add(raw.replace(/\\b(WOMEN|WOMENS|MEN|MENS)\\b/g, " ").replace(/[^A-Z0-9]+/g, " ").trim());
+  };
+  const team1 = data && data.team1 && typeof data.team1 === "object" ? data.team1 : {};
+  const team2 = data && data.team2 && typeof data.team2 === "object" ? data.team2 : {};
+  const urlTeams = extractTeamsFromCrexUrl(activeTargetUrl) || {};
+  [team1, team2].forEach(team => {
+    [team.short, team.code, team.full_name, team.fullName, team.name, team.team_name, team.teamName].forEach(addAlias);
+    const code = abbreviation(firstUseful(team.short, team.code, team.full_name, team.fullName, team.name));
+    addAlias(code);
+    if (typeof TEAM_NAMES !== "undefined" && TEAM_NAMES[code]) addAlias(TEAM_NAMES[code]);
+  });
+  [urlTeams.teamA, urlTeams.teamB].forEach(code => {
+    addAlias(code);
+    if (typeof TEAM_NAMES !== "undefined" && TEAM_NAMES[code]) addAlias(TEAM_NAMES[code]);
+  });
+  ["team1HeroName", "team2HeroName"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) addAlias(el.textContent);
+  });
+  aliases.delete("");
+  return aliases.has(winner);
+}
 function v6ParseToss(data) {
   let toss = v6GetDataValue(data, ["toss_update", "tossUpdate", "toss_details", "tossDetails", "toss", "toss_info", "tossInfo"]);
   if (toss && typeof toss === "object") {
@@ -2843,17 +2876,19 @@ function v6ParseToss(data) {
     const decision = firstUseful(toss.decision, toss.elected, toss.opted, toss.choice, toss.bat_or_bowl);
     toss = winner ? `${winner} won the toss${decision ? ` and opted to ${String(decision).replace(/^(opted|elected|opt|elect) to /i, "")}` : ""}` : firstUseful(toss.text, toss.message, toss.result, "");
   }
-  // Some feeds incorrectly map the source URL into the toss field. Never render a URL as toss text.
+  // Reject URLs, malformed toss text, and stale toss winners from a previously selected match.
   const parsedToss = v6ValidTossText(toss);
-  if (parsedToss) return parsedToss;
+  if (parsedToss && v6TossBelongsToCurrentMatch(parsedToss, data)) return parsedToss;
   const winner = v6GetDataValue(data, ["toss_winner", "tossWinner", "toss_won_by", "tossWonBy"]);
   const decision = v6GetDataValue(data, ["toss_decision", "tossDecision", "elected_to", "electedTo"]);
   if (winner) {
     const winnerText = `${String(winner)} won the toss${decision ? ` and opted to ${String(decision).replace(/^(opted|elected|opt|elect) to /i, "")}` : ""}`;
     const validWinnerText = v6ValidTossText(winnerText);
-    if (validWinnerText) return validWinnerText;
+    if (validWinnerText && v6TossBelongsToCurrentMatch(validWinnerText, data)) return validWinnerText;
   }
-  return v6ValidTossText(v6CrexMeta.tossText) || "TOSS UPDATE UNAVAILABLE";
+  const knownToss = v6ValidTossText(v6CrexMeta.tossText);
+  if (knownToss && v6TossBelongsToCurrentMatch(knownToss, data)) return knownToss;
+  return "TOSS UPDATE UNAVAILABLE";
 }
 function v6PollObject(data) {
   const raw = v6GetDataValue(data, ["poll_results", "pollResults", "fan_poll_results", "fanPollResults", "fan_poll", "fanPoll", "poll", "predictions", "vote_results", "voteResults"]);
