@@ -3128,16 +3128,31 @@ function v6ParseCrexText(doc) {
   }
 
   const tossCandidates = [];
-  for (const line of lines) {
-    if (/toss/i.test(line) && /(won|opt|elect|bat|bowl|choose|chose)/i.test(line)) tossCandidates.push(line.replace(/^.*?toss update\s*:?\s*/i, ""));
+  const cleanTossLabel = value => v6CleanText(value)
+    .replace(/^.*?\\btoss\\s*update\\s*[:：-]*\\s*/i, "")
+    .replace(/^[-:：\\s]+/, "")
+    .trim();
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    // CREX may render this as "Toss Update:- TN won the toss and opt to bowl",
+    // "Toss Update: TN won..." or split the label and value across adjacent lines.
+    if (/\\btoss\\s*update\\b/i.test(line)) {
+      const inline = cleanTossLabel(line);
+      if (/(won|opt|elect|bat|bowl|choose|chose)/i.test(inline)) tossCandidates.push(inline);
+      const next = lines[i + 1] || "";
+      if (/(won\\s+(?:the\\s+)?toss|opt(?:ed)?\\s+to\\s+(?:bat|bowl)|elect(?:ed)?\\s+to\\s+(?:bat|bowl))/i.test(next)) tossCandidates.push(next);
+    }
+    if (/\\btoss\\b/i.test(line) && /(won|opt|elect|bat|bowl|choose|chose)/i.test(line)) tossCandidates.push(cleanTossLabel(line));
     if (/won the toss and (?:opt(?:ed)?|elect(?:ed)?) to (?:bat|bowl)/i.test(line)) tossCandidates.push(line);
   }
   for (const img of [...doc.querySelectorAll("img[alt],img[title]")]) {
     const candidate = `${img.getAttribute("alt") || ""} ${img.getAttribute("title") || ""}`.trim();
-    if (/toss/i.test(candidate) && /(won|opt|elect|bat|bowl)/i.test(candidate)) tossCandidates.push(candidate.replace(/^.*?toss update\s*:?\s*/i, ""));
+    if (/toss/i.test(candidate) && /(won|opt|elect|bat|bowl)/i.test(candidate)) tossCandidates.push(cleanTossLabel(candidate));
   }
   const validToss = tossCandidates.map(v6ValidTossText).find(Boolean);
-  if (validToss) v6CrexMeta.tossText = validToss;
+  if (validToss && v6TossBelongsToCurrentMatch(validToss, latestScorePayloadForAssets || {})) {
+    v6CrexMeta.tossText = validToss;
+  }
   const resultLine = lines.find(line => /\bwon by\s+\d+\s+(?:wickets?|runs?)\b|\bmatch tied\b|\bno result\b|\babandoned\b/i.test(line));
   if (resultLine) {
     v6CrexMeta.resultText = resultLine;
