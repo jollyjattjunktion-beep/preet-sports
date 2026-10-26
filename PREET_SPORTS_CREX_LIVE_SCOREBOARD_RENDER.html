@@ -3943,9 +3943,26 @@ function setPlayerPortrait(photoId, initialsId, player, data, name) {
     const groups = [];
     const seen = new WeakSet();
     function walk(obj, inheritedTeam, depth){
-      if (!obj || typeof obj !== "object" || depth > 12 || seen.has(obj)) return;
+      if (!obj || typeof obj !== "object" || depth > 14 || seen.has(obj)) return;
       seen.add(obj);
-      if (Array.isArray(obj)) { for (const v of obj) walk(v, inheritedTeam, depth+1); return; }
+      if (Array.isArray(obj)) {
+        // CREX can use generic/opaque keys for player arrays instead of "playingXI".
+        // Only treat arrays as squads when most entries look like player records.
+        if (obj.length >= 5 && obj.length <= 15) {
+          const records = obj.filter(v => v && typeof v === "object" &&
+            xiName(v) && xiName(v).length <= 70 &&
+            (xiRole(v) || xiImage(v) || /player|batter|bowler|keeper|cricketer/i.test(Object.keys(v).join(" "))));
+          if (records.length >= 5 && records.length / obj.length >= 0.7) {
+            const players = xiPlayers(records);
+            const signature = players.map(p=>normalizePlayerKey(p.name)).join("|");
+            if (players.length >= 5 && !groups.some(g=>g.players.map(p=>normalizePlayerKey(p.name)).join("|")===signature)) {
+              groups.push({team:inheritedTeam || "",players});
+            }
+          }
+        }
+        for (const v of obj) walk(v, inheritedTeam, depth+1);
+        return;
+      }
       const localTeam = xiTeamLabel(obj, inheritedTeam || "");
       for (const [key,val] of Object.entries(obj)) {
         if (/^(playing[_\s-]?(xi|11|eleven)|playingxi|playing11|playingeleven|playing_xi|playing_11|line.?up)$/i.test(key) || /playing.?xi|playing.?11|playing.?eleven|line.?up/i.test(key)) {
@@ -3953,10 +3970,10 @@ function setPlayerPortrait(photoId, initialsId, player, data, name) {
           if (players.length >= 5) groups.push({team:localTeam,players});
         }
       }
-      // Team-nested objects may expose a playingXI array without the team name on the array.
+      // Team-nested objects may expose a squad under a generic field.
       for (const [key,val] of Object.entries(obj)) {
         if (val && typeof val === "object") {
-          const keyTeam = /^(team1|team_1|home|away|team2|team_2)$/i.test(key) ? xiTeamLabel(val, key) : localTeam;
+          const keyTeam = /^(team1|team_1|home|away|team2|team_2|team.?[ab]|home.?team|away.?team)$/i.test(key) ? xiTeamLabel(val, key) : localTeam;
           walk(val, keyTeam, depth+1);
         }
       }
