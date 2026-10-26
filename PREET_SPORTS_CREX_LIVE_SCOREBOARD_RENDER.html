@@ -1894,7 +1894,7 @@ function playerImageUrl(player, data) {
         if (url) return url;
     }
     const name = String(player && (player.name || player.full_name || player.short_name || player.shortName) || "").trim();
-    const all = data && (data.players || data.player_images || data.playerImages || data.squad || data.player_profiles || data.playerProfiles);
+    const all = data && (data.players || data.player_images || data.playerImages || data.squad || data.player_profiles || data.playerProfiles || data.playerList || data.player_list);
     const list = Array.isArray(all) ? all : (all && typeof all === "object" ? Object.values(all) : []);
     const target = normalizePlayerKey(name);
     const match = list.find(p => p && normalizePlayerKey(p.name || p.full_name || p.short_name || p.shortName) === target);
@@ -3869,7 +3869,9 @@ function setPlayerPortrait(photoId, initialsId, player, data, name) {
       const unique = [...new Set(matches)];
       if (unique.length === 1) return unique[0];
       // Preserve any useful legacy result only if no strict candidates were collected.
-      return unique.length ? "" : (previousPortraitLookup ? "" : "");
+      // Fall back to the established lookup only when the strict lookup found no
+      // candidate at all; it also understands the legacy CREX image-label formats.
+      return unique.length ? "" : (typeof previousPortraitLookup === "function" ? previousPortraitLookup(playerName) : "");
     };
   }
   const overlay = document.getElementById("preetPlayingXiOverlay");
@@ -3897,7 +3899,22 @@ function setPlayerPortrait(photoId, initialsId, player, data, name) {
   }
   function xiImage(p){
     if (!p || typeof p !== "object") return "";
-    return getImageUrl(p.icc_photo_url || p.iccPhotoUrl || p.crex_photo_url || p.crexPhotoUrl || p.player_photo_url || p.playerPhotoUrl || p.player_image_url || p.playerImageUrl || p.image_url || p.imageUrl || p.profile_image || p.profileImage || p.photo_url || p.photoUrl || p.headshot || p.avatar || p.image || p.photo || "");
+    const fields = [
+      p.icc_photo_url,p.iccPhotoUrl,p.crex_photo_url,p.crexPhotoUrl,p.crex_image_url,p.crexImageUrl,
+      p.player_photo_url,p.playerPhotoUrl,p.player_image_url,p.playerImageUrl,p.player_img_url,p.playerImgUrl,
+      p.profile_image_url,p.profileImageUrl,p.profile_image,p.profileImage,p.profile_photo_url,p.profilePhotoUrl,
+      p.photo_url,p.photoUrl,p.image_url,p.imageUrl,p.headshot_url,p.headshotUrl,p.thumbnail_url,p.thumbnailUrl,
+      p.avatar_url,p.avatarUrl,p.profile_pic,p.profilePic,p.picture_url,p.pictureUrl,p.headshot,p.avatar,p.image,p.photo,p.img,p.pic
+    ];
+    for (const value of fields) {
+      const direct = getImageUrl(value);
+      if (direct) return direct;
+      if (value && typeof value === "object") {
+        const nested = getImageUrl(value.url || value.src || value.original || value.large || value.medium || value.path || value.image_url || value.imageUrl);
+        if (nested) return nested;
+      }
+    }
+    return "";
   }
   function xiPlayers(value){
     let source = value;
@@ -4004,9 +4021,10 @@ function setPlayerPortrait(photoId, initialsId, player, data, name) {
       const row=document.createElement("div"); row.className="psxi-player";
       const initials=document.createElement("span"); initials.className="psxi-avatar psxi-initials";
       initials.textContent=xiClean(p.name).split(/\s+/).slice(0,2).map(x=>x[0]||"").join("").toUpperCase()||"•";
-      const img=document.createElement("img"); img.className="psxi-avatar"; img.alt=p.name+" portrait"; img.loading="lazy";
+      const img=document.createElement("img"); img.className="psxi-avatar"; img.alt=p.name+" portrait"; img.loading="eager"; img.decoding="async";
+      img.referrerPolicy="no-referrer";
       img.style.display="none";
-      const portrait = p.image || (typeof findCrexPlayerPhoto==="function" ? findCrexPlayerPhoto(p.name) : "");
+      const portrait = p.image || (typeof findCrexPlayerPhoto==="function" ? findCrexPlayerPhoto(p.name) : "") || (typeof playerImageUrl==="function" ? playerImageUrl({name:p.name, full_name:p.name}, latestScorePayloadForAssets) : "");
       if (portrait) {
         img.onload=()=>{img.style.display="block";initials.style.display="none";};
         img.onerror=()=>{img.style.display="none";initials.style.display="flex";};
