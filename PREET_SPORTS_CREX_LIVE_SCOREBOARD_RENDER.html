@@ -3900,7 +3900,13 @@ function setPlayerPortrait(photoId, initialsId, player, data, name) {
     return getImageUrl(p.icc_photo_url || p.iccPhotoUrl || p.crex_photo_url || p.crexPhotoUrl || p.player_photo_url || p.playerPhotoUrl || p.player_image_url || p.playerImageUrl || p.image_url || p.imageUrl || p.profile_image || p.profileImage || p.photo_url || p.photoUrl || p.headshot || p.avatar || p.image || p.photo || "");
   }
   function xiPlayers(value){
-    const arr = Array.isArray(value) ? value : (value && typeof value === "object" ? Object.values(value) : []);
+    let source = value;
+    if (!Array.isArray(source) && source && typeof source === "object") {
+      for (const key of ["players","playing_xi","playingXI","playing11","playing_11","playingEleven","lineup","line_up","list","items","data"]) {
+        if (Array.isArray(source[key]) && source[key].length) { source = source[key]; break; }
+      }
+    }
+    const arr = Array.isArray(source) ? source : (source && typeof source === "object" ? Object.values(source) : []);
     const out = [], seen = new Set();
     for (const item of arr) {
       const name = xiName(item);
@@ -3967,10 +3973,10 @@ function setPlayerPortrait(photoId, initialsId, player, data, name) {
       const line = lines[i];
       if (stop.test(line)) break;
       if (line.length > 85 || /^(?:playing\s*(?:xi|11|eleven)|team|players|role|batter|bowler|all.?rounder)$/i.test(line)) continue;
-      const roleMatch = line.match(/^(.{2,55}?)\s+(Batter|Batsman|Bowler|All.?Rounder|Wicket.?Keeper|WK)(?:\b.*)?$/i);
-      const name = roleMatch ? xiClean(roleMatch[1].replace(/\s*\((?:c|wk|vc)\)\s*/ig," ").trim()) : "";
-      if (!name || name.split(/\s+/).length < 2 || /won the toss|innings|overs|target|run rate/i.test(name)) continue;
-      if (!candidates.some(p=>normalizePlayerKey(p.name)===normalizePlayerKey(name))) candidates.push({name,role:roleMatch[2],image:"",raw:null});
+      const roleMatch = line.match(/\b(Batter|Batsman|Bowler|All.?Rounder|Wicket.?Keeper|WK)\b/i);
+      const name = roleMatch ? xiClean(line.slice(0, roleMatch.index).replace(/\s*\((?:c|wk|vc)\)\s*/ig," ").replace(/[•·▪●]+/g," ").trim()) : "";
+      if (!name || name.split(/\s+/).length < 2 || name.length > 55 || /won the toss|innings|overs|target|run rate/i.test(name)) continue;
+      if (!candidates.some(p=>normalizePlayerKey(p.name)===normalizePlayerKey(name))) candidates.push({name,role:roleMatch[1],image:"",raw:null});
       if (candidates.length >= 22) break;
     }
     if (!candidates.length) return [];
