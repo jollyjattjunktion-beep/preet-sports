@@ -3836,6 +3836,42 @@ function setPlayerPortrait(photoId, initialsId, player, data, name) {
 <script id="preetSportsPlayingXiEnhancement">
 (function(){
   "use strict";
+  // Safer portrait lookup: exact player-name/profile matches first; abbreviated names only match
+  // when both the first-name initial and surname agree. Avoid the old loose substring match.
+  if (typeof findCrexPlayerPhoto === "function") {
+    const previousPortraitLookup = findCrexPlayerPhoto;
+    findCrexPlayerPhoto = function(playerName) {
+      const target = normalizePlayerKey(playerName);
+      if (!target) return "";
+      if (crexPlayerPhotoMap && crexPlayerPhotoMap.has(target)) return crexPlayerPhotoMap.get(target);
+      const parts = target.split(" ").filter(Boolean);
+      const surname = parts[parts.length - 1] || "";
+      const initial = parts[0] ? parts[0][0] : "";
+      for (const [candidate, url] of (crexPlayerPhotoMap || new Map()).entries()) {
+        if (candidate === target) return url;
+        const c = candidate.split(" ").filter(Boolean);
+        if (parts.length >= 2 && c.length >= 2 && c[c.length-1] === surname && c[0][0] === initial) return url;
+      }
+      for (const item of (crexImageCandidates || [])) {
+        const label = normalizePlayerKey(item.label || "");
+        const href = normalizePlayerKey(String(item.href || "").split(/[/?#]/).filter(Boolean).pop().replace(/[-_]+/g," "));
+        if (label === target || href === target) return item.url || "";
+      }
+      // Permit an abbreviation only for an unambiguous surname + first initial match.
+      const matches = [];
+      for (const item of (crexImageCandidates || [])) {
+        const label = normalizePlayerKey(item.label || "");
+        const href = normalizePlayerKey(String(item.href || "").split(/[/?#]/).filter(Boolean).pop().replace(/[-_]+/g," "));
+        const candidate = href || label;
+        const c = candidate.split(" ").filter(Boolean);
+        if (surname && initial && c.length >= 2 && c[c.length-1] === surname && c[0][0] === initial && item.url) matches.push(item.url);
+      }
+      const unique = [...new Set(matches)];
+      if (unique.length === 1) return unique[0];
+      // Preserve any useful legacy result only if no strict candidates were collected.
+      return unique.length ? "" : (previousPortraitLookup ? "" : "");
+    };
+  }
   const overlay = document.getElementById("preetPlayingXiOverlay");
   const openBtn = document.getElementById("openPlayingXiBtn");
   const closeBtn = document.getElementById("psxiCloseBtn");
